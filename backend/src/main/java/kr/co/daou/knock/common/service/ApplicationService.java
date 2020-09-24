@@ -60,10 +60,10 @@ public class ApplicationService {
      * FUNCTION :: 공통 페이징 처리
      * @return
      */
-    public void setDefaultPaging(Model model, Paging pagingExtendedObject, int totalCount) {
+    public void setDefaultPaging(Map<String, Object> rtnMap, Paging pagingExtendedObject, int totalCount) {
         pagingExtendedObject.setTotalCount(totalCount);  //전체 페이지수 세팅
-        model.addAttribute("totalCount", totalCount);
-        model.addAttribute("paging", pagingExtendedObject);
+        rtnMap.put("totalCount", totalCount);
+        rtnMap.put("paging", pagingExtendedObject);
     }
 
     /**

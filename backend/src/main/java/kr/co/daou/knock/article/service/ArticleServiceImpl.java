@@ -29,13 +29,13 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
      * @return
      */
     public String list(Model model, Article article) {
+        Map<String, Object> rtnMap = returnMap();
         int totalCount = articleMapper.countByDto(article);
-        setDefaultPaging(model, article, totalCount);
+        setDefaultPaging(rtnMap, article, totalCount);
         List<Article> articleList = articleMapper.findAllByDto(article);
 
-        model.addAttribute("articleList", articleList);
-
-        return "url";
+        rtnMap.put("articleList", articleList);
+        return jsonFormatTransfer(rtnMap);
     }
 
     /**
