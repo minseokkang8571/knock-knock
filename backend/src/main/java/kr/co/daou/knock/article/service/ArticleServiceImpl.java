@@ -45,13 +45,14 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
      * @return
      */
     public String form(Model model, Article article) {
+        Map<String, Object> rtnMap = returnMap();
         if(article.getIdx() != null){
             // LINE :: 수정인 경우 정보 가져와서 보내주기
             article = articleMapper.findByIdx(article.getIdx());
         }
-        model.addAttribute("article", article);
 
-        return "url";
+        rtnMap.put("article", article);
+        return jsonFormatTransfer(rtnMap);
 
     }
 
@@ -62,13 +63,13 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
      * @return
      */
     public String view(Model model, Article article) {
+        Map<String, Object> rtnMap = returnMap();
         article = articleMapper.findByIdx(article.getIdx());
         List<Comment> comment = commentMapper.findAllByArticleIdx(article.getIdx());
 
-        model.addAttribute("article", article);
-        model.addAttribute("comment", comment);
-
-        return "url";
+        rtnMap.put("article", article);
+        rtnMap.put("comment", comment);
+        return jsonFormatTransfer(rtnMap);
 
     }
 
