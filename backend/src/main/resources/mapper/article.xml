@@ -1,0 +1,54 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.ArticleMapper">
+
+
+    <select id="findAllByDto" parameterType="article" resultType="article">
+        SELECT * FROM article
+        ORDER BY idx DESC
+        LIMIT 5
+    </select>
+
+    <select id="countByDto" parameterType="article" resultType="int">
+        SELECT count(*) FROM article
+    </select>
+
+    <select id="findByIdx" parameterType="Long" resultType="article">
+        SELECT * FROM article
+        WHERE idx = #{idx}
+    </select>
+
+    <update id="updateByArticle" parameterType="Long">
+        UPDATE article
+        SET delYn = 'Y'
+        WHERE idx = #{idx}
+    </update>
+
+    <insert id="insertByArticle" parameterType="adminMenuAuth">
+        INSERT
+        INTO ARTICLE (
+        userIdx
+        , title
+        , contents
+        , regDate
+        , delYn
+        )
+        VALUES (
+        #{userIdx}
+        , #{title}
+        , #{contents}
+        , sysdate()
+        , #{delYn}
+        )
+        <selectKey keyProperty="id" resultType="Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="updateDelYn" parameterType="Long">
+        UPDATE article
+        SET delYn = 'Y'
+        WHERE idx = #{idx}
+    </update>
+
+</mapper>
