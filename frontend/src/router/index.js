@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import ArticleList from '@/views/articles/ArticleList.vue'
-import ArticleDetail from '@/views/articles/ArticleDetail.vue'
-import Login from '@/views/accounts/Login.vue'
-import Signup from '@/views/accounts/Signup.vue'
-import ReviewList from '@/views/reviews/ReviewList.vue'
+import ArticleList from '@/views/articles/ArticleList'
+import ArticleDetail from '@/views/articles/ArticleDetail'
+import ArticleCreate from '@/views/articles/ArticleCreate'
+import Signin from '@/views/accounts/Signin'
+import Signup from '@/views/accounts/Signup'
+import ReviewList from '@/views/reviews/ReviewList'
+import ReviewDetail from '@/views/reviews/ReviewDetail'
 
 Vue.use(VueRouter)
 
@@ -15,9 +17,19 @@ const routes = [
     component: ArticleList
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/articles/:articleId',
+    name: 'ArticleDetail',
+    component: ArticleDetail
+  },
+  {
+    path: '/articles/',
+    name: 'ArticleCreate',
+    component: ArticleCreate
+  },
+  {
+    path: '/signin',
+    name: 'Signin',
+    component: Signin
   },
   {
     path: '/signup',
@@ -30,9 +42,9 @@ const routes = [
     component: ReviewList
   },
   {
-    path: '/articles/:articleId',
-    name: 'ArticleDetail',
-    component: ArticleDetail
+    path: '/reviews/:reviewId',
+    name: 'ReviewDetail',
+    component: ReviewDetail
   }
 ]
 

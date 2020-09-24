@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container">
     <article>
       <div class="d-flex justify-content-between">
         <h2>import Login from '@/views/Login.vue'</h2>
@@ -7,16 +7,24 @@
       </div>
       <hr>
       <div class="text-left mt-3">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+      <div class="d-flex justify-content-start">
+        <button class="tag mt-1 mr-2">tag</button>
+        <button class="tag mt-1">tag</button>
+      </div>
     </article>
     <CommentList />
+    <hr>
+    <CommentCreate />
   </div>
 </template>
 
 <script>
-import CommentList from '@/components/CommentList'
+import CommentList from '@/components/comment/CommentList'
+import CommentCreate from '@/components/comment/CommentCreate'
 export default {
   components: {
-    CommentList
+    CommentList,
+    CommentCreate
   }
 }
 </script>

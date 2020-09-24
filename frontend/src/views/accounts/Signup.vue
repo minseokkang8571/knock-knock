@@ -1,13 +1,10 @@
 <template>
   <div class="container">
     <b-form
-      class="container mt-5 pt-5 pb-5 pl-3 pr-3 rounded border border-color-grey"
-      style="max-width:450px;">
-      <b-form-group
-        id="input-group-1"
-        label-for="input-1"
-      >
-        <p class="text-left mb-0">ID:</p>
+      id="input-form"
+      class="container w-50 pt-5 pb-3 pl-3 pr-3 rounded border border-color-grey">
+        <h2>Sign up</h2>
+        <p>ID:</p>
         <b-form-input
           id="input-1"
           v-model="form.id"
@@ -15,12 +12,7 @@
           required
           placeholder="ID를 입력하세요."
         ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="input-group-2"
-        label-for="input-2">
-        <p class="text-left mb-0">Password:</p>
+        <p>Password:</p>
         <b-form-input
           id="input-2"
           v-model="form.password"
@@ -28,34 +20,23 @@
           required
           placeholder="비밀번호를 입력하세요."
         ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="input-group-2"
-        label-for="input-2">
-        <p class="text-left mb-0">Password Confirm:</p>
+        <p>Password Confirm:</p>
         <b-form-input
-          id="input-2"
-          v-model="form.password"
+          id="input-3"
+          v-model="form.passwordConfirm"
           type="password"
           required
           placeholder="비밀번호를 입력하세요."
         ></b-form-input>
-      </b-form-group>
-
-      <b-form-group
-        id="input-group-2"
-        label-for="input-2">
-        <p class="text-left mb-0">name:</p>
+        <p>name:</p>
         <b-form-input
-          id="input-2"
-          v-model="form.password"
-          type="password"
+          id="input-4"
+          v-model="form.name"
+          type="name"
           required
-          placeholder="비밀번호를 입력하세요."
+          placeholder="닉네임을 입력하세요."
         ></b-form-input>
-      </b-form-group>
-      <button type="submit" class="btn btn-success float-right">Submit</button>
+      <button type="submit" class="btn btn-success mt-3 w-100">Sign up</button>
     </b-form>
   </div>
 </template>
@@ -75,6 +56,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+/* #input-form p {
+  text-align: left;
+  margin-bottom: 0px;
+  margin-top: 10px;
+} */
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <article>
-      <div class="mt-5 d-flex justify-content-between">
-        <h2>import Login from '@/views/Login.vue'</h2>
+      <div class="d-flex justify-content-between">
+        <h2 @click="toDetail(reviewId)" class="common-title">import Login from '@/views/Login.vue'</h2>
         <span class="align-self-end">작성자 : ipsum</span>
       </div>
         <div class="text-left">
@@ -48,7 +48,19 @@
 
 <script>
 export default {
-
+  name: 'ReviewList',
+  data() {
+    return {
+      reviewId: 1
+    }
+  },
+  components: {
+  },
+  methods: {
+    toDetail(id) {
+      this.$router.push(`/reviews/${this.reviewId}`)
+    }
+  }
 }
 </script>
 
@@ -57,7 +69,16 @@ a {
   color: #42b983;
 }
 
-a:hover{
+a:hover {
   color: #043a22;
 }
+
+.review-title {
+  cursor: pointer;
+}
+
+.review-title:hover {
+  color: #4ae7a3;
+}
+
 </style>
