@@ -1,0 +1,281 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.ArticleMapper">
+
+
+    <select id="findAllByArticleIdx" parameterType="Long" resultType="comment">
+
+    </select>
+
+    <!-- 게시글 목록 조회 -->
+    <select id="findAllByDto" parameterType="article" resultType="article">
+        SELECT atc.*
+             , tsc.name AS sidoName
+             , com.idx AS replyIdx
+             , com.reg_name AS replyRegName
+             , spc.text AS categoryText
+             , (SELECT count(*) FROM tFile f WHERE f.useage_key = atc.idx AND f.filetype = 'attach' AND f.useage = 'board') AS attachCnt
+             , (SELECT count(*) FROM tRecommend rec WHERE rec.useage_key = atc.idx) AS recommendCnt
+             , fle.idx AS templateIdx
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+          LEFT OUTER JOIN tComment com ON atc.idx = com.article_idx AND com.del_yn = 'N'
+          LEFT OUTER JOIN tSidoCode tsc ON atc.sido_code = tsc.code
+          LEFT OUTER JOIN tSimpleCode spc ON atc.category = spc.code AND spc.useage = 'faq_gubun'
+          LEFT OUTER JOIN tFile fle ON atc.idx = fle.useage_key AND fle.useage = 'board' AND fle.filetype = 'template'
+         WHERE 1=1
+               <include refid="dynamicWhereCause"/>
+         ORDER BY atc.idx DESC
+         <if test="boardType != 'calendar'">limit #{startRownum}, #{pageSize}</if>
+    </select>
+
+    <!-- 게시글 수 조회 -->
+    <select id="countByDto" parameterType="article" resultType="int">
+        SELECT count(*)
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+         WHERE 1=1
+               <include refid="dynamicWhereCause"/>
+    </select>
+
+    <sql id="dynamicWhereCause">
+        AND atc.del_yn = 'N'
+        AND atc.is_private = 0
+        AND atc.board_idx = #{boardIdx}
+        AND atc.state != 'R'
+        AND brd.site_gubun IN (#{boardSiteGubun}, 'A')
+        <if test="searchType == ''">
+            AND (
+                 atc.subject LIKE concat('%', #{searchText}, '%')
+                 OR atc.reg_id LIKE concat('%', #{searchText}, '%')
+                 OR atc.reg_name LIKE concat('%', #{searchText}, '%')
+                )
+        </if>
+        <if test="searchType != null and searchType != '' and searchText != null">
+            AND atc.${searchType} LIKE concat('%', #{searchText}, '%')
+        </if>
+        <if test="state != null and state != ''">
+            AND atc.state = #{state}
+        </if>
+        <if test="category != null and category != ''">
+            AND atc.category = #{category}
+        </if>
+        <if test="boardType == 'calendar'">
+            AND #{searchSdate} >= date_format(atc.start_date, #{dateFormatPattern})
+            AND date_format(atc.end_date, #{dateFormatPattern}) >= #{searchSdate}
+        </if>
+        <if test="sidoCode != null and sidoCode != ''">
+            AND atc.sido_code = #{sidoCode}
+        </if>
+    </sql>
+
+    <!-- 공지글 조회 -->
+    <select id="findByBoardIdxAndIsNoticeTrue" parameterType="article" resultType="article">
+        SELECT atc.*
+             , (SELECT count(*) FROM tFile f WHERE f.useage_key = atc.idx AND f.filetype = 'attach' AND f.useage = 'board') AS attachCnt
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+         WHERE atc.board_idx = #{boardIdx}
+           AND brd.site_gubun IN (#{boardSiteGubun}, 'A')
+           AND atc.is_notice = 1
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+               <if test="sidoCode != null and sidoCode != ''">
+                   AND atc.sido_code = #{sidoCode}
+               </if>
+    </select>
+
+    <!-- idx ( 고유값 ), boardIdx ( 게시판 코드 ) 로 게시글 정보 조회 -->
+    <select id="findByIdxAndBoardIdx" parameterType="article" resultType="article">
+        SELECT atc.*
+             , tsc.name AS sidoName
+             , spc.text AS categoryText
+             , (SELECT count(*) FROM tRecommend rec WHERE rec.useage_key = atc.idx) AS recommendCnt
+          FROM tArticle atc
+          LEFT OUTER JOIN tSidoCode tsc ON atc.sido_code = tsc.code
+          LEFT OUTER JOIN tSimpleCode spc ON atc.category = spc.code AND spc.useage = 'faq_gubun'
+         WHERE atc.idx = #{idx}
+           AND atc.board_idx = #{boardIdx}
+           AND atc.is_private = 0
+    </select>
+
+    <!-- parents ( 상위 게시글 고유값 ) 로 게시글 정보 조회 -->
+    <select id="findByParents" parameterType="Long" resultType="article">
+        SELECT atc.*
+          FROM tArticle atc
+         WHERE atc.parents = #{parents}
+           AND atc.del_yn = 'N'
+         LIMIT 1
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="modifyViewsByIdx" parameterType="Long">
+        UPDATE tArticle
+           SET views = views + 1
+         WHERE idx = #{idx}
+    </update>
+
+    <select id="countByRegId" parameterType="article" resultType="int">
+        SELECT count(*)
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+          LEFT OUTER JOIN tComment com ON atc.idx = com.article_idx AND com.del_yn = 'N'
+         WHERE 1=1
+               <include refid="dynamicWhereCause2"/>
+    </select>
+
+    <select id="findAllByRegId" parameterType="article" resultType="article">
+        SELECT atc.*
+             , com.idx AS replyIdx
+             , com.reg_name AS replyRegName
+             , com.reg_date AS replyDate
+             , brd.path_value
+             , brd.exptext AS boardName
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+          LEFT OUTER JOIN tComment com ON atc.idx = com.article_idx AND com.del_yn = 'N'
+         WHERE 1=1
+               <include refid="dynamicWhereCause2"/>
+         ORDER BY atc.idx DESC
+    </select>
+
+    <select id="findByRegId" parameterType="article" resultType="article">
+        SELECT atc.*
+             , brd.path_value
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+         WHERE atc.idx = #{idx}
+           AND atc.reg_id = #{regId}
+           AND atc.reg_gubun = 'U'
+           AND atc.del_yn = 'N'
+           AND brd.site_gubun = #{boardSiteGubun}
+    </select>
+
+    <sql id="dynamicWhereCause2">
+        AND atc.reg_id = #{regId}
+        AND atc.reg_gubun = 'U'
+        AND atc.del_yn = 'N'
+        AND brd.site_gubun = #{boardSiteGubun}
+        <choose>
+            <when test="pathValue == 'qna'">
+                AND brd.reply_able = 1
+            </when>
+            <otherwise>
+                AND brd.comment_able = 1
+            </otherwise>
+        </choose>
+        <if test="searchType == ''">
+            AND (
+                 atc.subject LIKE concat('%', #{searchText}, '%')
+                 OR atc.contents LIKE concat('%', #{searchText}, '%')
+                )
+        </if>
+        <if test="searchType != null and searchType != '' and searchText != null">
+            AND atc.${searchType} LIKE concat('%', #{searchText}, '%')
+        </if>
+        <if test="state != null and state != ''">
+            AND atc.state = #{state}
+        </if>
+        <if test="category != null and category != ''">
+            AND atc.category = #{category}
+        </if>
+    </sql>
+
+    <!-- 이전글 조회 -->
+    <select id="findPrevArticle" parameterType="article" resultType="article">
+        SELECT atc.*
+          FROM tArticle atc
+         WHERE #{idx} > atc.idx
+           AND atc.board_idx = #{boardIdx}
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+         ORDER BY atc.idx DESC
+         limit 1
+    </select>
+
+    <!-- 다음글 조회 -->
+    <select id="findNextArticle" parameterType="article" resultType="article">
+        SELECT atc.*
+          FROM tArticle atc
+         WHERE atc.idx > #{idx}
+           AND atc.board_idx = #{boardIdx}
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+         ORDER BY atc.idx ASC
+         limit 1
+    </select>
+
+    <!-- 메인페이지 칼럼 글 조회 -->
+    <select id="findMainColumn" resultType="article">
+        SELECT atc.*
+             , cmt.subject AS commentSubject
+             , cmt.contents AS commentContents
+             , fle.idx AS fileIdx
+          FROM tArticle atc INNER JOIN tBoard brd ON atc.board_idx = brd.idx
+          LEFT OUTER JOIN tComment cmt ON atc.idx = cmt.article_idx
+          LEFT OUTER JOIN tFile fle ON cmt.idx = fle.useage_key AND fle.filetype = 'template'
+         WHERE brd.path_value = 'column'
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+         ORDER BY atc.idx DESC
+         limit 1
+    </select>
+
+    <select id="findMainArticleByBoardIdx" parameterType="article" resultType="article">
+        SELECT atc.*
+             , fle.idx AS fileIdx
+          FROM tArticle atc
+          LEFT OUTER JOIN tFile fle ON atc.idx = fle.useage_key AND fle.filetype = 'template' AND fle.useage = 'board'
+         WHERE atc.board_idx = #{boardIdx}
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+               <if test="sidoCode != null and sidoCode != ''">
+                   AND atc.sido_code = #{sidoCode}
+               </if>
+         ORDER BY atc.idx DESC
+         limit #{pageNo}, #{pageSize}
+    </select>
+
+    <select id="findMainArticleByBoardIdxAndLimit1" parameterType="article" resultType="article">
+        SELECT atc.*
+          FROM tArticle atc
+         WHERE atc.board_idx = #{boardIdx}
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+         ORDER BY atc.idx DESC
+         limit 1
+    </select>
+
+    <select id="findMainArticleByBoardIdxAndSidoCodeAndLimit1" parameterType="article" resultType="article">
+        SELECT atc.*
+          FROM tArticle atc
+         WHERE atc.board_idx = #{boardIdx}
+               <if test="sidoCode != null and sidoCode != ''">
+                   AND atc.sido_code = #{sidoCode}
+               </if>
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+         ORDER BY atc.idx DESC
+        limit 1
+    </select>
+
+    <select id="findMainCalendar" parameterType="article" resultType="article">
+        SELECT atc.*
+             , sdc.name AS sidoName
+          FROM tArticle atc INNER JOIN tSidoCode sdc ON atc.sido_code = sdc.code
+         WHERE date_format(atc.end_date, '%Y-%m-%d') >= date_format(sysdate(), '%Y-%m-%d')
+           AND last_day(sysdate()) >= date_format(atc.start_date, '%Y-%m-%d')
+           AND atc.board_idx = #{boardIdx}
+           AND atc.del_yn = 'N'
+           AND atc.is_private = 0
+           AND atc.state = 'A'
+               <if test="sidoCode != null and sidoCode != ''">
+                   AND atc.sido_code = #{sidoCode}
+               </if>
+         ORDER BY atc.start_date DESC
+                , atc.reg_date DESC
+         limit 2
+    </select>
+
+</mapper>
