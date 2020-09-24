@@ -1,4 +1,4 @@
-package kr.co.daou.knock.user.dto;
+package kr.co.daou.knock.common.db.mybatis.dto;
 
 import lombok.Data;
 

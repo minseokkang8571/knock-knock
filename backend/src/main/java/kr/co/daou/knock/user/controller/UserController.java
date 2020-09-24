@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import io.swagger.annotations.ApiOperation;
-import kr.co.daou.knock.user.dto.LoginRequest;
-import kr.co.daou.knock.user.dto.SignUpRequest;
-import kr.co.daou.knock.user.dto.UserDto;
+import kr.co.daou.knock.common.db.mybatis.dto.LoginRequest;
+import kr.co.daou.knock.common.db.mybatis.dto.SignUpRequest;
+import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
 import kr.co.daou.knock.user.service.Sha256;
 import kr.co.daou.knock.user.service.UserService;
 

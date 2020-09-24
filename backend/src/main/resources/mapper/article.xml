@@ -20,25 +20,22 @@
 
     <update id="updateByArticle" parameterType="Long">
         UPDATE article
-        SET delYn = 'Y'
+        SET title = #{title},
+            contents = #{contents}
         WHERE idx = #{idx}
     </update>
 
-    <insert id="insertByArticle" parameterType="adminMenuAuth">
+    <insert id="insertByArticle" parameterType="Long">
         INSERT
         INTO ARTICLE (
-        userIdx
+        user_idx
         , title
         , contents
-        , regDate
-        , delYn
         )
         VALUES (
         #{userIdx}
         , #{title}
         , #{contents}
-        , sysdate()
-        , #{delYn}
         )
         <selectKey keyProperty="id" resultType="Long">
             SELECT LAST_INSERT_ID()
@@ -47,7 +44,7 @@
 
     <update id="updateDelYn" parameterType="Long">
         UPDATE article
-        SET delYn = 'Y'
+        SET del_yn = 'Y'
         WHERE idx = #{idx}
     </update>
 

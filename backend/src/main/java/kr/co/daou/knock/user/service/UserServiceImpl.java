@@ -3,10 +3,10 @@ package kr.co.daou.knock.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.co.daou.knock.user.dto.LoginRequest;
-import kr.co.daou.knock.user.dto.SignUpRequest;
-import kr.co.daou.knock.user.dto.UserDto;
-import kr.co.daou.knock.user.mapper.UserMapper;
+import kr.co.daou.knock.common.db.mybatis.dto.LoginRequest;
+import kr.co.daou.knock.common.db.mybatis.dto.SignUpRequest;
+import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
+import kr.co.daou.knock.common.db.mybatis.mapper.UserMapper;
 
 @Service
 public class UserServiceImpl implements UserService{

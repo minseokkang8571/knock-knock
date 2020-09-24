@@ -1,6 +1,6 @@
 package kr.co.daou.knock.article.controller;
 
-import kr.co.daou.knock.article.service.ArticleService;
+import kr.co.daou.knock.article.service.ArticleServiceImpl;
 import kr.co.daou.knock.common.db.mybatis.dto.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ArticleController {
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleServiceImpl articleServiceImpl;
 
     /**
      * FUNCTION :: 게시글 리스트
@@ -22,7 +22,7 @@ public class ArticleController {
      */
     @RequestMapping(value = {"/list"}, method = RequestMethod.GET)
     public String list(Model model, Article article) {
-        return articleService.list(model, article);
+        return articleServiceImpl.list(model, article);
     }
 
     /**
@@ -31,7 +31,7 @@ public class ArticleController {
      */
     @RequestMapping(value = {"/view"}, method = RequestMethod.GET)
     public String view(Model model, Article article) {
-        return articleService.view(model, article);
+        return articleServiceImpl.view(model, article);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ArticleController {
      */
     @RequestMapping(value = {"/form"}, method = RequestMethod.GET)
     public String form(Model model, Article article) {
-        return articleService.form(model, article);
+        return articleServiceImpl.form(model, article);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ArticleController {
     @RequestMapping(value = {"/save"}, method = RequestMethod.POST)
     @ResponseBody
     public String save(Article article) {
-        return articleService.save(article);
+        return articleServiceImpl.save(article);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ArticleController {
     @RequestMapping(value = {"/save"}, method = RequestMethod.PATCH)
     @ResponseBody
     public String modify(Article article) {
-        return articleService.save(article);
+        return articleServiceImpl.save(article);
     }
 
     /**
@@ -71,7 +71,7 @@ public class ArticleController {
     @RequestMapping(value = {"/delete"}, method = RequestMethod.DELETE)
     @ResponseBody
     public String delete(Article article) {
-        return articleService.delete(article);
+        return articleServiceImpl.delete(article);
     }
 
 
