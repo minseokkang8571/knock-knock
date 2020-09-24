@@ -8,12 +8,15 @@
       </router-link>
       <SearchBar />
       <b-collapse id="nav-text-collapse" is-nav class="d-flex justify-content-end">
+        <router-link :to="{ name: 'ArticleCreate' }">
+          <b-button variant="outline-success" class="my-2 my-sm-0 mr-3">New issue</b-button>
+        </router-link>
         <b-navbar-nav>
           <router-link :to="{ name: 'ReviewList' }">
             <a class="mr-3">Review</a>
           </router-link>
-          <router-link :to="{ name: 'Login' }">
-            <a class="mr-3">Login</a>
+          <router-link :to="{ name: 'Signin' }">
+            <a class="mr-3">Signin</a>
           </router-link>
           <router-link :to="{ name: 'Signup' }">
             <a>Sign up</a>
@@ -39,6 +42,36 @@ export default {
   padding: 2px 15px 2px 15px;
   background-color: #90d39f;
   border-radius: 3px;
+}
+.common-title {
+  cursor: pointer;
+}
+
+.common-title:hover {
+  color: #4ae7a3;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+.scroll-area {
+  /* background: white; */
+  height: 75vh;
+  padding: 1em 1em;
+  /* margin: 1em; */
+  overflow-y: scroll;
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+}
+
+#input-form p {
+  text-align: left;
+  margin-bottom: 0px;
+  margin-top: 10px;
+}
+
+#input-form .btn {
+  margin-top: 5px;
 }
 </style>
 <style scoped>

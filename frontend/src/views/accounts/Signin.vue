@@ -1,13 +1,10 @@
 <template>
-  <div>
+  <div class="container">
     <b-form
-      class="container mt-5 pt-5 pb-5 pl-3 pr-3 rounded border border-color-grey"
-      style="max-width:450px;">
-      <b-form-group
-        id="input-group-1"
-        label-for="input-1"
-      >
-        <p class="text-left mb-0">ID:</p>
+      id="input-form"
+      class="container w-50 pt-5 pb-3 pl-3 pr-3 rounded border border-color-grey">
+        <h2>Sign in</h2>
+        <p>ID:</p>
         <b-form-input
           id="input-1"
           v-model="form.id"
@@ -15,12 +12,8 @@
           required
           placeholder="ID를 입력하세요."
         ></b-form-input>
-      </b-form-group>
 
-      <b-form-group
-        id="input-group-2"
-        label-for="input-2">
-        <p class="text-left mb-0">Password:</p>
+        <p>Password:</p>
         <b-form-input
           id="input-2"
           v-model="form.password"
@@ -28,8 +21,7 @@
           required
           placeholder="비밀번호를 입력하세요."
         ></b-form-input>
-      </b-form-group>
-      <button type="submit" class="btn btn-success float-right">Submit</button>
+      <button type="submit" class="btn btn-success w-100 mt-3">Sign in</button>
     </b-form>
   </div>
 </template>

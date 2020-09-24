@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <article>
-      <div class="mt-5 d-flex justify-content-between">
-        <h2 @click="toDetail(articleId)" class="article-title">import Login from '@/views/Login.vue'</h2>
+      <div class="d-flex justify-content-between">
+        <h2 @click="toDetail(articleId)" class="common-title">import Login from '@/views/Login.vue'</h2>
         <span class="align-self-end">작성자 : ipsum</span>
       </div>
         <div class="text-left">
@@ -49,7 +49,7 @@
 <script>
 
 export default {
-  name: 'Home',
+  name: 'ArticleList',
   data() {
     return {
       articleId: 1
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     toDetail(id) {
-      this.$router.push(`/articles/${1}`)
+      this.$router.push(`/articles/${this.articleId}`)
     }
   }
 }
@@ -73,13 +73,4 @@ a {
 a:hover {
   color: #043a22;
 }
-
-.article-title {
-  cursor: pointer;
-}
-
-.article-title:hover {
-  color: #4ae7a3;
-}
-
 </style>
