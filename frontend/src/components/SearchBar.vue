@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex">
-    <div class="btn-group">
+    <div class="dropdown">
       <button type="button" class="btn btn-success dropdown-toggle mt-2 mb-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Language
       </button>

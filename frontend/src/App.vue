@@ -15,12 +15,17 @@
           <router-link :to="{ name: 'ReviewList' }">
             <a class="mr-3">Review</a>
           </router-link>
-          <router-link :to="{ name: 'Signin' }">
-            <a class="mr-3">Signin</a>
-          </router-link>
-          <router-link :to="{ name: 'Signup' }">
-            <a>Sign up</a>
-          </router-link>
+          <div v-if="!isLogin">
+            <router-link :to="{ name: 'Signin' }">
+              <a class="mr-3">Sign in</a>
+            </router-link>
+            <router-link :to="{ name: 'Signup' }">
+              <a>Sign up</a>
+            </router-link>
+          </div>
+          <div v-if="isLogin">
+            <a class="mr-3" @click="onSignout">Sign out</a>
+          </div>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -30,9 +35,16 @@
 
 <script>
 import SearchBar from '@/components/SearchBar'
+import { mapState, mapActions } from 'vuex'
 export default {
   components: {
     SearchBar
+  },
+  computed: {
+    ...mapState(['isLogin'])
+  },
+  methods: {
+    ...mapActions(['onSignout'])
   }
 }
 </script>
