@@ -67,6 +67,7 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         article = articleMapper.findByIdx(article.getIdx());
         List<Comment> comment = commentMapper.findAllByArticleIdx(article.getIdx());
 
+
         rtnMap.put("article", article);
         rtnMap.put("comment", comment);
         return jsonFormatTransfer(rtnMap);
@@ -84,7 +85,8 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         if(article.getIdx() != null){   // 수정일 경우
             articleMapper.updateByArticle(article);
         } else {    // 등록일 경우
-            article.setIdx(articleMapper.insertByArticle(article));
+            articleMapper.insertByArticle(article);
+            article.setIdx(article.getIdx());
         }
         rtnMap.put("idx", article.getIdx());
         rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);

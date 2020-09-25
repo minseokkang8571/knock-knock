@@ -8,11 +8,11 @@ public interface ArticleMapper {
 
     Article findByIdx(Long idx);
 
-    long updateByArticle(Article article);
+    void updateByArticle(Article article);
 
-    long insertByArticle(Article article);
+    void insertByArticle(Article article);
 
-    int updateDelYn(Long idx);
+    void updateDelYn(Long idx);
 
     List<Article> findAllByDto(Article article);   // 게시글 목록 조회
 
