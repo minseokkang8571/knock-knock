@@ -6,7 +6,7 @@
     <select id="findAllByDto" parameterType="article" resultType="article">
         SELECT * FROM article
         ORDER BY idx DESC
-        LIMIT 5
+        LIMIT #{firstIndex},5
     </select>
 
     <select id="countByDto" parameterType="article" resultType="int">
