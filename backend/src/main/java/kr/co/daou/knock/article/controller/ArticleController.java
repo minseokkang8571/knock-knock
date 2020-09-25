@@ -22,8 +22,8 @@ public class ArticleController {
      */
     @ApiOperation(value = "게시글 리스트", response = List.class)
     @GetMapping("/list")
-    public String list(Model model, Article article) {
-        return articleService.list(model, article);
+    public String list(@RequestBody Article article) {
+        return articleService.list(article);
     }
 
     /**
@@ -32,18 +32,8 @@ public class ArticleController {
      */
     @ApiOperation(value = "게시글 상세", response = List.class)
     @GetMapping("/view")
-    public String view(Model model,@RequestBody Article article) {
-        return articleService.view(model, article);
-    }
-
-    /**
-     * FUNCTION :: 게시글 등록 / 수정 서식
-     * @return
-     */
-    @ApiOperation(value = "게시글 등록 / 수정 서식", response = List.class)
-    @GetMapping("/form")
-    public String form(Model model,@RequestBody Article article) {
-        return articleService.form(model, article);
+    public String view(@RequestBody Article article) {
+        return articleService.view(article);
     }
 
     /**

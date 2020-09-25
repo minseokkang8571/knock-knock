@@ -3,11 +3,14 @@
 <mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.CommentMapper">
 
 
-    <select id="findAllByArticleIdx" parameterType="Long" resultType="comment">
+    <select id="findAllByArticleIdx" parameterType="article" resultType="comment">
         SELECT * FROM comment
         WHERE article_idx = #{idx}
-        ORDER BY idx DESC
+        ORDER BY origin_idx DESC, group_ord ASC
+        LIMIT #{firstIndex},10
     </select>
-
+    <select id="countByDto" parameterType="article" resultType="int">
+        SELECT count(*) FROM comment
+    </select>
 
 </mapper>

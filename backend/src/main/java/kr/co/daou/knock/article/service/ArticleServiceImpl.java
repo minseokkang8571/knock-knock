@@ -24,52 +24,36 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
 
     /**
      * FUNCTION :: 게시글 리스트
-     * @param model
      * @param article
      * @return
      */
-    public String list(Model model, Article article) {
+    public String list(Article article) {
         Map<String, Object> rtnMap = returnMap();
         int totalCount = articleMapper.countByDto(article);
         setDefaultPaging(rtnMap, article, totalCount);
         List<Article> articleList = articleMapper.findAllByDto(article);
-
         rtnMap.put("articleList", articleList);
+        rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
         return jsonFormatTransfer(rtnMap);
-    }
-
-    /**
-     * FUNCTION :: 게시글 등록 / 수정 서식
-     * @param model
-     * @param article
-     * @return
-     */
-    public String form(Model model, Article article) {
-        Map<String, Object> rtnMap = returnMap();
-        if(article.getIdx() != null){
-            // LINE :: 수정인 경우 정보 가져와서 보내주기
-            article = articleMapper.findByIdx(article.getIdx());
-        }
-
-        rtnMap.put("article", article);
-        return jsonFormatTransfer(rtnMap);
-
     }
 
     /**
      * FUNCTION :: 게시글 상세
-     * @param model
      * @param article
      * @return
      */
-    public String view(Model model, Article article) {
+    public String view(Article article) {
         Map<String, Object> rtnMap = returnMap();
         article = articleMapper.findByIdx(article.getIdx());
-        List<Comment> comment = commentMapper.findAllByArticleIdx(article.getIdx());
+
+        int totalCount = commentMapper.countByDto(article);
+        setDefaultPaging(rtnMap, article, totalCount);
+        List<Comment> comment = commentMapper.findAllByArticleIdx(article);
 
 
         rtnMap.put("article", article);
         rtnMap.put("comment", comment);
+        rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
         return jsonFormatTransfer(rtnMap);
 
     }
