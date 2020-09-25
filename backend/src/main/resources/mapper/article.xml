@@ -18,16 +18,16 @@
         WHERE idx = #{idx}
     </select>
 
-    <update id="updateByArticle" parameterType="Long">
+    <update id="updateByArticle" parameterType="article">
         UPDATE article
         SET title = #{title},
             contents = #{contents}
         WHERE idx = #{idx}
     </update>
 
-    <insert id="insertByArticle" parameterType="Long">
+    <insert id="insertByArticle" parameterType="article">
         INSERT
-        INTO ARTICLE (
+        INTO article (
         user_idx
         , title
         , contents
@@ -37,7 +37,7 @@
         , #{title}
         , #{contents}
         )
-        <selectKey keyProperty="id" resultType="Long">
+        <selectKey keyProperty="idx" resultType="Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
     </insert>

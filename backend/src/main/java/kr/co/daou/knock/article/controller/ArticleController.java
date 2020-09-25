@@ -1,66 +1,71 @@
 package kr.co.daou.knock.article.controller;
 
-import kr.co.daou.knock.article.service.ArticleServiceImpl;
+import io.swagger.annotations.ApiOperation;
+import kr.co.daou.knock.article.service.ArticleService;
 import kr.co.daou.knock.common.db.mybatis.dto.Article;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping(value = "/article")
+import java.util.List;
+
+@RestController
+@RequestMapping("/article")
 public class ArticleController {
 
     @Autowired
-    private ArticleServiceImpl articleServiceImpl;
+    private ArticleService articleService;
 
     /**
      * FUNCTION :: 게시글 리스트
      * @return
      */
-    @RequestMapping(value = {"/list"}, method = RequestMethod.GET)
+    @ApiOperation(value = "게시글 리스트", response = List.class)
+    @GetMapping("/list")
     public String list(Model model, Article article) {
-        return articleServiceImpl.list(model, article);
+        return articleService.list(model, article);
     }
 
     /**
      * FUNCTION :: 게시글 상세
      * @return
      */
-    @RequestMapping(value = {"/view"}, method = RequestMethod.GET)
-    public String view(Model model, Article article) {
-        return articleServiceImpl.view(model, article);
+    @ApiOperation(value = "게시글 상세", response = List.class)
+    @GetMapping("/view")
+    public String view(Model model,@RequestBody Article article) {
+        return articleService.view(model, article);
     }
 
     /**
      * FUNCTION :: 게시글 등록 / 수정 서식
      * @return
      */
-    @RequestMapping(value = {"/form"}, method = RequestMethod.GET)
-    public String form(Model model, Article article) {
-        return articleServiceImpl.form(model, article);
+    @ApiOperation(value = "게시글 등록 / 수정 서식", response = List.class)
+    @GetMapping("/form")
+    public String form(Model model,@RequestBody Article article) {
+        return articleService.form(model, article);
     }
 
     /**
      * FUNCTION :: 게시글 등록
      * @return
      */
-    @RequestMapping(value = {"/save"}, method = RequestMethod.POST)
+    @ApiOperation(value = "게시글 등록", response = List.class)
+    @PostMapping("/save")
     @ResponseBody
-    public String save(Article article) {
-        return articleServiceImpl.save(article);
+    public String save(@RequestBody Article article) {
+        return articleService.save(article);
     }
 
     /**
      * FUNCTION :: 게시글 수정
      * @return
      */
-    @RequestMapping(value = {"/save"}, method = RequestMethod.PATCH)
+    @ApiOperation(value = "게시글 수정", response = List.class)
+    @PatchMapping("/save")
     @ResponseBody
-    public String modify(Article article) {
-        return articleServiceImpl.save(article);
+    public String modify(@RequestBody Article article) {
+        return articleService.save(article);
     }
 
     /**
@@ -68,10 +73,11 @@ public class ArticleController {
      * @param article
      * @return
      */
-    @RequestMapping(value = {"/delete"}, method = RequestMethod.DELETE)
+    @ApiOperation(value = "게시글 삭제", response = List.class)
+    @DeleteMapping("/delete")
     @ResponseBody
-    public String delete(Article article) {
-        return articleServiceImpl.delete(article);
+    public String delete(@RequestBody Article article) {
+        return articleService.delete(article);
     }
 
 
