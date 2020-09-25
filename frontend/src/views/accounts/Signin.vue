@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <b-form
+      @submit="onSubmit"
       id="input-form"
       class="container w-50 pt-5 pb-3 pl-3 pr-3 rounded border border-color-grey">
+
       <h2>Sign in</h2>
       <p>ID:</p>
       <b-form-input
@@ -11,7 +13,9 @@
         type="email"
         required
         placeholder="ID를 입력하세요."
+        autocomplete="off"
       ></b-form-input>
+
       <p>Password:</p>
       <b-form-input
         id="input-2"
@@ -24,14 +28,13 @@
       <button
         type="submit"
         class="btn btn-success w-100 mt-3"
-        @click="onSignin(form)"
       >Sign in</button>
     </b-form>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -42,7 +45,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['onSignin'])
+    // ...mapActions(['onSignin']),
+    onSubmit(evt) {
+      evt.preventDefault()
+      // alert(JSON.stringify(this.form))
+      this.$store.dispatch('onSignin', this.form)
+    }
   }
 }
 </script>
