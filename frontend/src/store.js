@@ -29,9 +29,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    onSignin({ commit }, loginObj) {
+    onSignin({ commit }, payload) {
       http
-        .post('/user/login', loginObj, null)
+        .post('/user/login', payload, null)
         .then((res) => {
           console.log(res)
           commit('SigninSuccess', res.data.userInfo)
@@ -47,6 +47,17 @@ export default new Vuex.Store({
     onSignout({ commit }) {
       commit('Signout')
       localStorage.removeItem('token')
+    },
+    onSignup({ commit }, payload) {
+      http
+        .post('/user/signup', payload, null)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      router.push({ name: 'ArticleList' })
     }
   }
 })

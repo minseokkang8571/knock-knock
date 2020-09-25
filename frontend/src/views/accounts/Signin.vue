@@ -7,24 +7,24 @@
       <p>ID:</p>
       <b-form-input
         id="input-1"
-        v-model="email"
+        v-model="form.email"
         type="email"
         required
         placeholder="ID를 입력하세요."
       ></b-form-input>
-
       <p>Password:</p>
       <b-form-input
         id="input-2"
-        v-model="password"
+        v-model="form.password"
         type="password"
         required
         placeholder="비밀번호를 입력하세요."
       ></b-form-input>
+
       <button
         type="submit"
         class="btn btn-success w-100 mt-3"
-        @click="onSignin({ email, password })"
+        @click="onSignin(form)"
       >Sign in</button>
     </b-form>
   </div>
@@ -35,8 +35,10 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
-      email: '',
-      password: ''
+      form: {
+        email: '',
+        password: ''
+      }
     }
   },
   methods: {
