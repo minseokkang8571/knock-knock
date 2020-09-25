@@ -42,7 +42,7 @@ public class UserController {
 	}
 	
 	@ApiOperation(value = "로그인", response = List.class)
-	@GetMapping("/login")
+	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> loginUser(@RequestBody LoginRequest loginRequest) {
 		// 회원정보를 가져와 jwt 생성하기  >> jwt 프론트로 전송
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -53,6 +53,7 @@ public class UserController {
 		if(userService.login(loginRequest) == 1) {
 			userDto = userService.getUserInfo(loginRequest);
 			map.put("status", true);
+			map.put("user", userDto);
 			// 토큰 생성 후 리턴
 		} else {
 			map.put("status", false);
