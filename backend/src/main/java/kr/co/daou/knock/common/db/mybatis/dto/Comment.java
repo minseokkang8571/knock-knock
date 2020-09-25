@@ -14,6 +14,9 @@ public class Comment extends Paging {
     private String contents;
     private String delYn;
     private Date regDate;
+    private Long originIdx;
+    private Long groupOrd;
+    private Long groupLayer;
 
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
