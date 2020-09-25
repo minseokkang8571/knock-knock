@@ -69,8 +69,6 @@ public class Paging {
         }
 
         this.setFinalPageNo(finalPage); // 마지막 페이지 번호
-        System.out.println("1 : "+pageNo+" 2: "+pageSize+"3 : "+firstIndex);
         this.firstIndex = (pageNo-1) * pageSize;
-        System.out.println("4 : "+firstIndex);
     }
 }
