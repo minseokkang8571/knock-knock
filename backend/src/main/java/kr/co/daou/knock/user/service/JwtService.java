@@ -68,12 +68,6 @@ public class JwtService {
 			claims = Jwts.parser()
 					.setSigningKey(this.generateKey())
 					.parseClaimsJws(jwt).getBody();
-			String sig = Jwts.parser()
-					.setSigningKey(this.generateKey())
-					.parseClaimsJws(jwt).getSignature();
-			JwsHeader header = Jwts.parser()
-					.setSigningKey(this.generateKey())
-					.parseClaimsJws(jwt).getHeader();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
