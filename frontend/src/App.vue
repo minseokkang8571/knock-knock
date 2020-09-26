@@ -24,7 +24,7 @@
             </router-link>
           </div>
           <div v-if="isLogin">
-            <a class="mr-3" @click="onSignout">Sign out</a>
+            <a class="mr-3 cursor-pointer" @click="onSignout">Sign out</a>
           </div>
         </b-navbar-nav>
       </b-collapse>
@@ -41,7 +41,7 @@ export default {
     SearchBar
   },
   computed: {
-    ...mapState(['isLogin'])
+    ...mapState(['isLogin', 'userInfo'])
   },
   methods: {
     ...mapActions(['onSignout'])
@@ -74,6 +74,10 @@ export default {
   /* margin: 1em; */
   overflow-y: scroll;
   box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
 
 #input-form p {

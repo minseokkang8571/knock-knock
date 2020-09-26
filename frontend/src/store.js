@@ -37,9 +37,9 @@ export default new Vuex.Store({
         .post('/user/login', payload, null)
         .then((res) => {
           console.log(res)
-          commit('SigninSuccess', res.data.userInfo)
+          commit('SigninSuccess', res.data.user)
 
-          const token = 'asdfasdfjlawejrljk'
+          const token = res.data.token
           localStorage.setItem('token', token)
         })
         .catch((err) => {
@@ -61,6 +61,20 @@ export default new Vuex.Store({
           console.log(err)
         })
       router.push({ name: 'ArticleList' })
+    },
+    getUserInfo({ commit }) {
+      const token = localStorage.getItem('token')
+      if (token) {
+        http
+          .post('/user/info', { token: token }, null)
+          .then((res) => {
+            console.log(res)
+            commit('SigninSuccess', res.data.user.user)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     },
     createArticle(context, payload) {
       http
