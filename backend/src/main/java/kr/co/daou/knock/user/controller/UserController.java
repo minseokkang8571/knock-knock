@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import kr.co.daou.knock.common.db.mybatis.dto.LoginRequest;
 import kr.co.daou.knock.common.db.mybatis.dto.SignUpRequest;
 import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
+import kr.co.daou.knock.user.service.JwtService;
 import kr.co.daou.knock.user.service.Sha256;
 import kr.co.daou.knock.user.service.UserService;
 
@@ -36,7 +36,6 @@ public class UserController {
 		}
 		String password = Sha256.encrypt(signUpRequest.getPassword());
 		signUpRequest.setPassword(password);
-		System.out.println(signUpRequest.toString());
 		userService.registerUser(signUpRequest);
 		return ResponseEntity.ok(true);
 	}
@@ -54,7 +53,13 @@ public class UserController {
 			userDto = userService.getUserInfo(loginRequest);
 			map.put("status", true);
 			map.put("user", userDto);
+
 			// 토큰 생성 후 리턴
+			JwtService jwt = new JwtService();
+			String token = jwt.createLoginToken(userDto);
+			map.put("token", token);
+			Object data = jwt.getUser(token);
+			map.put("data", data);
 		} else {
 			map.put("status", false);
 		}

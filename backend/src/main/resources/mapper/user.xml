@@ -20,7 +20,7 @@
 	</select>
 	
 	<select id="getUserInfo" parameterType="UserDto" resultType="UserDto">
-		SELECT * 
+		SELECT idx, email, name
 		FROM user
 		WHERE email = #{email} AND password = #{password}
 	</select>
