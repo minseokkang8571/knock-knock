@@ -15,6 +15,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public int registerUser(SignUpRequest signUpRequest) {
+		String password = Sha256.encrypt(signUpRequest.getPassword());
+		signUpRequest.setPassword(password);
 		return userMapper.registerUser(signUpRequest);
 	}
 
@@ -25,6 +27,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public int login(LoginRequest loginRequest) {
+		String password = Sha256.encrypt(loginRequest.getPassword());
+		loginRequest.setPassword(password);
 		return userMapper.login(loginRequest);
 	}
 
