@@ -2,19 +2,22 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import http from './util/http-common'
 import router from './router'
-// import http from '@/util/http-common'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     userInfo: null,
-    isLogin: false
+    isLogin: false,
+    articles: []
   },
   // state get
   getters: {
     isSignin(state) {
       return state.isLogin
+    },
+    articles(state) {
+      return state.articles
     }
   },
   // state 변경
@@ -58,6 +61,27 @@ export default new Vuex.Store({
           console.log(err)
         })
       router.push({ name: 'ArticleList' })
+    },
+    createArticle(context, payload) {
+      http
+        .post('/user/save', payload, null)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getArticle(context, counter) {
+      http
+        .get(`article/list?pageNo=${counter}`)
+        .then((res) => {
+          console.log(res)
+          this.state.articles = res.data.articleList
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 })
