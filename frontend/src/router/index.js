@@ -17,12 +17,13 @@ const routes = [
     component: ArticleList
   },
   {
-    path: '/articles/:articleId',
+    path: '/articles',
     name: 'ArticleDetail',
-    component: ArticleDetail
+    component: ArticleDetail,
+    props: true
   },
   {
-    path: '/articles/',
+    path: '/articles',
     name: 'ArticleCreate',
     component: ArticleCreate
   },

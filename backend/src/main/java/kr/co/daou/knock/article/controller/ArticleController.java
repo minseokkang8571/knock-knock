@@ -22,7 +22,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "게시글 리스트", response = List.class)
     @GetMapping("/list")
-    public String list(@RequestBody Article article) {
+    public String list(Article article) {
         return articleService.list(article);
     }
 
@@ -32,7 +32,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "게시글 상세", response = List.class)
     @GetMapping("/view")
-    public String view(@RequestBody Article article) {
+    public String view(Article article) {
         return articleService.view(article);
     }
 

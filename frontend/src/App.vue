@@ -86,6 +86,7 @@ export default {
   margin-top: 5px;
 }
 </style>
+
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
