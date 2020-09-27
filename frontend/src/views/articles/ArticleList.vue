@@ -1,24 +1,11 @@
 <template>
   <div class="container">
-    <!-- <article>
-      <div class="d-flex justify-content-between">
-        <h2 @click="toDetail(articleId)" class="common-title">{{ article.title }}</h2>
-        <span class="align-self-end">작성자 : ipsum</span>
-      </div>
-        <div class="text-left">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?
-        </div>
-      <div class="d-flex justify-content-start">
-        <button class="tag mt-1 mr-2">tag</button>
-        <button class="tag mt-1">tag</button>
-      </div>
-    </article> -->
     <article v-for="(article, idx) in articles" :key="idx">
       <div class="mt-5 d-flex justify-content-between">
-        <h2 @click="toDetail(article.idx)" class="common-title text-overflow">{{ article.title }}</h2>
+        <h2 @click="toDetail(article.idx)" class="common-title title-overflow">{{ article.title }}</h2>
         <span class="align-self-end">작성자 : ipsum {{ article.formatedRegDate }}</span>
       </div>
-        <p class="text-left text-overflow">{{ article.contents }}</p>
+        <p class="text-left content-overflow">{{ article.contents }}</p>
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
@@ -121,13 +108,5 @@ a {
 
 a:hover {
   color: #043a22;
-}
-
-.text-overflow {
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 1000px;
 }
 </style>

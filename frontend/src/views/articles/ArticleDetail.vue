@@ -2,7 +2,7 @@
   <div class="container">
     <article>
       <div class="d-flex justify-content-between">
-        <h2>{{ article.title }}</h2>
+        <h2 class="title-overflow">{{ article.title }}</h2>
         <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
       </div>
       <hr>
