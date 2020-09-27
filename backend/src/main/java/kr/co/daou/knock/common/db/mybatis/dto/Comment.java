@@ -18,6 +18,8 @@ public class Comment extends Paging {
     private Long groupOrd;
     private Long groupLayer;
 
+    private int commentLikeCount;
+
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if(this.regDate != null){

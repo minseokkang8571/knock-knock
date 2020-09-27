@@ -5,12 +5,14 @@
 
     <select id="findAllByDto" parameterType="article" resultType="article">
         SELECT * FROM article
+        WHERE del_yn = 'N'
         ORDER BY idx DESC
         LIMIT #{firstIndex},5
     </select>
 
     <select id="countByDto" parameterType="article" resultType="int">
         SELECT count(*) FROM article
+        WHERE del_yn = 'N'
     </select>
 
     <select id="findByIdx" parameterType="Long" resultType="article">
@@ -18,14 +20,14 @@
         WHERE idx = #{idx}
     </select>
 
-    <update id="updateByArticle" parameterType="article">
+    <update id="updateArticle" parameterType="article">
         UPDATE article
         SET title = #{title},
             contents = #{contents}
         WHERE idx = #{idx}
     </update>
 
-    <insert id="insertByArticle" parameterType="article">
+    <insert id="insertArticle" parameterType="article">
         INSERT
         INTO article (
         user_idx
@@ -48,4 +50,26 @@
         WHERE idx = #{idx}
     </update>
 
+    <insert id="insertArticleLike" parameterType="articleLike">
+        INSERT
+        INTO articleLike (
+        user_idx
+        , article_idx
+        )
+        VALUES (
+        #{userIdx}
+        , #{articleIdx}
+        )
+    </insert>
+    <delete id="deleteArticleLike" parameterType="articleLike">
+        DELETE FROM articleLike
+        WHERE  user_idx = #{userIdx}
+        AND article_idx = #{articleIdx}
+    </delete>
+
+    <select id="countByUserIdxAndCommentIdx" parameterType="articleLike" resultType="int">
+        SELECT count(*) FROM articleLike
+        WHERE user_idx = #{userIdx}
+        AND article_idx = #{articleIdx}
+    </select>
 </mapper>

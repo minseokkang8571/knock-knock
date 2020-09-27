@@ -4,13 +4,76 @@
 
 
     <select id="findAllByArticleIdx" parameterType="article" resultType="comment">
-        SELECT * FROM comment
-        WHERE article_idx = #{idx}
-        ORDER BY origin_idx DESC, group_ord ASC
+        SELECT cm.*,(SELECT COUNT(*) FROM commentLike cml WHERE cml.comment_idx=cm.idx) commentLikeCount
+        FROM comment cm
+        WHERE cm.article_idx = #{idx}
+        AND cm.del_yn = 'N'
+        ORDER BY cm.origin_idx DESC, cm.group_ord ASC
         LIMIT #{firstIndex},10
+
     </select>
     <select id="countByDto" parameterType="article" resultType="int">
         SELECT count(*) FROM comment
+        WHERE article_idx = #{idx}
+        AND del_yn = 'N'
     </select>
 
+    <select id="maxGroupOrd" parameterType="comment" resultType="int">
+        SELECT MAX(group_ord) FROM comment
+        WHERE origin_idx = #{originIdx}
+    </select>
+    <update id="updateComment" parameterType="comment">
+        UPDATE comment
+        SET contents = #{contents}
+        WHERE idx = #{idx}
+    </update>
+
+    <insert id="insertComment" parameterType="comment">
+        INSERT
+        INTO comment (
+        user_idx
+        , article_idx
+        , contents
+        , origin_idx
+        , group_ord
+        , group_layer
+        )
+        VALUES (
+        #{userIdx}
+        , #{articleIdx}
+        , #{contents}
+        , #{originIdx}
+        , #{groupOrd}
+        , #{groupLayer}
+        )
+    </insert>
+
+    <update id="updateDelYn" parameterType="Long">
+        UPDATE comment
+        SET del_yn = 'Y'
+        WHERE idx = #{idx}
+    </update>
+
+    <insert id="insertCommentLike" parameterType="commentLike">
+        INSERT
+        INTO commentLike (
+        user_idx
+        , comment_idx
+        )
+        VALUES (
+        #{userIdx}
+        , #{commentIdx}
+        )
+    </insert>
+    <delete id="deleteCommentLike" parameterType="commentLike">
+        DELETE FROM commentLike
+        WHERE  user_idx = #{userIdx}
+        AND comment_idx = #{commentIdx}
+    </delete>
+
+    <select id="countByUserIdxAndCommentIdx" parameterType="commentLike" resultType="int">
+        SELECT count(*) FROM commentLike
+        WHERE user_idx = #{userIdx}
+        AND comment_idx = #{commentIdx}
+    </select>
 </mapper>

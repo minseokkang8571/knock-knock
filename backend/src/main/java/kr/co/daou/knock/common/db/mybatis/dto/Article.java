@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Article extends Paging {
@@ -14,6 +15,7 @@ public class Article extends Paging {
     private String contents;
     private String delYn;
     private Date regDate;
+    private List<ArticleHashtag> articleHashtagList;
 
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
