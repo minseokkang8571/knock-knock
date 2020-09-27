@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     userInfo: null,
     isLogin: false,
-    articles: []
+    articles: [],
+    chats: []
   },
   // state get
   getters: {
@@ -92,6 +93,16 @@ export default new Vuex.Store({
         .then((res) => {
           console.log(res)
           this.state.articles = res.data.articleList
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    getChat(context, roomNumber) {
+      http
+        .get(`chat/list/${roomNumber}`)
+        .then((res) => {
+          this.state.chats = res.data.chatList
         })
         .catch((err) => {
           console.log(err)

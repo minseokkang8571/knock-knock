@@ -34,10 +34,11 @@ Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import { mapGetters } from 'vuex'
+import http from '@/util/http-common'
 export default {
   data() {
     return {
-      roomNumber: this.$route.params.roomNumber,
+      roomNumber: 1,
       content: null,
       chatList: []
     }
@@ -51,7 +52,23 @@ export default {
       this.getChat()
     },
     getChat() {
-      this.$store.dispatch('getChat', this.roomNumber)
+      // this.$store.dispatch('getChat', this.roomNumber)
+      const config = {}
+      console.log(localStorage.getItem('token'))
+      if (localStorage.getItem('token')) {
+        config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+      http
+        .get('chat/getChat/' + this.roomNumber, config)
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     connect() {
       const serverURL = 'http://localhost:4000/chat'

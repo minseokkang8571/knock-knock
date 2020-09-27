@@ -21,7 +21,7 @@ import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
 
 @Service
 public class JwtService {
-	private static final String ENCRYPT_STRING = "daouinternknocknock"; // 비밀키 설정
+	private static final String ENCRYPT_STRING = "intern"; // 비밀키 설정
 	private static final String DATA_KEY = "user";
 	
 	@Autowired

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.ReviewMapper">
+	
+	<insert id="createRoom" useGeneratedKeys="true" keyProperty="idx" parameterType="Room">
+		INSERT INTO room(user_idx, article_idx, content)
+		VALUES (#{user_idx}, #{article_idx}, #{content})
+	</insert>
+
+	<insert id="createReview" parameterType="Review">
+		INSERT INTO review(room_idx, code)
+		VALUES (#{room_idx}, #{code})
+	</insert>
+</mapper>

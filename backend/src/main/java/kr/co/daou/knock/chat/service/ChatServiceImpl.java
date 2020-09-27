@@ -12,7 +12,7 @@ import kr.co.daou.knock.common.db.mybatis.mapper.ChatMapper;
 public class ChatServiceImpl implements ChatService{
 
 	@Autowired
-	ChatMapper chatMapper;
+	private ChatMapper chatMapper;
 	
 	@Override
 	public boolean writeChat(Msg msg) {
