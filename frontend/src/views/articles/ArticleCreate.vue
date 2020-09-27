@@ -7,7 +7,7 @@
         <p>Title:</p>
         <b-form-input
           id="input-1"
-          v-model="form.id"
+          v-model="form.title"
           type="text"
           required
           placeholder="제목을 입력하세요."
@@ -17,7 +17,7 @@
         <p>Content:</p>
         <b-form-textarea
           id="input-2"
-          v-model="form.content"
+          v-model="form.contents"
           type="textarea"
           required
           placeholder="이슈내용을 입력하세요."

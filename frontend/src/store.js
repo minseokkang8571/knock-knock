@@ -39,6 +39,7 @@ export default new Vuex.Store({
         .then((res) => {
           console.log(res)
           commit('SigninSuccess', res.data.user)
+          router.push({ name: 'ArticleList' })
 
           const token = res.data.token
           localStorage.setItem('token', token)
@@ -46,7 +47,6 @@ export default new Vuex.Store({
         .catch((err) => {
           console.log(err)
         })
-      router.push({ name: 'ArticleList' })
     },
     onSignout({ commit }) {
       commit('Signout')
@@ -57,11 +57,11 @@ export default new Vuex.Store({
         .post('/user/signup', payload, null)
         .then((res) => {
           console.log(res)
+          router.push({ name: 'ArticleList' })
         })
         .catch((err) => {
           console.log(err)
         })
-      router.push({ name: 'ArticleList' })
     },
     getUserInfo({ commit }) {
       const token = localStorage.getItem('token')
@@ -78,21 +78,13 @@ export default new Vuex.Store({
       }
     },
     createArticle(context, payload) {
+      payload.userIdx = this.state.userInfo.idx
       http
-        .post('/user/save', payload, null)
+        .post('/article/save', payload, null)
         .then((res) => {
           console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    getArticle(context, counter) {
-      http
-        .get(`article/list?pageNo=${counter}`)
-        .then((res) => {
-          console.log(res)
-          this.state.articles = res.data.articleList
+          // router.push({ name: 'ArticleList' })
+          router.push(`articles?articleIdx=${res.data.idx}`)
         })
         .catch((err) => {
           console.log(err)

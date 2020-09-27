@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store'
 import ArticleList from '@/views/articles/ArticleList'
 import ArticleDetail from '@/views/articles/ArticleDetail'
 import ArticleCreate from '@/views/articles/ArticleCreate'
@@ -9,6 +10,15 @@ import ReviewList from '@/views/reviews/ReviewList'
 import ReviewDetail from '@/views/reviews/ReviewDetail'
 
 Vue.use(VueRouter)
+
+const onlyAuthUser = (to, from, next) => {
+  if (store.state.isLogin === true || localStorage.getItem('token') !== null) {
+    next()
+  } else {
+    alert('로그인을 해야합니다.')
+    next('/signin')
+  }
+}
 
 const routes = [
   {
@@ -25,7 +35,8 @@ const routes = [
   {
     path: '/articles',
     name: 'ArticleCreate',
-    component: ArticleCreate
+    component: ArticleCreate,
+    beforeEnter: onlyAuthUser
   },
   {
     path: '/signin',

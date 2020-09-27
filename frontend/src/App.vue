@@ -80,6 +80,25 @@ export default {
   cursor: pointer;
 }
 
+.title-overflow {
+  display: inline-block;
+  text-align: left;
+  overflow: hidden;
+  white-space: normal;
+  width: 100%;
+  line-height: 1.2;
+}
+
+.content-overflow {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  width: 100%;
+  line-height: 1.2;
+  height: 3.6em;
+}
+
 #input-form p {
   text-align: left;
   margin-bottom: 0px;
