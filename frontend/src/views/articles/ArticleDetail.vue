@@ -39,17 +39,20 @@ export default {
   },
   methods: {
     getArticle() {
-      http
-        .get(`article/view?idx=${this.$route.query.articleIdx}`)
-        .then((res) => {
-          console.log(res)
-          this.article.content = res.data.article.contents
-          this.article.title = res.data.article.title
-          this.article.regDate = res.data.article.formatedRegDate
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      setTimeout(() => {
+        http
+          .get(`article/view?idx=${this.$route.query.articleIdx}`)
+          .then((res) => {
+            console.log(res)
+
+            this.article.content = res.data.article.contents
+            this.article.title = res.data.article.title
+            this.article.regDate = res.data.article.formatedRegDate
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }, 400)
     }
   },
   mounted() {

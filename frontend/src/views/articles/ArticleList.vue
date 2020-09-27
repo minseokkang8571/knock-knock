@@ -15,7 +15,7 @@
     </article> -->
     <article v-for="(article, idx) in articles" :key="idx">
       <div class="mt-5 d-flex justify-content-between">
-        <h2 @click="toDetail(article.idx)" class="common-title">{{ article.title }} {{ article.idx }}</h2>
+        <h2 @click="toDetail(article.idx)" class="common-title">{{ article.title }}</h2>
         <span class="align-self-end">작성자 : ipsum {{ article.formatedRegDate }}</span>
       </div>
         <p class="text-left">{{ article.contents }}</p>
@@ -62,7 +62,7 @@ export default {
   components: {
   },
   methods: {
-    getArticle(counter) {
+    getArticleList(counter) {
       http
         .get(`article/list?pageNo=${counter}`)
         .then((res) => {
@@ -105,13 +105,12 @@ export default {
       const articleInPage = this.articleInPage
       for (var i = 1; i < articleInPage; i++) {
         this.pageIdx.push(i)
-        console.log(i)
       }
     }
   },
   mounted() {
     this.setPageIdx()
-    this.getArticle(1)
+    this.getArticleList(1)
   },
   computed: {
     // ...mapState(['articles'])
