@@ -24,7 +24,7 @@ public class StompController {
 	
 	@MessageMapping("/receive/{roomNumber}")
 	@SendTo("/send/{roomNumber}")
-	public Msg getChat(@RequestBody Msg msg, @PathVariable("roomNumber") String roomNumber) throws Exception {
+	public Msg stompChat(@RequestBody Msg msg, @PathVariable("roomNumber") String roomNumber) throws Exception {
 		System.out.println("sendmsg StompController >>>>>>"+msg);
 		System.out.println("roomNumber >>>>>>>>>>>>>>>>>>>>>>>>>> "+roomNumber);
 		chatService.writeChat(msg);

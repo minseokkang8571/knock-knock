@@ -31,8 +31,80 @@ Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC
 </template>
 
 <script>
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
+import { mapGetters } from 'vuex'
+import http from '@/util/http-common'
 export default {
-
+  data() {
+    return {
+      roomNumber: 1,
+      content: null,
+      chatList: []
+    }
+  },
+  computed: {
+    ...mapGetters(['loginInfo'])
+  },
+  methods: {
+    init() {
+      this.connect()
+      this.getChat()
+    },
+    getChat() {
+      // this.$store.dispatch('getChat', this.roomNumber)
+      const config = {}
+      console.log(localStorage.getItem('token'))
+      if (localStorage.getItem('token')) {
+        config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+      http
+        .get('chat/getChat/' + this.roomNumber, config)
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    connect() {
+      const serverURL = 'http://localhost:4000/chat'
+      const socket = new SockJS(serverURL)
+      this.stompClient = Stomp.over(socket)
+      this.stompClient.connect(
+        {},
+        frame => {
+          this.connected = true
+          console.log(frame)
+          this.stompClient.subscribe('/send/' + this.roomNumber, res => {
+            this.chatList.push(JSON.parse(res.body))
+          })
+        }
+        // error => {
+        //   this.connected = false
+        // }
+      )
+    },
+    send() {
+      var option = {
+        roomNumber: this.roomNumber,
+        id: this.loginInfo.id,
+        content: this.content,
+        name: this.loginInfo.name
+      }
+      this.stompClient.send(
+        'receive' + this.roomNumber,
+        JSON.stringify(option),
+        {}
+      )
+    }
+  },
+  mounted() {
+    this.init()
+  }
 }
 </script>
 

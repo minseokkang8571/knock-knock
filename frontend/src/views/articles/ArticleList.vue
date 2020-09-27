@@ -1,24 +1,11 @@
 <template>
   <div class="container">
-    <!-- <article>
-      <div class="d-flex justify-content-between">
-        <h2 @click="toDetail(articleId)" class="common-title">{{ article.title }}</h2>
-        <span class="align-self-end">작성자 : ipsum</span>
-      </div>
-        <div class="text-left">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?
-        </div>
-      <div class="d-flex justify-content-start">
-        <button class="tag mt-1 mr-2">tag</button>
-        <button class="tag mt-1">tag</button>
-      </div>
-    </article> -->
     <article v-for="(article, idx) in articles" :key="idx">
       <div class="mt-5 d-flex justify-content-between">
-        <h2 @click="toDetail(article.idx)" class="common-title">{{ article.title }} {{ article.idx }}</h2>
+        <h2 @click="toDetail(article.idx)" class="common-title title-overflow">{{ article.title }}</h2>
         <span class="align-self-end">작성자 : ipsum {{ article.formatedRegDate }}</span>
       </div>
-        <p class="text-left">{{ article.contents }}</p>
+        <p class="text-left content-overflow">{{ article.contents }}</p>
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
@@ -28,7 +15,7 @@
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item">
-          <a class="page-link" @click="toPrevious" aria-label="Previous">
+          <a class="page-link cursor-pointer" @click="toPrevious" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
@@ -36,7 +23,7 @@
           <a class="page-link" v-if="endPageNo >= idx" @click="onPaging(idx)" href="#">{{ idx }}</a>
         </li>
         <li class="page-item">
-          <a class="page-link" @click="toNext" aria-label="Next">
+          <a class="page-link cursor-pointer" @click="toNext" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -46,6 +33,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 // import { mapState } from 'vuex'
 import http from '@/util/http-common'
 export default {
@@ -59,10 +47,8 @@ export default {
       endPageNo: 0
     }
   },
-  components: {
-  },
   methods: {
-    getArticle(counter) {
+    getArticleList(counter) {
       http
         .get(`article/list?pageNo=${counter}`)
         .then((res) => {
@@ -79,13 +65,13 @@ export default {
       this.$router.push(`articles?articleIdx=${idx}`)
     },
     onPaging(idx) {
-      this.getArticle(idx)
+      this.getArticleList(idx)
     },
     toNext() {
       console.log('toNext')
       if (this.pageIdx[0] + this.articleInPage < this.endPageNo) {
         for (var i = 0; i < this.pageIdx.length; i++) {
-          this.pageIdx[i] += this.articleInPage
+          Vue.set(this.pageIdx, i, this.pageIdx[i] + this.articleInPage)
         }
       } else {
         alert('End')
@@ -95,7 +81,7 @@ export default {
       console.log('toPrevious')
       if (this.pageIdx[0] - this.articleInPage > 0) {
         for (var i = 0; i < this.pageIdx.length; i++) {
-          this.pageIdx[i] -= this.articleInPage
+          Vue.set(this.pageIdx, i, this.pageIdx[i] - this.articleInPage)
         }
       } else {
         alert('End')
@@ -103,18 +89,14 @@ export default {
     },
     setPageIdx() {
       const articleInPage = this.articleInPage
-      for (var i = 1; i < articleInPage; i++) {
+      for (var i = 1; i <= articleInPage; i++) {
         this.pageIdx.push(i)
-        console.log(i)
       }
     }
   },
   mounted() {
     this.setPageIdx()
-    this.getArticle(1)
-  },
-  computed: {
-    // ...mapState(['articles'])
+    this.getArticleList(1)
   }
 }
 </script>

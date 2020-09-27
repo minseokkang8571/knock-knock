@@ -2,7 +2,7 @@
   <div class="container">
     <article>
       <div class="d-flex justify-content-between">
-        <h2>{{ article.title }}</h2>
+        <h2 class="title-overflow">{{ article.title }}</h2>
         <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
       </div>
       <hr>
@@ -39,17 +39,20 @@ export default {
   },
   methods: {
     getArticle() {
-      http
-        .get(`article/view?idx=${this.$route.query.articleIdx}`)
-        .then((res) => {
-          console.log(res)
-          this.article.content = res.data.article.contents
-          this.article.title = res.data.article.title
-          this.article.regDate = res.data.article.formatedRegDate
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      setTimeout(() => {
+        http
+          .get(`article/view?idx=${this.$route.query.articleIdx}`)
+          .then((res) => {
+            console.log(res)
+
+            this.article.content = res.data.article.contents
+            this.article.title = res.data.article.title
+            this.article.regDate = res.data.article.formatedRegDate
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }, 400)
     }
   },
   mounted() {

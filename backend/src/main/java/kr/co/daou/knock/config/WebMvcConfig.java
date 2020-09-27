@@ -19,7 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private static final String[] EXCLUDE_PATHS = {
     		"/user/**",
             //TODO :: 테스트용(추후 삭제)
-            "/article/**"
+            "/article/**","/review/**"
     };
 
     @Override
