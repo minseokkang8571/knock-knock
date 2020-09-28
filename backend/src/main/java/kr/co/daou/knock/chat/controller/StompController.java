@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import kr.co.daou.knock.chat.service.ChatService;
-import kr.co.daou.knock.common.db.mybatis.dto.Msg;
+import kr.co.daou.knock.common.db.mybatis.dto.Chat;
 
 
 @Controller
@@ -22,13 +22,11 @@ public class StompController {
 	@Autowired
 	ChatService chatService;
 	
-	@MessageMapping("/receive/{roomNumber}")
-	@SendTo("/send/{roomNumber}")
-	public Msg stompChat(@RequestBody Msg msg, @PathVariable("roomNumber") String roomNumber) throws Exception {
-		System.out.println("sendmsg StompController >>>>>>"+msg);
-		System.out.println("roomNumber >>>>>>>>>>>>>>>>>>>>>>>>>> "+roomNumber);
-		chatService.writeChat(msg);
-		return msg;
+	@MessageMapping("/receive/{roomIdx}")
+	@SendTo("/send/{roomIdx}")
+	public Chat stompChat(@RequestBody Chat chat, @PathVariable("roomIdx") long roomIdx) throws Exception {
+		chatService.writeChat(chat);
+		return chat;
 	}
 	
 	
