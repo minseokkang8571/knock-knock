@@ -13,7 +13,11 @@
 	</update>
 	
 	<select id="getRoom" resultType="Room">
-		SELECT * FROM room where DEL_YN = 'N';
+		SELECT a.*, b.name, c.title 
+		FROM room AS a INNER JOIN user AS b 
+		ON (a.user_idx = b.idx) INNER JOIN article AS c 
+		ON (a.article_idx = c.idx)
+		WHERE a.DEL_YN = 'N'
 	</select>
 	
 	<select id="getCode" resultType="Code">
