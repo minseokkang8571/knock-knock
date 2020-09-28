@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -42,8 +43,14 @@ export default {
   },
   methods: {
     onSubmit() {
+      if (this.currentArticleIdx !== null) {
+        this.form.idx = this.currentArticleIdx
+      }
       this.$store.dispatch('createArticle', this.form)
     }
+  },
+  computed: {
+    ...mapState(['currentArticleIdx'])
   }
 }
 </script>

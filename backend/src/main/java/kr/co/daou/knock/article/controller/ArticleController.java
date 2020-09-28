@@ -80,7 +80,7 @@ public class ArticleController {
     @ApiOperation(value = "게시글 삭제", response = List.class)
     @DeleteMapping("/delete")
     @ResponseBody
-    public String delete(@RequestBody Article article) {
+    public String delete(Article article) {
         return articleService.delete(article);
     }
 

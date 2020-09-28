@@ -8,9 +8,7 @@
       </router-link>
       <SearchBar />
       <b-collapse id="nav-text-collapse" is-nav class="d-flex justify-content-end">
-        <router-link :to="{ name: 'ArticleCreate' }">
-          <b-button variant="outline-success" class="my-2 my-sm-0 mr-3">New issue</b-button>
-        </router-link>
+        <b-button @click="onCreate" variant="outline-success" class="my-2 my-sm-0 mr-3">New issue</b-button>
         <b-navbar-nav>
           <router-link :to="{ name: 'ReviewList' }">
             <a class="mr-3">Review</a>
@@ -29,7 +27,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -44,7 +42,14 @@ export default {
     ...mapState(['isLogin', 'userInfo'])
   },
   methods: {
-    ...mapActions(['onSignout'])
+    ...mapActions(['onSignout']),
+    onCreate() {
+      this.$store.commit('setCurrentArticle', null)
+      if (this.$route.name !== 'ArticleCreate') {
+        this.$router.push({ name: 'ArticleCreate' })
+        console.log('##')
+      }
+    }
   }
 }
 </script>
