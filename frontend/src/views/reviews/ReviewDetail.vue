@@ -6,7 +6,33 @@
         <h4>ReviewPart</h4>ion and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains."
       </div>
       <div class="col-4 scroll-area">
-        <h4>ChatPart</h4>
+        <b-row v-for="list in chatList" v-bind:key="list.idx">
+          <b-col cols="2" class="text-align:right" v-if="userinfo.idx == list.userIdx">
+            <div class="outgoing-chats-msg">
+              <p>{{ list.contents }}</p>
+            </div>
+          </b-col>
+          <b-col v-if="userinfo.idx != list.userIdx">
+            <h5>{{ list.name }}</h5>
+            <div class="received-msg-inbox">
+              <p>{{ list.contents }}</p>
+            </div>
+          </b-col>
+        </b-row>
+        <footer absolute class="msg-bottom">
+          <b-col cols="10">
+            <input
+              type="text"
+              class="form-control"
+              id="chatting"
+              v-model="chatting"
+              placeholder="메세지를 입력해주세요."
+            />
+          </b-col>
+          <b-col cols="2" class="hover" @click="send()" @keypress.enter="send()"
+            >전송</b-col
+          >
+        </footer>
       </div>
     </div>
     <div class="d-flex justify-content-end mt-2">

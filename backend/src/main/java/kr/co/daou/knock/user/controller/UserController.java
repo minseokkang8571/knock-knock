@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
 import kr.co.daou.knock.user.service.JwtService;
 import kr.co.daou.knock.user.service.UserService;
 
-
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 @RequestMapping("/user")
 public class UserController {

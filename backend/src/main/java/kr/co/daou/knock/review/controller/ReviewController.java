@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import kr.co.daou.knock.common.db.mybatis.dto.Review;
 import kr.co.daou.knock.common.db.mybatis.dto.Room;
 import kr.co.daou.knock.review.service.ReviewService;
 
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
