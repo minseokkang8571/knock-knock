@@ -54,7 +54,7 @@ const routes = [
     component: ReviewList
   },
   {
-    path: '/reviews/:reviewId',
+    path: '/reviews',
     name: 'ReviewDetail',
     component: ReviewDetail
   }

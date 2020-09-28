@@ -1,19 +1,19 @@
 <template>
   <div class="container">
-    <article>
+    <article v-for="(room, idx) in rooms" :key="idx">
       <div class="d-flex justify-content-between">
-        <h2 @click="toDetail(reviewId)" class="common-title">import Login from '@/views/Login.vue'</h2>
-        <span class="align-self-end">작성자 : ipsum</span>
+        <h2 @click="toDetail(room.idx)" class="common-title">{{ room.title }}</h2>
+        <span class="align-self-end">작성자 : {{ room.name }}</span>
       </div>
         <div class="text-left">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?
+          {{ room.contents }}
         </div>
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
       </div>
     </article>
-    <article>
+    <!-- <article>
       <div class="mt-5 d-flex justify-content-between">
         <h2>import Login from '@/views/Login.vue'</h2>
         <span class="align-self-end">작성자 : ipsum</span>
@@ -25,7 +25,7 @@
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
       </div>
-    </article>
+    </article> -->
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item">
@@ -47,19 +47,37 @@
 </template>
 
 <script>
+import http from '@/util/http-common'
 export default {
   name: 'ReviewList',
   data() {
     return {
-      reviewId: 1
+      rooms: []
     }
   },
   components: {
   },
   methods: {
-    toDetail(id) {
-      this.$router.push(`/reviews/${this.reviewId}`)
+    init() {
+      this.getRoomList()
+    },
+    getRoomList() {
+      http
+        .get('review/getRoom')
+        .then((res) => {
+          console.log(res)
+          this.rooms = res.data.roomList
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    toDetail(roomIdx) {
+      this.$router.push(`/reviews?roomIdx=${roomIdx}`)
     }
+  },
+  mounted() {
+    this.init()
   }
 }
 </script>

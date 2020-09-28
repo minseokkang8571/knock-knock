@@ -9,4 +9,7 @@ public class Room {
 	private long articleIdx;
 	private String contents;
 	private String delYn;
+	
+	private String name; // userName
+	private String title; // articleTitle
 }
