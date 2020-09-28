@@ -3,12 +3,45 @@
 <mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.ReviewMapper">
 	
 	<insert id="createRoom" useGeneratedKeys="true" keyProperty="idx" parameterType="Room">
-		INSERT INTO room(user_idx, article_idx, content)
-		VALUES (#{user_idx}, #{article_idx}, #{content})
+		INSERT INTO room(user_idx, article_idx, CONTENTS)
+		VALUES (#{userIdx}, #{articleIdx}, #{contents})
 	</insert>
-
-	<insert id="createReview" parameterType="Review">
-		INSERT INTO review(room_idx, code)
-		VALUES (#{room_idx}, #{code})
+	
+	<update id="copyCode" parameterType="Long">
+		UPDATE code set REVIEW_CONTENTS = ORIGIN_CONTENTS
+		WHERE article_idx = #{articleIdx}
+	</update>
+	
+	<select id="getRoom" resultType="Room">
+		SELECT * FROM room where DEL_YN = 'N';
+	</select>
+	
+	<select id="getCode" resultType="Code">
+		SELECT *
+		FROM code
+		where article_idx = #{articleIdx}
+	</select>
+	
+	<select id="enterRoom" resultType="Code">
+		SELECT *
+		FROM code
+		where article_idx = (SELECT article_idx 
+							FROM room 
+							WHERE idx = #{roomIdx})
+	</select>
+	
+	<update id="modifyCode" parameterType="Review">
+		UPDATE code set REVIEW_CONTENTS = #{contents}
+		WHERE idx = #{codeIdx}
+	</update>
+	
+	<insert id="reviewLog" parameterType="Review">
+		INSERT INTO review(room_idx, code_idx, user_idx, CONTENTS)
+		VALUES (#{roomIdx}, #{codeIdx}, #{userIdx}, #{contents})
 	</insert>
+	
+	<update id="saveCode" parameterType="Long">
+		UPDATE room set DEL_YN = 'Y'
+		WHERE idx = #{roomIdx}
+	</update>
 </mapper>

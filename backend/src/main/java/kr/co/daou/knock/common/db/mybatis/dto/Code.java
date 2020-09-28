@@ -3,10 +3,9 @@ package kr.co.daou.knock.common.db.mybatis.dto;
 import lombok.Data;
 
 @Data
-public class Room {
+public class Code {
 	private long idx;
-	private long userIdx;
 	private long articleIdx;
-	private String contents;
-	private String delYn;
+	private String originContents;
+	private String reviewContents;
 }

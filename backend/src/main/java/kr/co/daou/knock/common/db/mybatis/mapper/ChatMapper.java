@@ -1,10 +1,11 @@
 package kr.co.daou.knock.common.db.mybatis.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
-import kr.co.daou.knock.common.db.mybatis.dto.Msg;
+import kr.co.daou.knock.common.db.mybatis.dto.Chat;
 
 public interface ChatMapper {
-	int writeChat(Msg msg);
-	List<Msg> getChat(long roomNumber);
+	int writeChat(Chat chat);
+	List<HashMap<String, Object>> getChat(long roomIdx);
 }
