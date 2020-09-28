@@ -1,12 +1,13 @@
 package kr.co.daou.knock.common.db.mybatis.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
-public class Room {
-	private long idx;
+public class Chat {
+	private long roomIdx;
 	private long userIdx;
-	private long articleIdx;
 	private String contents;
-	private String delYn;
+	private Date date;
 }

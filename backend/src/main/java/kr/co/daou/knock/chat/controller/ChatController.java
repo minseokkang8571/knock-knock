@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
 import kr.co.daou.knock.chat.service.ChatService;
-import kr.co.daou.knock.common.db.mybatis.dto.Msg;
 
 @RestController
 @RequestMapping("/chat")
@@ -20,11 +19,11 @@ public class ChatController {
 	@Autowired
 	private ChatService chatService;
 	
-	@ApiOperation(value="채팅 리스트", response = List.class)
-	@GetMapping("/getChat/{roomNumber}")
-	public ResponseEntity<List<Msg>> getChat(@PathVariable("roomNumber") long roomNumber) {
-		List<Msg> list = chatService.getChat(roomNumber);
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<List<Msg>>(list, status);
-	}
+//	@ApiOperation(value="채팅 리스트", response = List.class)
+//	@GetMapping("/getChat/{roomNumber}")
+//	public ResponseEntity<List<Msg>> getChat(@PathVariable("roomNumber") long roomNumber) {
+//		List<Msg> list = chatService.getChat(roomNumber);
+//		HttpStatus status = HttpStatus.ACCEPTED;
+//		return new ResponseEntity<List<Msg>>(list, status);
+//	}
 }
