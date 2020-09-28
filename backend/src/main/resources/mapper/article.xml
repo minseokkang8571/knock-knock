@@ -4,20 +4,30 @@
 
 
     <select id="findAllByDto" parameterType="article" resultType="article">
-        SELECT * FROM article
-        WHERE del_yn = 'N'
-        ORDER BY idx DESC
+        SELECT ac.*,u.name FROM article ac INNER JOIN user u ON ac.user_idx = u.idx
+        <if test="searchTag != '' and searchTag != null">
+            INNER JOIN articleHashtag acht ON acht.article_idx = ac.idx
+            INNER JOIN hashtag ht ON ht.idx = acht.hashtag_idx and ht.tag = #{searchTag}
+        </if>
+        WHERE ac.del_yn = 'N'
+        <if test="searchText != '' and searchText != null">
+            AND (ac.title LIKE concat('%', #{searchText}, '%')
+            OR ac.contents LIKE concat('%', #{searchText}, '%')
+            OR u.name LIKE concat('%', #{searchText}, '%')
+            )
+        </if>
+        ORDER BY ac.idx DESC
         LIMIT #{firstIndex},5
     </select>
 
     <select id="countByDto" parameterType="article" resultType="int">
-        SELECT count(*) FROM article
-        WHERE del_yn = 'N'
+        SELECT count(*) FROM article ac INNER JOIN user u ON ac.user_idx = u.idx
+        WHERE ac.del_yn = 'N'
     </select>
 
     <select id="findByIdx" parameterType="Long" resultType="article">
-        SELECT * FROM article
-        WHERE idx = #{idx}
+        SELECT ac.*,u.name FROM article ac INNER JOIN user u ON ac.user_idx = u.idx
+        WHERE ac.idx = #{idx}
     </select>
 
     <update id="updateArticle" parameterType="article">
@@ -67,7 +77,7 @@
         AND article_idx = #{articleIdx}
     </delete>
 
-    <select id="countByUserIdxAndCommentIdx" parameterType="articleLike" resultType="int">
+    <select id="countByUserIdxAndArticleIdx" parameterType="articleLike" resultType="int">
         SELECT count(*) FROM articleLike
         WHERE user_idx = #{userIdx}
         AND article_idx = #{articleIdx}

@@ -98,6 +98,7 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         } else {    // 등록일 경우
             articleMapper.insertArticle(article);
             article.setIdx(article.getIdx());
+            //TODO :: 코드테이블에 데이터 등록해야함
             //해시태그 추출
             Hashtag hashtag = new Hashtag();
             hashtag.setTag(article.getContents().substring(article.getContents().indexOf("```")+1).split(" ")[0]);
@@ -180,6 +181,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
             commentMapper.updateComment(comment);
         } else {    // 등록일 경우
             comment.setGroupLayer(comment.getGroupLayer()+1L);
+            //TODO ::
+            // 로직 - 답글의 경우 group_layer = -1, 재답글의 경우 group_layer = '클릭한 답글의 group_layer'
+            // 앞단에서 줘야하는값 - originIdx, groupLayer
+
             comment.setGroupOrd(commentMapper.maxGroupOrd(comment)+1L);
             commentMapper.insertComment(comment);
         }

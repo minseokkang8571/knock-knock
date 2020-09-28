@@ -4,8 +4,8 @@
 
 
     <select id="findAllByArticleIdx" parameterType="article" resultType="comment">
-        SELECT cm.*,(SELECT COUNT(*) FROM commentLike cml WHERE cml.comment_idx=cm.idx) commentLikeCount
-        FROM comment cm
+        SELECT cm.*,u.name,(SELECT COUNT(*) FROM commentLike cml WHERE cml.comment_idx=cm.idx) commentLikeCount
+        FROM comment cm INNER JOIN user u ON cm.user_idx = u.idx
         WHERE cm.article_idx = #{idx}
         AND cm.del_yn = 'N'
         ORDER BY cm.origin_idx DESC, cm.group_ord ASC
@@ -13,9 +13,10 @@
 
     </select>
     <select id="countByDto" parameterType="article" resultType="int">
-        SELECT count(*) FROM comment
-        WHERE article_idx = #{idx}
-        AND del_yn = 'N'
+        SELECT count(*)
+        FROM comment cm INNER JOIN user u ON cm.user_idx = u.idx
+        WHERE cm.article_idx = #{idx}
+        AND cm.del_yn = 'N'
     </select>
 
     <select id="maxGroupOrd" parameterType="comment" resultType="int">

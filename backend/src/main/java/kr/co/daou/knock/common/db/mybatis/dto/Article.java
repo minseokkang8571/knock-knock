@@ -17,6 +17,8 @@ public class Article extends Paging {
     private Date regDate;
     private List<ArticleHashtag> articleHashtagList;
 
+    private String name;
+
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if(this.regDate != null){
