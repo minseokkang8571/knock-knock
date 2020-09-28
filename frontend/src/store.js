@@ -7,10 +7,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userInfo: null,
+    userInfo: {
+      idx: 0,
+      name: null,
+      email: null
+    },
     isLogin: false,
     articles: [],
-    chats: []
+    chats: [],
+    currentArticleIdx: null
   },
   // state get
   getters: {
@@ -30,6 +35,9 @@ export default new Vuex.Store({
     Signout(state) {
       state.isLogin = false
       state.userInfo = null
+    },
+    setCurrentArticle(state, articleIdx) {
+      state.currentArticleIdx = articleIdx
     }
   },
   actions: {
@@ -83,7 +91,6 @@ export default new Vuex.Store({
         .post('/article/save', payload, null)
         .then((res) => {
           console.log(res)
-          // router.push({ name: 'ArticleList' })
           router.push(`articles?articleIdx=${res.data.idx}`)
         })
         .catch((err) => {
