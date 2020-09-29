@@ -2,11 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.ChatMapper">
 	
-	<select id="getChat" resultType="HashMap">
+	<select id="getChat" resultType="Chat">
 		SELECT a.*, b.name
 		FROM chat AS a
 		INNER JOIN user as b
 		on (a.user_idx = b.idx)
 		WHERE room_idx = #{roomIdx}
 	</select>
+	
+	<insert id="writeChat" parameterType="Chat">
+		INSERT INTO chat(room_idx, user_idx, contents)
+		VALUES(#{roomIdx}, #{userIdx}, #{contents})
+	</insert>
 </mapper>
