@@ -137,7 +137,7 @@ public class ArticleController {
     @ApiOperation(value = "답글 삭제", response = List.class)
     @DeleteMapping("/commentDelete")
     @ResponseBody
-    public String commentDelete(@RequestBody Comment comment) {
+    public String commentDelete(Comment comment) {
         return articleService.commentDelete(comment);
     }
 

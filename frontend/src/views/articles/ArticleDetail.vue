@@ -11,14 +11,14 @@
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
       </div>
-      <div v-if="article.userIdx === userInfo.idx">
+      <div v-show="article.userIdx === userInfo.idx">
         <button @click="onUpdate">수정</button>
         <button @click="onDelete">삭제</button>
       </div>
     </article>
-    <CommentList />
+    <CommentList v-if="comments" :comments="comments" :article="article" @changeComment="getArticle(1)"/>
     <hr>
-    <CommentCreate />
+    <CommentCreate :article="article" @saveComment="getArticle(1)"/>
   </div>
 </template>
 
@@ -34,9 +34,10 @@ export default {
         title: '',
         content: '',
         regDate: '',
-        userIdx: ''
+        userIdx: '',
+        idx: null
       },
-      comments: []
+      comments: null
     }
   },
   components: {
@@ -44,11 +45,10 @@ export default {
     CommentCreate
   },
   methods: {
-    // TODO:: 타임아웃 외의 방법 찾아보기
-    getArticle() {
+    getArticle(pageNo) {
       setTimeout(() => {
         http
-          .get(`article/view?idx=${this.$route.query.articleIdx}`)
+          .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
           .then((res) => {
             console.log(res)
 
@@ -56,6 +56,8 @@ export default {
             this.article.title = res.data.article.title
             this.article.regDate = res.data.article.formatedRegDate
             this.article.userIdx = res.data.article.userIdx
+            this.article.idx = res.data.article.idx
+            this.comments = res.data.comment
           })
           .catch((err) => {
             console.log(err)
@@ -79,7 +81,7 @@ export default {
     }
   },
   mounted() {
-    this.getArticle()
+    this.getArticle(1)
   },
   computed: {
     ...mapState(['userInfo'])
