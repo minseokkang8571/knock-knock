@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <article v-for="(article, idx) in articles" :key="idx">
-      <div class="mt-5 d-flex justify-content-between">
+    <div v-for="(article, idx) in articles" :key="idx">
+      <!-- <div class="mt-5 d-flex justify-content-between">
         <h2 @click="toDetail(article.idx)" class="common-title title-overflow">{{ article.title }}</h2>
         <span class="align-self-end">작성자 : ipsum {{ article.formatedRegDate }}</span>
       </div>
@@ -9,8 +9,9 @@
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
-      </div>
-    </article>
+      </div> -->
+      <ArticleListItem :article="article" />
+    </div>
 
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
@@ -34,7 +35,7 @@
 
 <script>
 import Vue from 'vue'
-// import { mapState } from 'vuex'
+import ArticleListItem from '@/components/article/ArticleListItem'
 import http from '@/util/http-common'
 export default {
   name: 'ArticleList',
@@ -46,6 +47,9 @@ export default {
       pageIdx: [],
       endPageNo: 0
     }
+  },
+  components: {
+    ArticleListItem
   },
   methods: {
     getArticleList(counter) {
@@ -60,9 +64,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    },
-    toDetail(idx) {
-      this.$router.push(`articles?articleIdx=${idx}`)
     },
     onPaging(idx) {
       this.getArticleList(idx)

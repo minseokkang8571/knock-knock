@@ -46,6 +46,7 @@ export default {
     CommentCreate
   },
   methods: {
+    // TODO:: 타임아웃 외의 방법 찾아보기
     getArticle() {
       setTimeout(() => {
         http
