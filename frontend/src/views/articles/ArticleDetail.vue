@@ -6,7 +6,7 @@
         <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
       </div>
       <hr>
-      <div class="text-left mt-3">{{ article.content }}</div>
+      <div class="hljs" ref="hlDiv" v-html="previewMarkdown"></div>
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
@@ -27,12 +27,14 @@ import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
+import marked from 'marked'
+import hljs from 'highlight.js'
 export default {
   data() {
     return {
       article: {
         title: '',
-        content: '',
+        contents: '',
         regDate: '',
         userIdx: ''
       },
@@ -51,7 +53,7 @@ export default {
           .then((res) => {
             console.log(res)
 
-            this.article.content = res.data.article.contents
+            this.article.contents = res.data.article.contents
             this.article.title = res.data.article.title
             this.article.regDate = res.data.article.formatedRegDate
             this.article.userIdx = res.data.article.userIdx
@@ -81,7 +83,24 @@ export default {
     this.getArticle()
   },
   computed: {
-    ...mapState(['userInfo'])
+    ...mapState(['userInfo']),
+    previewMarkdown() {
+      marked.setOptions({
+        renderer: new marked.Renderer(),
+        highlight: function(code) {
+          return hljs.highlightAuto(code).value
+        },
+        pedantic: false,
+        gfm: true,
+        tables: true,
+        breaks: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        xhtml: false
+      })
+      return marked(this.article.contents)
+    }
   }
 }
 </script>
