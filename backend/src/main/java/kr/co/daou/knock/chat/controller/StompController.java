@@ -1,11 +1,9 @@
 package kr.co.daou.knock.chat.controller;
 
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -24,9 +22,21 @@ public class StompController {
 	
 	@MessageMapping("/receive/{roomIdx}")
 	@SendTo("/send/{roomIdx}")
-	public Chat stompChat(@RequestBody Chat chat, @PathVariable("roomIdx") long roomIdx) throws Exception {
+	public Chat stompChat(@RequestBody Chat chat, @PathVariable("roomIdx") String roomIdx) throws Exception {
 		chatService.writeChat(chat);
 		return chat;
+	}
+	
+	@MessageMapping("/lock/{roomIdx}")
+	@SendTo("/send/{roomIdx}")
+	public Map<String, String> stompLock(@RequestBody Map<String, String> params, @PathVariable("roomIdx") String roomIdx) throws Exception {
+		return params;
+	}
+	
+	@MessageMapping("/out/{roomIdx}")
+	@SendTo("/send/{roomIdx}")
+	public String stompOut(@PathVariable("roomIdx") String roomIdx) throws Exception {
+		return "out";
 	}
 	
 	
