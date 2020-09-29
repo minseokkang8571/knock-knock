@@ -6,7 +6,7 @@
         <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
       </div>
       <hr>
-      <div class="hljs" ref="hlDiv" v-html="previewMarkdown"></div>
+      <div class="hljs" ref="hlDiv" v-html="convertMarkdown()"></div>
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
@@ -78,14 +78,8 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    }
-  },
-  mounted() {
-    this.getArticle()
-  },
-  computed: {
-    ...mapState(['userInfo']),
-    previewMarkdown() {
+    },
+    convertMarkdown() {
       marked.setOptions({
         renderer: new marked.Renderer(),
         highlight: function(code) {
@@ -102,6 +96,12 @@ export default {
       })
       return marked(this.article.contents)
     }
+  },
+  mounted() {
+    this.getArticle()
+  },
+  computed: {
+    ...mapState(['userInfo'])
   }
 }
 </script>
