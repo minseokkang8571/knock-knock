@@ -206,10 +206,14 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
                 commentMapper.updateComment(comment);
             } else {    // 등록일 경우
                 comment.setGroupLayer(comment.getGroupLayer()+1L);
-                if(comment.getGroupLayer()!=0){
+                if(comment.getGroupLayer()!=0){//재답글인 경우
                     comment.setGroupOrd(commentMapper.maxGroupOrd(comment)+1L);
+                    commentMapper.insertComment(comment);
+                } else{ //답글인 경우
+                    commentMapper.insertComment(comment);
+                    commentMapper.updateOriginIdx(comment);
+
                 }
-                commentMapper.insertComment(comment);
             }
             rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
