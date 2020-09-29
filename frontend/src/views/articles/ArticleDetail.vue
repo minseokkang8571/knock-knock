@@ -6,7 +6,7 @@
         <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
       </div>
       <hr>
-      <div class="text-left mt-3">{{ article.content }}</div>
+      <p class="text-left mt-3">{{ article.content }}</p>
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
@@ -44,6 +44,7 @@ export default {
     CommentCreate
   },
   methods: {
+    // TODO:: 타임아웃 외의 방법 찾아보기
     getArticle() {
       setTimeout(() => {
         http
