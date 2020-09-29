@@ -1,8 +1,10 @@
 package kr.co.daou.knock.article.service;
 
-import kr.co.daou.knock.common.db.mybatis.dto.*;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
+import kr.co.daou.knock.common.db.mybatis.dto.Article;
+import kr.co.daou.knock.common.db.mybatis.dto.ArticleLike;
+import kr.co.daou.knock.common.db.mybatis.dto.Comment;
+import kr.co.daou.knock.common.db.mybatis.dto.CommentLike;
+
 public interface ArticleService {
 	String list(Article article);
 	String view(Article article);

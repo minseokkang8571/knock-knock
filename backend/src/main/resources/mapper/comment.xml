@@ -30,15 +30,14 @@
     </update>
 
     <insert id="insertComment" parameterType="comment">
-        <selectKey keyProperty="tempOriginIdx" resultType="Long" order="BEFORE">
-            SELECT MAX(idx)+1 FROM comment
-        </selectKey>
         INSERT
         INTO comment (
         user_idx
         , article_idx
         , contents
+        <if test='groupLayer != "0"'>
         , origin_idx
+        </if>
         , group_ord
         , group_layer
         )
@@ -49,13 +48,19 @@
         <if test='groupLayer != "0"'>
         , #{originIdx}
         </if>
-        <if test='groupLayer == "0"'>
-        , #{tempOriginIdx}
-        </if>
         , #{groupOrd}
         , #{groupLayer}
         )
+        <selectKey keyProperty="originIdx" resultType="Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
+
+    <update id="updateOriginIdx" parameterType="comment">
+        UPDATE comment
+        SET origin_idx = #{originIdx}
+        WHERE idx = #{originIdx}
+    </update>
 
     <update id="updateDelYn" parameterType="Long">
         UPDATE comment

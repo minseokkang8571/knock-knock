@@ -17,7 +17,6 @@ public class Comment extends Paging {
     private Long originIdx;
     private Long groupOrd;
     private Long groupLayer;
-    private Long tempOriginIdx;
 
     private int commentLikeCount;
 

@@ -18,6 +18,8 @@ public interface CommentMapper {
 
     void insertComment(Comment comment);
 
+    void updateOriginIdx(Comment comment);
+
     void updateDelYn(Long idx);
 
     void insertCommentLike(CommentLike commentLike);
