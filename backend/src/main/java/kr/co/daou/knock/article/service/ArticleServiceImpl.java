@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +43,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
                 articleList.get(i).setArticleHashtagList(articleHashtagMapper.findAllByArticleIdx(articleList.get(i).getIdx()));
             }
             rtnMap.put("articleList", articleList);
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -68,10 +67,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
 
             rtnMap.put("article", article);
             rtnMap.put("comment", comment);
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -88,10 +87,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
             setDefaultPaging(rtnMap, article, totalCount);
             List<Comment> comment = commentMapper.findAllByArticleIdx(article);
             rtnMap.put("comment", comment);
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -128,10 +127,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
                 articleHashtagMapper.insertHashtag(articleHashtag);
             }
             rtnMap.put("idx", article.getIdx());
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -146,10 +145,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         Map<String, Object> rtnMap = returnMap();
         try {
             articleMapper.updateDelYn(article.getIdx());
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -165,14 +164,14 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         try {
             //좋아요 등록 여부 확인
             if(articleMapper.countByUserIdxAndArticleIdx(articleLike)==1){
-                rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_DUPLICATE);
+                rtnMap.put(RESULT_TEXT, RESULT_DUPLICATE);
             } else{
                 articleMapper.insertArticleLike(articleLike);
-                rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+                rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
             }
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -186,10 +185,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         Map<String, Object> rtnMap = returnMap();
         try {
             articleMapper.deleteArticleLike(articleLike);
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -212,10 +211,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
                 }
                 commentMapper.insertComment(comment);
             }
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
 
         return jsonFormatTransfer(rtnMap);
@@ -230,10 +229,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         Map<String, Object> rtnMap = returnMap();
         try {
             commentMapper.updateDelYn(comment.getIdx());
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -249,14 +248,14 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         try {
             //좋아요 등록 여부 확인
             if(commentMapper.countByUserIdxAndCommentIdx(commentLike)==1){
-                rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_DUPLICATE);
+                rtnMap.put(RESULT_TEXT, RESULT_DUPLICATE);
             } else{
                 commentMapper.insertCommentLike(commentLike);
-                rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+                rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
             }
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }
@@ -270,10 +269,10 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         Map<String, Object> rtnMap = returnMap();
         try {
             commentMapper.deleteCommentLike(commentLike);
-            rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_SUCCESS);
+            rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
             log.error("Class ["+e.getClass()+"] Exception :: ",e);
-            defaultExceptionHandling(rtnMap,AJAX_RESULT_FAIL);
+            defaultExceptionHandling(rtnMap,RESULT_FAIL);
         }
         return jsonFormatTransfer(rtnMap);
     }

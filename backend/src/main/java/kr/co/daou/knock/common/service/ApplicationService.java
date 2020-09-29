@@ -6,7 +6,6 @@ import kr.co.daou.knock.common.db.mybatis.dto.Paging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.ui.Model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +13,16 @@ import java.util.Map;
 public class ApplicationService {
     public final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public static final String AJAX_RESULT_TEXT = "httpCode";
+    public static final String RESULT_TEXT = "httpCode";
 
     // LINE :: AJAX 결과 코드 ====================================================================================================================================================
-    public static final String AJAX_RESULT_SUCCESS = "200";         // 성공
-    public static final String AJAX_RESULT_DUPLICATE = "300";       // 중복
-    public static final String AJAX_RESULT_NODATA = "400";          // 데이터 없음
-    public static final String AJAX_RESULT_ILLEGAL_STATE = "401";   // 유효하지 않은 접근
-    public static final String AJAX_RESULT_AUTHFAIL = "402";        // 인증실패
-    public static final String AJAX_RESULT_FAIL = "500";            // 실패
-    public static final String AJAX_RESULT_OVERFLOW = "999";        // 다중 행 리턴
+    public static final String RESULT_SUCCESS = "200";         // 성공
+    public static final String RESULT_DUPLICATE = "300";       // 중복
+    public static final String RESULT_NODATA = "400";          // 데이터 없음
+    public static final String RESULT_ILLEGAL_STATE = "401";   // 유효하지 않은 접근
+    public static final String RESULT_AUTHFAIL = "402";        // 인증실패
+    public static final String RESULT_FAIL = "500";            // 실패
+    public static final String RESULT_OVERFLOW = "999";        // 다중 행 리턴
 
     /**
      * FUNCTION :: Ajax요청에 대한 리턴 맵 객체 선언
@@ -32,7 +31,7 @@ public class ApplicationService {
      */
     public HashMap<String, Object> returnMap(){
         HashMap<String, Object> rtnMap = new HashMap<>();
-        rtnMap.put(AJAX_RESULT_TEXT, AJAX_RESULT_FAIL);      /* 실패 */
+        rtnMap.put(RESULT_TEXT, RESULT_FAIL);      /* 실패 */
         return rtnMap;
     }
 
@@ -75,7 +74,7 @@ public class ApplicationService {
      */
     public void defaultExceptionHandling(Map<String, Object> rtnMap, String result) {
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        rtnMap.put(AJAX_RESULT_TEXT, result);
+        rtnMap.put(RESULT_TEXT, result);
     }
 
 }
