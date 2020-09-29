@@ -9,7 +9,7 @@
       placeholder="댓글내용을 입력하세요."
       rows="15"
     ></b-form-textarea>
-    <button class="btn btn-primary mt-2 float-right" @click="onCommentCreate">submit</button>
+    <button class="btn btn-primary mt-2 ml-auto d-block" @click="onCommentCreate">submit</button>
   </div>
 </template>
 
@@ -36,8 +36,8 @@ export default {
       const payload = {
         articleIdx: this.article.idx,
         groupLayer: -1,
+        groupOrd: 0,
         userIdx: this.$store.state.userInfo.idx,
-        originIdx: 1,
         contents: this.form.contents
       }
       console.log(payload)

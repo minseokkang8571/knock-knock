@@ -16,7 +16,7 @@
         <button @click="onDelete">삭제</button>
       </div>
     </article>
-    <CommentList :comments="comments" :article="article" @changeComment="getArticle(1)"/>
+    <CommentList v-if="comments" :comments="comments" :article="article" @changeComment="getArticle(1)"/>
     <hr>
     <CommentCreate :article="article" @saveComment="getArticle(1)"/>
   </div>
