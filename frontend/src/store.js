@@ -37,11 +37,11 @@ export default new Vuex.Store({
         .then((res) => {
           console.log(res)
           if (res.data.status) {
-            // 정상적으로 로그인 된 경우
+            // 정상적으로 로그인 된 경우, 상태정보 저장 후 이전 페이지로 리다이렉트
             const token = res.data.token
             localStorage.setItem('token', token)
             commit('SigninSuccess', res.data.user)
-            router.push({ name: 'ArticleList' })
+            router.back()
           } else {
             // DB에 없는 데이터가 전달 된 경우
             alert('이메일과 비밀번호를 확인해주세요.')

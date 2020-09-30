@@ -1,20 +1,25 @@
 <template>
   <div class="mt-2 mb-2">
+    <!-- 댓글 -->
     <div v-if="comment.groupLayer === 0" class="row">
       <p class="col-1">userIdx = {{ comment.userIdx }} </p>
       <p class="col-11 text-left">{{ comment.contents }}</p>
     </div>
-    <div v-if="comment.groupLayer === 1" class="row recomment">
+    <!-- 재댓글 -->
+    <div v-if="comment.groupLayer === 1" class="row recomment ml-4">
       <p class="col-1">userIdx = {{ comment.userIdx }}</p>
       <p class="col-11 text-left">{{ comment.contents }}</p>
     </div>
 
+    <!-- 댓글의 작성자일 경우 수정,삭제 권한을 제공 -->
     <div v-show="comment.userIdx === userInfo.idx">
       <button @click="showUpdateForm">수정</button>
       <button @click="onDelete">삭제</button>
-      <button v-if="comment.groupLayer === 0" @click="showCommentForm">재댓글</button>
     </div>
-    <div v-if="commentForm.isVisible" class="w-100">
+    <button v-if="comment.groupLayer === 0" @click="showCommentForm">재댓글</button>
+
+    <!-- 수정의 경우 markdown, 재댓글의 경우 text이기 때문에 서로 다른 폼을 사용 -->
+    <div v-if="recommentFormVisibleIdx === comment.idx" class="w-100">
       <b-form-textarea
         id="input-2"
         v-model="commentForm.contents"
@@ -55,19 +60,18 @@ export default {
   data() {
     return {
       commentForm: {
-        contents: '',
-        isVisible: false
+        contents: ''
       },
       updateForm: {
-        contents: '',
-        isVisible: false
+        contents: ''
       }
     }
   },
   props: {
     comment: Object,
     article: Object,
-    recomments: Array
+    updateFormVisibleIdx: Number,
+    recommentFormVisibleIdx: Number
   },
   computed: {
     ...mapState(['userInfo'])
@@ -85,11 +89,12 @@ export default {
         })
     },
     showUpdateForm() {
-      this.updateForm.isVisible = true
+      this.$emit('onUpdate', this.comment.idx)
       alert('구현예정')
     },
     showCommentForm() {
-      this.commentForm.isVisible = true
+      // this.commentForm.isVisible = true
+      this.$emit('onRecomment', this.comment.idx)
     },
     onComment() {
       if (this.$store.state.isLogin === null || this.$store.state.userInfo.idx < 1) {
