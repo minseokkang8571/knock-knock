@@ -36,11 +36,16 @@ export default new Vuex.Store({
         .post('/user/login', payload, null)
         .then((res) => {
           console.log(res)
-          commit('SigninSuccess', res.data.user)
-          router.push({ name: 'ArticleList' })
-
-          const token = res.data.token
-          localStorage.setItem('token', token)
+          if (res.data.status) {
+            // 정상적으로 로그인 된 경우
+            const token = res.data.token
+            localStorage.setItem('token', token)
+            commit('SigninSuccess', res.data.user)
+            router.push({ name: 'ArticleList' })
+          } else {
+            // DB에 없는 데이터가 전달 된 경우
+            alert('이메일과 비밀번호를 확인해주세요.')
+          }
         })
         .catch((err) => {
           console.log(err)
