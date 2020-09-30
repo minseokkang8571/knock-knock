@@ -36,7 +36,8 @@ const routes = [
     path: '/articles',
     name: 'ArticleCreate',
     component: ArticleCreate,
-    beforeEnter: onlyAuthUser
+    beforeEnter: onlyAuthUser,
+    props: true
   },
   {
     path: '/signin',

@@ -13,18 +13,8 @@ export default new Vuex.Store({
       email: null
     },
     isLogin: false,
-    articles: [],
     chats: [],
     currentArticleIdx: null
-  },
-  // state get
-  getters: {
-    isSignin(state) {
-      return state.isLogin
-    },
-    articles(state) {
-      return state.articles
-    }
   },
   // state 변경
   mutations: {
@@ -84,18 +74,6 @@ export default new Vuex.Store({
             console.log(err)
           })
       }
-    },
-    createArticle(context, payload) {
-      payload.userIdx = this.state.userInfo.idx
-      http
-        .post('/article/save', payload, null)
-        .then((res) => {
-          console.log(res)
-          router.push(`articles?articleIdx=${res.data.idx}`)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     getChat(context, roomNumber) {
       http

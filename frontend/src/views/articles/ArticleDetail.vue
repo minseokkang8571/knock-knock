@@ -68,7 +68,7 @@ export default {
     },
     onUpdate() {
       this.$store.commit('setCurrentArticle', this.$route.query.articleIdx)
-      this.$router.push({ name: 'ArticleCreate' })
+      this.$router.push({ name: 'ArticleCreate', params: { articleTitle: this.article.title, articleContents: this.article.contents } })
     },
     onDelete() {
       http

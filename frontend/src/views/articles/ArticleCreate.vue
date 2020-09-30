@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <b-form
-      @submit="onSubmit"
+      @submit="onSubmit(form)"
       id="input-form"
       class="pt-5 pb-5 pl-3 pr-3 rounded border border-color-grey">
         <p>Title:</p>
@@ -40,6 +40,7 @@
 
 <script>
 import marked from 'marked'
+import http from '@/util/http-common'
 import hljs from 'highlight.js'
 import { mapState } from 'vuex'
 import '@/assets/styles/github-gist.css'
@@ -52,12 +53,32 @@ export default {
       }
     }
   },
+  props: {
+    articleTitle: String,
+    articleContents: String
+  },
   methods: {
-    onSubmit() {
+    // 수정시 필요한 파라미터를 갱신해주는 함수
+    isUpdate() {
       if (this.currentArticleIdx !== null) {
         this.form.idx = this.currentArticleIdx
+        this.form.title = this.articleTitle
+        this.form.contents = this.articleContents
       }
-      this.$store.dispatch('createArticle', this.form)
+    },
+    onSubmit(payload) {
+      event.preventDefault()
+      payload.userIdx = this.$store.state.userInfo.idx
+      console.log(payload)
+      http
+        .post('/article/save', payload, null)
+        .then((res) => {
+          console.log(res)
+          this.$router.push(`articles?articleIdx=${res.data.idx}`)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     tabber(event) {
       if (event) {
@@ -93,6 +114,9 @@ export default {
       })
       return marked(this.form.contents)
     }
+  },
+  mounted() {
+    this.isUpdate()
   }
 }
 </script>
