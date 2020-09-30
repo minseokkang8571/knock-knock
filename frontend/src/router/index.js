@@ -11,8 +11,9 @@ import ReviewDetail from '@/views/reviews/ReviewDetail'
 
 Vue.use(VueRouter)
 
+// 로그인이 필요한 페이지의 경우, 로그인 페이지로 리다이렉트
 const onlyAuthUser = (to, from, next) => {
-  if (store.state.isLogin === true || localStorage.getItem('token') !== null) {
+  if (store.state.isLogin === true) {
     next()
   } else {
     alert('로그인을 해야합니다.')
@@ -33,7 +34,7 @@ const routes = [
     props: true
   },
   {
-    path: '/articles',
+    path: '/article',
     name: 'ArticleCreate',
     component: ArticleCreate,
     beforeEnter: onlyAuthUser
@@ -56,7 +57,8 @@ const routes = [
   {
     path: '/reviews',
     name: 'ReviewDetail',
-    component: ReviewDetail
+    component: ReviewDetail,
+    beforeEnter: onlyAuthUser
   }
 ]
 
