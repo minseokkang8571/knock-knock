@@ -84,5 +84,9 @@
 
 /* 수정 */
 pre {
-    background-color: #f8f8f8;
+  background-color: #f8f8f8;
+}
+
+code {
+  background-color: #f8f8f8;
 }
