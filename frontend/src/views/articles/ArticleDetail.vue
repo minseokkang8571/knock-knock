@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="article">
     <article>
       <div class="d-flex justify-content-between">
         <h2 class="title-overflow">{{ article.title }}</h2>
@@ -48,23 +48,21 @@ export default {
   },
   methods: {
     getArticle(pageNo) {
-      setTimeout(() => {
-        http
-          .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
-          .then((res) => {
-            console.log(res)
+      http
+        .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
+        .then((res) => {
+          console.log(res)
 
-            this.article.contents = res.data.article.contents
-            this.article.title = res.data.article.title
-            this.article.regDate = res.data.article.formatedRegDate
-            this.article.userIdx = res.data.article.userIdx
-            this.article.idx = res.data.article.idx
-            this.comments = res.data.comment
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }, 400)
+          this.article.contents = res.data.article.contents
+          this.article.title = res.data.article.title
+          this.article.regDate = res.data.article.formatedRegDate
+          this.article.userIdx = res.data.article.userIdx
+          this.article.idx = res.data.article.idx
+          this.comments = res.data.comment
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     onUpdate() {
       this.$store.commit('setCurrentArticle', this.$route.query.articleIdx)
