@@ -87,9 +87,11 @@ export default {
       http
         .get('review/enterRoom/' + this.roomIdx, config)
         .then((res) => {
-          this.chatList = res.data.chatList
-          this.codeList = res.data.codeList
-          this.review = this.codeList[0].reviewContents
+          if (res.data.state) {
+            this.chatList = res.data.chatList
+            this.codeList = res.data.codeList
+            this.review = this.codeList[0].reviewContents
+          }
         })
         .catch((err) => {
           console.log(err)

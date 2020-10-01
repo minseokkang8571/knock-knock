@@ -7,5 +7,5 @@ import kr.co.daou.knock.common.db.mybatis.dto.Chat;
 
 public interface ChatService {
 	boolean writeChat(Chat chat);
-	List<HashMap<String, Object>> getChat(long roomIdx);
+//	List<HashMap<String, Object>> getChat(long roomIdx);
 }

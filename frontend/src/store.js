@@ -45,12 +45,17 @@ export default new Vuex.Store({
       http
         .post('/user/login', payload, null)
         .then((res) => {
-          console.log(res)
-          commit('SigninSuccess', res.data.user)
-          router.push({ name: 'ArticleList' })
+          console.log(res.data.status)
+          if (res.data.status) {
+            console.log(res)
+            commit('SigninSuccess', res.data.user)
+            router.push({ name: 'ArticleList' })
 
-          const token = res.data.token
-          localStorage.setItem('token', token)
+            const token = res.data.token
+            localStorage.setItem('token', token)
+          } else {
+            alert('로그인 실패')
+          }
         })
         .catch((err) => {
           console.log(err)
@@ -65,6 +70,7 @@ export default new Vuex.Store({
         .post('/user/signup', payload, null)
         .then((res) => {
           console.log(res)
+          alert('회원가입이 완료되었습니다.')
           router.push({ name: 'ArticleList' })
         })
         .catch((err) => {
@@ -91,6 +97,7 @@ export default new Vuex.Store({
         .post('/article/save', payload, null)
         .then((res) => {
           console.log(res)
+          alert('게시물이 등록되었습니다.')
           router.push(`articles?articleIdx=${res.data.idx}`)
         })
         .catch((err) => {

@@ -64,6 +64,7 @@ public class ReviewServiceImpl implements ReviewService{
 		} else {
 			map.put("status", false);
 		}
+		System.out.println(map);
 		return map;
 	}
 
