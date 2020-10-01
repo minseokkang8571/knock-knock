@@ -34,7 +34,6 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -45,10 +44,13 @@ export default {
     }
   },
   methods: {
-    // ...mapActions(['onSignin']),
     onSubmit(evt) {
       evt.preventDefault()
-      // alert(JSON.stringify(this.form))
+      // 이미 로그인한 경우, api요청없이 리다이렉션
+      if (this.$store.state.isLogin === true) {
+        alert('이미 로그인된 사용자입니다.')
+        this.$router.push({ name: 'ArticleList' })
+      }
       this.$store.dispatch('onSignin', this.form)
     }
   }

@@ -44,10 +44,10 @@ export default {
   methods: {
     ...mapActions(['onSignout']),
     onCreate() {
+      // 기존 페이지가 ArticleCreate가 아닌 경우 Article생성
       this.$store.commit('setCurrentArticle', null)
       if (this.$route.name !== 'ArticleCreate') {
         this.$router.push({ name: 'ArticleCreate' })
-        console.log('##')
       }
     }
   }

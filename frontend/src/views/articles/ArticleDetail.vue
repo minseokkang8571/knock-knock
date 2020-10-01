@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="article">
     <article>
       <div class="d-flex justify-content-between">
         <h2 class="title-overflow">{{ article.title }}</h2>
@@ -16,9 +16,9 @@
         <button @click="onDelete">삭제</button>
       </div>
     </article>
-    <CommentList v-if="comments" :comments="comments" :article="article" @changeComment="getArticle(1)"/>
+    <CommentList v-if="comments" :comments="comments" :article="article" @saveComment="getArticle(1)"/>
     <hr>
-    <CommentCreate :article="article" @saveComment="getArticle(1)"/>
+    <CommentCreate :payload="commentCreatePayload" @saveComment="getArticle(1)"/>
   </div>
 </template>
 
@@ -39,7 +39,12 @@ export default {
         userIdx: '',
         idx: null
       },
-      comments: null
+      comments: null,
+      commentCreatePayload: {
+        articleIdx: null,
+        groupLayer: -1,
+        groupOrd: 0
+      }
     }
   },
   components: {
@@ -48,27 +53,25 @@ export default {
   },
   methods: {
     getArticle(pageNo) {
-      setTimeout(() => {
-        http
-          .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
-          .then((res) => {
-            console.log(res)
+      http
+        .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
+        .then((res) => {
+          console.log(res)
 
-            this.article.contents = res.data.article.contents
-            this.article.title = res.data.article.title
-            this.article.regDate = res.data.article.formatedRegDate
-            this.article.userIdx = res.data.article.userIdx
-            this.article.idx = res.data.article.idx
-            this.comments = res.data.comment
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }, 400)
+          this.article.contents = res.data.article.contents
+          this.article.title = res.data.article.title
+          this.article.regDate = res.data.article.formatedRegDate
+          this.article.userIdx = this.commentCreatePayload.userIdx = res.data.article.userIdx
+          this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
+          this.comments = res.data.comment
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     onUpdate() {
       this.$store.commit('setCurrentArticle', this.$route.query.articleIdx)
-      this.$router.push({ name: 'ArticleCreate' })
+      this.$router.push({ name: 'ArticleCreate', params: { articleTitle: this.article.title, articleContents: this.article.contents } })
     },
     onDelete() {
       http

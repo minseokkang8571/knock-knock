@@ -2,16 +2,24 @@
 <div class="mt-2">
   <h4 class="text-left">Answer</h4>
   <div v-for="(comment, idx) in comments" :key="idx" class="container mt-2">
-    <Comment :comment="comment" :recomments="recomments" :article="article" @changeComment="changeComment"/>
+    <CommentListItem
+      :comment="comment"
+      :article="article"
+      :updateFormVisibleIdx="updateFormVisibleIdx"
+      :recommentFormVisibleIdx="recommentFormVisibleIdx"
+      @onRecomment="onRecomment"
+      @onUpdate="onUpdate"
+      @saveComment="saveComment"
+    />
   </div>
 </div>
 </template>
 
 <script>
-import Comment from '@/components/comment/Comment'
+import CommentListItem from '@/components/comment/CommentListItem'
 export default {
   components: {
-    Comment
+    CommentListItem
   },
   props: {
     comments: Array,
@@ -19,26 +27,28 @@ export default {
   },
   data() {
     return {
-      classifiedComments: [],
-      recomments: []
+      recommentFormVisibleIdx: null,
+      updateFormVisibleIdx: null
     }
   },
   methods: {
-    changeComment() {
-      this.$emit('changeComment')
+    onRecomment(payload) {
+      // 특정 댓글에 대한 commentForm만 보이게 함
+      this.recommentFormVisibleIdx = payload
+      this.updateFormVisibleIdx = null
     },
-    classifyRecomment() {
-      for (var i = 0; i < this.comments.length; i++) {
-        if (this.comments[i].groupLayer === 1) {
-          this.recomments.push(this.comments[i])
-        } else {
-          this.classifiedComments.push(this.comments[i])
-        }
-      }
+    onUpdate(payload) {
+      // 특정 댓글에 대한 commentForm만 보이게 함
+      this.updateFormVisibleIdx = payload
+      this.recommentFormVisibleIdx = null
+    },
+    saveComment() {
+      // commentForm을 제거하고 변경사항 적용을 위해 emit
+      this.recommentFormVisibleIdx = null
+      this.updateFormVisibleIdx = null
+
+      this.$emit('saveComment')
     }
-  },
-  mounted() {
-    this.classifyRecomment()
   }
 }
 </script>
