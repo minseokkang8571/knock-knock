@@ -11,7 +11,8 @@ public interface ReviewMapper {
 	int copyCode(long articleIdx);
 	List<Code> getCode(long articleIdx);
 	List<Code> enterRoom(long roomIdx);
-	List<Room> getRoom();
+	int countByDto(Room room);
+	List<Room> findAllByDto(Room room);
 	int modifyCode(Review review);
 	int reviewLog(Review review);
 	int saveCode(long roomIdx);

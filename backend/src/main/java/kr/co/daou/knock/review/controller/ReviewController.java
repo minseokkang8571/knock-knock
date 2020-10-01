@@ -37,9 +37,9 @@ public class ReviewController {
 	
 	@ApiOperation(value = "방 리스트")
 	@GetMapping("/getRoom") // 페이징 파라미터 추가하기
-	public ResponseEntity<Map<String, Object>> getRoom() {
+	public ResponseEntity<Map<String, Object>> getRoom(Room room) {
 		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(reviewService.getRoom(), status);
+		return new ResponseEntity<Map<String,Object>>(reviewService.getRoom(room), status);
 	}
 	
 	@ApiOperation(value = "방 입장 (getCode)")
