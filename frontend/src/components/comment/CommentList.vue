@@ -7,9 +7,9 @@
       :article="article"
       :updateFormVisibleIdx="updateFormVisibleIdx"
       :recommentFormVisibleIdx="recommentFormVisibleIdx"
-      @changeComment="changeComment"
       @onRecomment="onRecomment"
       @onUpdate="onUpdate"
+      @saveComment="saveComment"
     />
   </div>
 </div>
@@ -32,16 +32,22 @@ export default {
     }
   },
   methods: {
-    changeComment() {
-      this.recommentFormVisibleIdx = null
-      this.$emit('changeComment')
-    },
     onRecomment(payload) {
-      console.log(payload)
+      // 특정 댓글에 대한 commentForm만 보이게 함
       this.recommentFormVisibleIdx = payload
+      this.updateFormVisibleIdx = null
     },
     onUpdate(payload) {
+      // 특정 댓글에 대한 commentForm만 보이게 함
       this.updateFormVisibleIdx = payload
+      this.recommentFormVisibleIdx = null
+    },
+    saveComment() {
+      // commentForm을 제거하고 변경사항 적용을 위해 emit
+      this.recommentFormVisibleIdx = null
+      this.updateFormVisibleIdx = null
+
+      this.$emit('saveComment')
     }
   }
 }

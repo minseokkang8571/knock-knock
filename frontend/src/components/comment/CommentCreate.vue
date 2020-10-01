@@ -17,7 +17,10 @@
 import http from '@/util/http-common'
 export default {
   props: {
-    article: Object
+    article: Object,
+    commentContents: String,
+    commentIdx: Number,
+    payload: Object
   },
   data() {
     return {
@@ -27,30 +30,35 @@ export default {
     }
   },
   methods: {
+    isUpdate() {
+      // 수정의 경우 기존의 값을 사용자에게 제공
+      if (this.commentIdx !== null) {
+        this.form.contents = this.commentContents
+      }
+    },
     onCommentCreate() {
+      // 로그인이 되지 않은 사용자는 Signin으로 리다이렉트
       if (this.$store.state.isLogin === null || this.$store.state.userInfo.idx < 1) {
         alert('로그인이 필요합니다')
         this.$router.push({ name: 'Signin' })
       }
 
-      const payload = {
-        articleIdx: this.article.idx,
-        groupLayer: -1,
-        groupOrd: 0,
-        userIdx: this.$store.state.userInfo.idx,
-        contents: this.form.contents
-      }
-      console.log(payload)
+      this.payload.contents = this.form.contents
+
       http
-        .post('article/commentSave', payload, null)
+        .post('article/commentSave', this.payload, null)
         .then((res) => {
           console.log(res)
+          this.form.contents = ''
           this.$emit('saveComment')
         })
         .catch((err) => {
           console.log(err)
         })
     }
+  },
+  mounted() {
+    this.isUpdate()
   }
 }
 </script>
