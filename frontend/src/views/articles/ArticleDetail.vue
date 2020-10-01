@@ -6,7 +6,7 @@
         <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
       </div>
       <hr>
-      <div class="hljs" ref="hlDiv" v-html="convertMarkdown()"></div>
+      <Preview :contents="article.contents" />
       <div class="d-flex justify-content-start">
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
@@ -25,11 +25,15 @@
 <script>
 import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
+import Preview from '@/components/viewer/Preview'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
-import marked from 'marked'
-import hljs from 'highlight.js'
 export default {
+  components: {
+    CommentList,
+    CommentCreate,
+    Preview
+  },
   data() {
     return {
       article: {
@@ -46,10 +50,6 @@ export default {
         groupOrd: 0
       }
     }
-  },
-  components: {
-    CommentList,
-    CommentCreate
   },
   methods: {
     getArticle(pageNo) {
@@ -83,23 +83,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    },
-    convertMarkdown() {
-      marked.setOptions({
-        renderer: new marked.Renderer(),
-        highlight: function(code) {
-          return hljs.highlightAuto(code).value
-        },
-        pedantic: false,
-        gfm: true,
-        tables: true,
-        breaks: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false,
-        xhtml: false
-      })
-      return marked(this.article.contents)
     }
   },
   mounted() {

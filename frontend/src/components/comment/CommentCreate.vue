@@ -50,6 +50,7 @@ export default {
         .then((res) => {
           console.log(res)
           this.form.contents = ''
+          // 변경사항을 화면에 서브하기 위해 emit
           this.$emit('saveComment')
         })
         .catch((err) => {

@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import http from '@/util/http-common'
 import CommentCreate from '@/components/comment/CommentCreate'
+import http from '@/util/http-common'
 import { mapState } from 'vuex'
 export default {
   components: {

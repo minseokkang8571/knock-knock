@@ -24,27 +24,34 @@
           rows="15"
           @keydown.tab.prevent="tabber($event)"
         ></b-form-textarea>
-      <button
-        type="submit"
-        class="btn btn-success float-right pl-3 pr-3"
-      >Submit</button>
-
+      <div class="d-flex justify-content-end">
+        <!-- preview for markdown -->
+        <PreviewModal :contents="form.contents" />
+        <button
+          type="submit"
+          class="btn btn-success ml-2 pl-3 pr-3"
+        >Submit</button>
+      </div>
     </b-form>
-    <div class="hljs" ref="hlDiv" v-html="previewMarkdown"></div>
     <!-- TO DO::
     v-html 대체할 방법 찾기
-    preview 추가
      -->
   </div>
 </template>
 
 <script>
-import marked from 'marked'
+import PreviewModal from '@/components/modal/PreviewModal'
 import http from '@/util/http-common'
-import hljs from 'highlight.js'
 import { mapState } from 'vuex'
 import '@/assets/styles/github-gist.css'
 export default {
+  components: {
+    PreviewModal
+  },
+  props: {
+    articleTitle: String,
+    articleContents: String
+  },
   data() {
     return {
       form: {
@@ -53,13 +60,9 @@ export default {
       }
     }
   },
-  props: {
-    articleTitle: String,
-    articleContents: String
-  },
   methods: {
-    // 수정시 필요한 파라미터를 갱신해주는 함수
     isUpdate() {
+      // 수정시 필요한 파라미터를 갱신해주는 함수
       if (this.currentArticleIdx !== null) {
         this.form.idx = this.currentArticleIdx
         this.form.title = this.articleTitle
@@ -69,7 +72,6 @@ export default {
     onSubmit(payload) {
       event.preventDefault()
       payload.userIdx = this.$store.state.userInfo.idx
-      console.log(payload)
       http
         .post('/article/save', payload, null)
         .then((res) => {
@@ -81,6 +83,7 @@ export default {
         })
     },
     tabber(event) {
+      // 탭을 눌렀을 때, 4space만큼 커서와 내용이 이동하도록 하는 함수
       if (event) {
         event.preventDefault()
         const text = this.form.contents
@@ -96,24 +99,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentArticleIdx']),
-    previewMarkdown() {
-      marked.setOptions({
-        renderer: new marked.Renderer(),
-        highlight: function(code) {
-          return hljs.highlightAuto(code).value
-        },
-        pedantic: false,
-        gfm: true,
-        tables: true,
-        breaks: false,
-        sanitize: false,
-        smartLists: true,
-        smartypants: false,
-        xhtml: false
-      })
-      return marked(this.form.contents)
-    }
+    ...mapState(['currentArticleIdx'])
   },
   mounted() {
     this.isUpdate()
