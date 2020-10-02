@@ -1,93 +1,56 @@
 <template>
   <div class="container">
+    <!-- 게시글 리스트 -->
     <div v-for="(article, idx) in articles" :key="idx">
       <ArticleListItem :article="article" />
     </div>
-
-    <nav aria-label="Page navigation example">
-      <ul class="pagination justify-content-center">
-        <li class="page-item">
-          <a class="page-link cursor-pointer" @click="toPrevious" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item" v-for="(idx) in pageIdx" :key="idx">
-          <a class="page-link" v-if="endPageNo >= idx" @click="onPaging(idx)" href="#">{{ idx }}</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link cursor-pointer" @click="toNext" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <!-- 하단 페이지네이션 -->
+    <Pagination
+      :pageInfo="pageInfo"
+      @onPaging="onPaging"
+    />
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import ArticleListItem from '@/components/article/ArticleListItem'
+import Pagination from '@/components/Pagination'
 import http from '@/util/http-common'
 export default {
   name: 'ArticleList',
+  components: {
+    ArticleListItem,
+    Pagination
+  },
   data() {
     return {
       articles: [],
-      articleTotalCnt: 0,
-      articleInPage: 5,
-      pageIdx: [],
-      endPageNo: 0
+      pageInfo: {
+        endPageNo: 0,
+        totalCnt: 0,
+        ItemInPage: 5
+      }
     }
   },
-  components: {
-    ArticleListItem
-  },
   methods: {
-    getArticleList(counter) {
+    getArticleList(pageNo) {
       http
-        .get(`article/list?pageNo=${counter}`)
+        .get(`article/list?pageNo=${pageNo}`)
         .then((res) => {
           console.log(res)
           this.articles = res.data.articleList
-          this.articleTotalCnt = res.data.totalCount
-          this.endPageNo = this.articleTotalCnt / 5
+          this.pageInfo.totalCnt = res.data.totalCount
+          this.pageInfo.endPageNo = res.data.totalCount / 5 - 1
         })
         .catch((err) => {
           console.log(err)
         })
     },
-    onPaging(idx) {
-      this.getArticleList(idx)
-    },
-    toNext() {
-      console.log('toNext')
-      if (this.pageIdx[0] + this.articleInPage < this.endPageNo) {
-        for (var i = 0; i < this.pageIdx.length; i++) {
-          Vue.set(this.pageIdx, i, this.pageIdx[i] + this.articleInPage)
-        }
-      } else {
-        alert('End')
-      }
-    },
-    toPrevious() {
-      console.log('toPrevious')
-      if (this.pageIdx[0] - this.articleInPage > 0) {
-        for (var i = 0; i < this.pageIdx.length; i++) {
-          Vue.set(this.pageIdx, i, this.pageIdx[i] - this.articleInPage)
-        }
-      } else {
-        alert('End')
-      }
-    },
-    setPageIdx() {
-      const articleInPage = this.articleInPage
-      for (var i = 1; i <= articleInPage; i++) {
-        this.pageIdx.push(i)
-      }
+    onPaging(pageNo) {
+      this.getArticleList(pageNo)
     }
   },
   mounted() {
-    this.setPageIdx()
     this.getArticleList(1)
   }
 }
