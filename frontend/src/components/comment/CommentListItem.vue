@@ -1,21 +1,37 @@
 <template>
-  <div class="mt-2 mb-2">
+  <div>
+    <hr>
     <!-- 댓글 -->
     <div v-if="comment.groupLayer === 0" class="row">
-      <p class="col-1">userIdx = {{ comment.userIdx }} </p>
+      <button class="col-1" @click="onLike">좋아요 {{ comment.commentLikeCount }}</button>
       <p class="col-11 text-left">{{ comment.contents }}</p>
     </div>
     <!-- 재댓글 -->
-    <div v-if="comment.groupLayer === 1" class="row recomment ml-4">
+    <div v-if="comment.groupLayer === 1" class="row ml-4">
       <p class="col-1">userIdx = {{ comment.userIdx }}</p>
       <p class="col-11 text-left">{{ comment.contents }}</p>
     </div>
     <!-- 댓글의 작성자일 경우 수정,삭제 권한을 제공 -->
-    <div v-show="comment.userIdx === userInfo.idx">
-      <button @click="showUpdateForm">수정</button>
-      <button @click="onDelete">삭제</button>
+    <div class="d-flex justify-content-end">
+      <span
+        v-if="comment.groupLayer === 0"
+        @click="showCommentForm"
+        class="mr-2 detail-button">
+        재댓글
+      </span>
+      <div v-show="comment.userIdx === userInfo.idx" class="d-inline">
+        <span
+          @click="showUpdateForm"
+          class="mr-2 detail-button">
+          수정
+        </span>
+        <span
+          @click="onDelete"
+          class="detail-button">
+          삭제
+        </span>
+      </div>
     </div>
-    <button v-if="comment.groupLayer === 0" @click="showCommentForm">재댓글</button>
     <!-- 수정의 경우 markdown, 재댓글의 경우 text이기 때문에 서로 다른 폼을 사용 -->
     <div
       v-if="recommentFormVisibleIdx === comment.idx"
@@ -102,6 +118,25 @@ export default {
     },
     saveComment() {
       this.$emit('saveComment')
+    },
+    // TODO:: 좋아요 명확하게 변경해야함.(백단에서부터)
+    onLike() {
+      const payload = {
+        userIdx: this.$store.state.userInfo.idx,
+        commentIdx: this.comment.idx
+      }
+      console.log(payload)
+      http
+        .post('article/commentLikeSave', payload, null)
+        .then((res) => {
+          console.log(res)
+          if (res.data.httpCode === '300') {
+            alert('이미 좋아요한 유저입니다.')
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }
@@ -109,7 +144,8 @@ export default {
 </script>
 
 <style scoped>
-.recomment {
-  background-color: #f8f8f8;
+.detail-button {
+  color: grey;
+  cursor: pointer;
 }
 </style>

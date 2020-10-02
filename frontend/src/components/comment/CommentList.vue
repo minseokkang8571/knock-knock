@@ -33,14 +33,24 @@ export default {
   },
   methods: {
     onRecomment(payload) {
-      // 특정 댓글에 대한 commentForm만 보이게 함
-      this.recommentFormVisibleIdx = payload
-      this.updateFormVisibleIdx = null
+      if (this.recommentFormVisibleIdx === payload) {
+        // 이미 commentForm이 보이는경우, commentForm을 닫음
+        this.recommentFormVisibleIdx = null
+      } else {
+        // 특정 댓글에 대한 commentForm만 보이게 함
+        this.recommentFormVisibleIdx = payload
+        this.updateFormVisibleIdx = null
+      }
     },
     onUpdate(payload) {
-      // 특정 댓글에 대한 commentForm만 보이게 함
-      this.updateFormVisibleIdx = payload
-      this.recommentFormVisibleIdx = null
+      if (this.updateFormVisibleIdx === payload) {
+        // 이미 commentForm이 보이는경우, commentForm을 닫음
+        this.updateFormVisibleIdx = null
+      } else {
+        // 특정 댓글에 대한 commentForm만 보이게 함
+        this.updateFormVisibleIdx = payload
+        this.recommentFormVisibleIdx = null
+      }
     },
     saveComment() {
       // commentForm을 제거하고 변경사항 적용을 위해 emit
