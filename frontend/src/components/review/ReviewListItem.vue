@@ -16,6 +16,11 @@
 export default {
   props: {
     room: Object
+  },
+  methods: {
+    toDetail(roomIdx) {
+      this.$router.push(`/reviews?roomIdx=${roomIdx}`)
+    }
   }
 }
 </script>

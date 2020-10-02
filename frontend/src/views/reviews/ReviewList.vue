@@ -49,9 +49,6 @@ export default {
           console.log(err)
         })
     },
-    toDetail(roomIdx) {
-      this.$router.push(`/reviews?roomIdx=${roomIdx}`)
-    },
     onPaging(pageNo) {
       this.getRoomList(pageNo)
     }
