@@ -2,7 +2,7 @@
   <div class="mt-2 mb-2">
     <!-- 댓글 -->
     <div v-if="comment.groupLayer === 0" class="row">
-      <p class="col-1">userIdx = {{ comment.userIdx }} </p>
+      <button class="col-1" @click="onLike">좋아요 {{ comment.commentLikeCount }}</button>
       <p class="col-11 text-left">{{ comment.contents }}</p>
     </div>
     <!-- 재댓글 -->
@@ -102,6 +102,25 @@ export default {
     },
     saveComment() {
       this.$emit('saveComment')
+    },
+    // TODO:: 좋아요 명확하게 변경해야함.(백단에서부터)
+    onLike() {
+      const payload = {
+        userIdx: this.$store.state.userInfo.idx,
+        commentIdx: this.comment.idx
+      }
+      console.log(payload)
+      http
+        .post('article/commentLikeSave', payload, null)
+        .then((res) => {
+          console.log(res)
+          if (res.data.httpCode === '300') {
+            alert('이미 좋아요한 유저입니다.')
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }

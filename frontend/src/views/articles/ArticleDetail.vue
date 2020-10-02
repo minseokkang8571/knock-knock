@@ -100,7 +100,8 @@ export default {
         xhtml: false
       })
       return marked(this.article.contents)
-    }
+    },
+    toggleLike() {}
   },
   mounted() {
     this.getArticle(1)
