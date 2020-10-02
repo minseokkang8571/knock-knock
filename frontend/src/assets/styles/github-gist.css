@@ -83,10 +83,7 @@
 }
 
 /* 수정 */
-pre {
-  background-color: #f8f8f8;
-}
-
-code {
+.code-wide,
+.code-narrow {
   background-color: #f8f8f8;
 }

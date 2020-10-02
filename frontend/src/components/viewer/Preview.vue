@@ -13,21 +13,31 @@ export default {
   },
   methods: {
     convertMarkdown() {
+      const tags = ['pre', 'code']
+      // https://marked.js.org/using_advanced#options 옵션에 대한 문서
       marked.setOptions({
         renderer: new marked.Renderer(),
         highlight: function(code) {
           return hljs.highlightAuto(code).value
         },
-        pedantic: false,
-        gfm: true,
-        tables: true,
-        breaks: false,
-        sanitize: false,
+        breaks: true,
+        sanitize: true,
         smartLists: true,
-        smartypants: false,
-        xhtml: false
+        smartypants: false
       })
-      return marked(this.contents)
+      let changedText = marked(this.contents)
+      // marked.js 변환 태그에 클래스 부여
+      for (const tag of tags) {
+        let className
+        const regex = new RegExp('<' + tag + '>', 'g')
+
+        switch (tag) {
+          case 'pre': className = 'code-wide'; break
+          case 'code': className = 'code-narrow'; break
+        }
+        changedText = changedText.replace(regex, `<${tag} class="${className}">`)
+      }
+      return changedText
     }
   }
 
