@@ -1,31 +1,9 @@
 <template>
   <div class="container">
     <article v-for="(room, idx) in rooms" :key="idx">
-      <div class="d-flex justify-content-between">
-        <h2 @click="toDetail(room.idx)" class="common-title">{{ room.title }}</h2>
-        <span class="align-self-end">작성자 : {{ room.name }}</span>
-      </div>
-        <div class="text-left">
-          {{ room.contents }}
-        </div>
-      <div class="d-flex justify-content-start">
-        <button class="tag mt-1 mr-2">tag</button>
-        <button class="tag mt-1">tag</button>
-      </div>
+      <ReviewListItem :room="room" />
     </article>
-    <!-- <article>
-      <div class="mt-5 d-flex justify-content-between">
-        <h2>import Login from '@/views/Login.vue'</h2>
-        <span class="align-self-end">작성자 : ipsum</span>
-      </div>
-        <div class="text-left">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi non quis exercitationem culpa nesciunt nihil aut nostrum explicabo reprehenderit optio amet ab temporibus asperiores quasi cupiditate. Voluptatum ducimus voluptates voluptas?
-        </div>
-      <div class="d-flex justify-content-start">
-        <button class="tag mt-1 mr-2">tag</button>
-        <button class="tag mt-1">tag</button>
-      </div>
-    </article> -->
+
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item">
@@ -47,15 +25,17 @@
 </template>
 
 <script>
+import ReviewListItem from '@/components/review/ReviewListItem'
 import http from '@/util/http-common'
 export default {
   name: 'ReviewList',
+  components: {
+    ReviewListItem
+  },
   data() {
     return {
       rooms: []
     }
-  },
-  components: {
   },
   methods: {
     init() {
