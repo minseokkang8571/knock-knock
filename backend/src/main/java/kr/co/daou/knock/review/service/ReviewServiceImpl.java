@@ -13,19 +13,20 @@ import kr.co.daou.knock.common.db.mybatis.dto.Review;
 import kr.co.daou.knock.common.db.mybatis.dto.Room;
 import kr.co.daou.knock.common.db.mybatis.mapper.ChatMapper;
 import kr.co.daou.knock.common.db.mybatis.mapper.ReviewMapper;
+import kr.co.daou.knock.common.service.CommonService;
 
 @Service
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceImpl extends CommonService implements ReviewService {
 
 	@Autowired
 	private ReviewMapper reviewMapper;
 	@Autowired
 	private ChatMapper chatMapper;
-	
+
 	@Override
 	public Map<String, Object> createRoom(Room room) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(reviewMapper.createRoom(room) == 1) {
+		if (reviewMapper.createRoom(room) == 1) {
 			long roomIdx = room.getIdx();
 			map.put("roomIdx", roomIdx);
 			reviewMapper.copyCode(room.getArticleIdx());
@@ -39,25 +40,32 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 
 	@Override
-	public Map<String, Object> getRoom() {
+	public Map<String, Object> getRoom(Room room) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Room> list = reviewMapper.getRoom();
-		if(list.size() > 0) {
-			map.put("status", true);
-			map.put("roomList", list);
-		} else {
-			map.put("status", false);
+		try {
+			int totalCount = reviewMapper.countByDto(room);
+			setDefaultPaging(map, room, totalCount);
+			List<Room> roomList = reviewMapper.findAllByDto(room);
+
+			if(roomList.size() > 0) {
+				map.put("status", true);
+				map.put("roomList", roomList);
+			} else {
+				map.put("status", false);
+			}
+		} catch (Exception e) {
+			defaultExceptionHandling(map, RESULT_FAIL);
 		}
+		
 		return map;
 	}
-	
 
 	@Override
 	public Map<String, Object> enterRoom(long roomIdx) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Code> codeList = reviewMapper.enterRoom(roomIdx);
 		List<Chat> chatList = chatMapper.getChat(roomIdx);
-		if(codeList.size() > 0) {
+		if (codeList.size() > 0) {
 			map.put("status", true);
 			map.put("codeList", codeList);
 			map.put("chatList", chatList);
@@ -70,27 +78,23 @@ public class ReviewServiceImpl implements ReviewService{
 	@Override
 	public Map<String, Object> modifyCode(Review review) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println(review);
-		if(reviewMapper.modifyCode(review) == 1 && reviewMapper.reviewLog(review) == 1) {
+		if (reviewMapper.modifyCode(review) == 1 && reviewMapper.reviewLog(review) == 1) {
 			map.put("status", true);
 		} else {
 			map.put("status", false);
 		}
 		return map;
 	}
-
 
 	@Override
 	public Map<String, Object> saveCode(long roomIdx) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if(reviewMapper.saveCode(roomIdx) == 1) {
+		if (reviewMapper.saveCode(roomIdx) == 1) {
 			map.put("status", true);
 		} else {
 			map.put("status", false);
 		}
 		return map;
 	}
-
-
 
 }

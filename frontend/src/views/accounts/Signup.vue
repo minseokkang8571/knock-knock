@@ -25,6 +25,9 @@
         required
         placeholder="비밀번호를 입력하세요."
       ></b-form-input>
+      <b-form-invalid-feedback :state="pwChk">
+        (영문 + 숫자 + 특수기호) 8자리 이상으로 입력해주세요.
+      </b-form-invalid-feedback>
 
       <p>Password Confirm:</p>
       <b-form-input
@@ -69,6 +72,10 @@ export default {
   },
   methods: {
     onSubmit(evt) {
+      if (!this.validation || !this.pwChk) {
+        alert('비밀번호를 확인해주세요.')
+        return
+      }
       evt.preventDefault()
       this.$store.dispatch('onSignup', this.form)
     }
@@ -76,6 +83,16 @@ export default {
   computed: {
     validation() {
       return this.form.password === this.form.passwordConfirm
+    },
+    pwChk() {
+      var pw = this.form.password
+      var pattern1 = /[0-9]/
+      var pattern2 = /[a-zA-Z]/
+      var pattern3 = /[!@#$%^&*()_+~=-]/
+      if (pw.length === 0) {
+        return true
+      }
+      return pw.length > 8 && pattern1.test(pw) && pattern2.test(pw) && pattern3.test(pw) && pw.length < 20
     }
   }
 }

@@ -54,8 +54,6 @@ public class UserController {
 			JwtService jwt = new JwtService();
 			String token = jwt.createLoginToken(userDto);
 			map.put("token", token);
-			Object data = jwt.getUser(token);
-			map.put("data", data);
 		} else {
 			map.put("status", false);
 		}

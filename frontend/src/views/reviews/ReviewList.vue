@@ -34,13 +34,12 @@ export default {
   },
   methods: {
     init() {
-      this.getRoomList()
+      this.getRoomList(1)
     },
-    getRoomList() {
+    getRoomList(counter) {
       http
-        .get('review/getRoom')
+        .get(`review/getRoom?pageNo=${counter}`)
         .then((res) => {
-          console.log(res)
           this.rooms = res.data.roomList
           this.pageInfo.totalCnt = this.rooms.length
           this.pageInfo.endPageNo = this.pageInfo.totalCnt / 5 - 1

@@ -12,13 +12,19 @@
 		WHERE article_idx = #{articleIdx}
 	</update>
 	
-	<select id="getRoom" resultType="Room">
+	<select id="findAllByDto" parameterType="Room" resultType="Room">
 		SELECT a.*, b.name, c.title 
 		FROM room AS a INNER JOIN user AS b 
 		ON (a.user_idx = b.idx) INNER JOIN article AS c 
 		ON (a.article_idx = c.idx)
 		WHERE a.DEL_YN = 'N'
+		LIMIT #{firstIndex},5
 	</select>
+
+    <select id="countByDto" parameterType="Room" resultType="int">
+        SELECT count(*) FROM room
+        WHERE del_yn = 'N'
+    </select>
 	
 	<select id="getCode" resultType="Code">
 		SELECT *

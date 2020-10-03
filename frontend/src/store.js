@@ -60,6 +60,7 @@ export default new Vuex.Store({
         .post('/user/signup', payload, null)
         .then((res) => {
           console.log(res)
+          alert('회원가입이 완료되었습니다.')
           router.push({ name: 'ArticleList' })
         })
         .catch((err) => {

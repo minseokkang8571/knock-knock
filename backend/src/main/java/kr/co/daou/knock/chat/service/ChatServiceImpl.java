@@ -23,9 +23,9 @@ public class ChatServiceImpl implements ChatService{
 			return false;
 	}
 
-	@Override
-	public List<HashMap<String, Object>> getChat(long roomIdx) {
-		return chatMapper.getChat(roomIdx);
-	}
+//	@Override
+//	public List<HashMap<String, Object>> getChat(long roomIdx) {
+//		return chatMapper.getChat(roomIdx);
+//	}
 
 }
