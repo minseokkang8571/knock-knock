@@ -23,6 +23,7 @@
           placeholder="이슈내용을 입력하세요."
           rows="15"
           @keydown.tab.prevent="tabber($event)"
+          @keydown.ctrl.66="setBold"
         ></b-form-textarea>
       <div class="d-flex justify-content-end">
         <!-- preview for markdown -->
@@ -96,6 +97,18 @@ export default {
         event.target.value = this.form.contents
         event.target.selectionEnd = event.target.selectionStart = originalSelectionStart + 1
       }
+    },
+    setBold(event) {
+      // ctrl+b를 눌렀을 때, 커서블록부분을 Bold처리하는 함수
+      const text = this.form.contents
+      const selectionStart = event.target.selectionStart
+      const selectionEnd = event.target.selectionEnd
+      const startText = text.slice(0, selectionStart)
+      let endText = text.slice(selectionStart)
+      const boldText = text.slice(selectionStart, selectionEnd)
+
+      endText = text.slice(selectionEnd)
+      this.form.contents = `${startText}**${boldText}**${endText}`
     }
   },
   computed: {
