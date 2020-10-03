@@ -1,6 +1,7 @@
 <template>
   <div>
-      <div class="hljs" ref="hlDiv" v-html="convertMarkdown()"></div>
+    <!-- v-html을 통한 XSS공격을 막기위해 sanitizer 라이브러리를 사용 -->
+    <div class="hljs" v-dompurify-html="convertMarkdown()"></div>
   </div>
 </template>
 
@@ -21,7 +22,6 @@ export default {
           return hljs.highlightAuto(code).value
         },
         breaks: true,
-        sanitize: true,
         smartLists: true,
         smartypants: false
       })
@@ -37,6 +37,7 @@ export default {
         }
         changedText = changedText.replace(regex, `<${tag} class="${className}">`)
       }
+
       return changedText
     }
   }
