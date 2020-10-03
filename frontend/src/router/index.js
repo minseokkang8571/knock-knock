@@ -11,13 +11,27 @@ import ReviewDetail from '@/views/reviews/ReviewDetail'
 
 Vue.use(VueRouter)
 
-// 로그인이 필요한 페이지의 경우, 로그인 페이지로 리다이렉트
+const rejectAuthUser = (to, from, next) => {
+  // 로그인 상태에서 사용자가 직접 signin, signup url을 주소창에 쳐서 들어온 경우
+  // ArticleList로 리다이렉트
+  // 주소창에 직접 검색시 새로고침이 되며 store에 유저정보가 사라져, 임시로 비동기 처리를 타임아웃으로 처리
+  setTimeout(function() {
+    if (store.state.isLogin === true) {
+      alert('로그인 상태입니다.')
+      next({ name: 'ArticleList' })
+    } else {
+      next()
+    }
+  }, 300)
+}
+
 const onlyAuthUser = (to, from, next) => {
+  // 로그인이 필요한 페이지의 경우, 로그인 페이지로 리다이렉트
   if (store.state.isLogin === true) {
     next()
   } else {
     alert('로그인을 해야합니다.')
-    next('/signin')
+    next({ name: 'Signin' })
   }
 }
 
@@ -43,12 +57,14 @@ const routes = [
   {
     path: '/signin',
     name: 'Signin',
-    component: Signin
+    component: Signin,
+    beforeEnter: rejectAuthUser
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: Signup,
+    beforeEnter: rejectAuthUser
   },
   {
     path: '/review',

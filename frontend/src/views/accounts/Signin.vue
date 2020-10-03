@@ -46,7 +46,7 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault()
-      // 이미 로그인한 경우, api요청없이 리다이렉션
+      // 이미 로그인한 경우, api요청없이 리다이렉션 (index.js에서도 처리되어있음)
       if (this.$store.state.isLogin === true) {
         alert('이미 로그인된 사용자입니다.')
         this.$router.push({ name: 'ArticleList' })
