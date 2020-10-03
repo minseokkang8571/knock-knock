@@ -2,7 +2,7 @@
   <div>
     <b-button @click="$bvModal.show('modal-scoped')">Preview</b-button>
 
-    <b-modal id="modal-scoped">
+    <b-modal size="xl" id="modal-scoped">
       <template v-slot:modal-header="{}">
         <h5>Preview</h5>
       </template>
