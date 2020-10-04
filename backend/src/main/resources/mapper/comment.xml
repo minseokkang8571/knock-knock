@@ -9,7 +9,7 @@
         WHERE cm.article_idx = #{idx}
         AND cm.del_yn = 'N'
         ORDER BY cm.origin_idx DESC, cm.group_ord ASC
-        LIMIT #{firstIndex},10
+        LIMIT #{firstIndex},#{pageSize}
 
     </select>
     <select id="countByDto" parameterType="article" resultType="int">

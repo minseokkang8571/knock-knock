@@ -1,10 +1,7 @@
 package kr.co.daou.knock.article.service;
 
 import kr.co.daou.knock.common.db.mybatis.dto.*;
-import kr.co.daou.knock.common.db.mybatis.mapper.ArticleHashtagMapper;
-import kr.co.daou.knock.common.db.mybatis.mapper.ArticleMapper;
-import kr.co.daou.knock.common.db.mybatis.mapper.CommentMapper;
-import kr.co.daou.knock.common.db.mybatis.mapper.HashtagMapper;
+import kr.co.daou.knock.common.db.mybatis.mapper.*;
 import kr.co.daou.knock.common.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +24,9 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
 
     @Autowired
     private HashtagMapper hashtagMapper;
+
+    @Autowired
+    private CodeMapper codeMapper;
 
     /**
      * FUNCTION :: 게시글 리스트
@@ -60,6 +60,7 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         Map<String, Object> rtnMap = returnMap();
         try{
             article = articleMapper.findByIdx(article.getIdx());
+            article.setArticleHashtagList(articleHashtagMapper.findAllByArticleIdx(article.getIdx()));
 
             int totalCount = commentMapper.countByDto(article);
             setDefaultPaging(rtnMap, article, totalCount);
@@ -108,23 +109,35 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
                 articleMapper.updateArticle(article);
             } else {    // 등록일 경우
                 articleMapper.insertArticle(article);
-                article.setIdx(article.getIdx());
-                //TODO :: 코드테이블에 데이터 등록해야함
-                //해시태그 추출
-                Hashtag hashtag = new Hashtag();
-                hashtag.setTag(article.getContents().substring(article.getContents().indexOf("```")+1).split(" ")[0]);
-                //추출된 해시태그 hashtag 테이블에 있는지 확인
-                if(hashtagMapper.countByTag(hashtag) == 0){
-                    //해시태그가 없으면 tag 테이블에 추출된 해시태그 삽입
-                    hashtagMapper.insertHashtag(hashtag);
-                } else{
-                    hashtag = hashtagMapper.findByHashtag(hashtag);
+
+                int startIndex = article.getContents().indexOf("```");
+                int endIndex=0;
+                Code code = new Code();
+                code.setArticleIdx(article.getIdx());
+                while(startIndex!=-1){
+                    System.out.println(startIndex+" : "+endIndex);
+                    endIndex = article.getContents().indexOf("```",startIndex+1);
+                    //코드테이블 삽입
+                    code.setOriginContents(article.getContents().substring(startIndex,endIndex+3));
+                    codeMapper.insertCode(code);
+                    //해시태그 추출
+                    Hashtag hashtag = new Hashtag();
+                    hashtag.setTag(code.getOriginContents().split("\n")[0].substring(3));
+                    //추출된 해시태그 hashtag 테이블에 있는지 확인
+                    if(hashtagMapper.countByTag(hashtag) == 0){
+                        //해시태그가 없으면 tag 테이블에 추출된 해시태그 삽입
+                        hashtagMapper.insertHashtag(hashtag);
+                    } else{
+                        hashtag = hashtagMapper.findByHashtag(hashtag);
+                    }
+                    //articleHashtag 테이블에 추출된 해시태그 정보 삽입
+                    ArticleHashtag articleHashtag = new ArticleHashtag();
+                    articleHashtag.setArticleIdx(article.getIdx());
+                    articleHashtag.setHashtagIdx(hashtag.getIdx());
+                    articleHashtagMapper.insertHashtag(articleHashtag);
+                    startIndex = article.getContents().indexOf("```",endIndex+1);
+                    System.out.println(startIndex+" : "+endIndex);
                 }
-                //articleHashtag 테이블에 추출된 해시태그 정보 삽입
-                ArticleHashtag articleHashtag = new ArticleHashtag();
-                articleHashtag.setArticleIdx(article.getIdx());
-                articleHashtag.setHashtagIdx(hashtag.getIdx());
-                articleHashtagMapper.insertHashtag(articleHashtag);
             }
             rtnMap.put("idx", article.getIdx());
             rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);

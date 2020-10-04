@@ -17,7 +17,7 @@
             )
         </if>
         ORDER BY ac.idx DESC
-        LIMIT #{firstIndex},5
+        LIMIT #{firstIndex},#{pageSize}
     </select>
 
     <select id="countByDto" parameterType="article" resultType="int">
