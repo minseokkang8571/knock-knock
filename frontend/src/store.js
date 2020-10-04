@@ -69,12 +69,17 @@ export default new Vuex.Store({
     },
     getUserInfo({ commit }) {
       const token = localStorage.getItem('token')
+      const config = {}
       if (token) {
+        config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
         http
-          .post('/user/info', { token: token }, null)
+          .get('/user/info', config)
           .then((res) => {
             console.log(res)
-            commit('SigninSuccess', res.data.user.user)
+            commit('SigninSuccess', res.data.user)
           })
           .catch((err) => {
             console.log(err)

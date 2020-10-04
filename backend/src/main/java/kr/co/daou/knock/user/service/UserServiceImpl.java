@@ -1,8 +1,17 @@
 package kr.co.daou.knock.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import io.jsonwebtoken.Claims;
 import kr.co.daou.knock.common.db.mybatis.dto.LoginRequest;
 import kr.co.daou.knock.common.db.mybatis.dto.SignUpRequest;
 import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
@@ -26,15 +35,36 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public int login(LoginRequest loginRequest) {
+	public long login(LoginRequest loginRequest) {
 		String password = Sha256.encrypt(loginRequest.getPassword());
 		loginRequest.setPassword(password);
 		return userMapper.login(loginRequest);
 	}
 
 	@Override
-	public UserDto getUserInfo(LoginRequest loginRequest) {
-		return userMapper.getUserInfo(loginRequest);
+	public UserDto getUserInfo(long userIdx) {
+		return userMapper.getUserInfo(userIdx);
+	}
+
+	@Override
+	public Map<String, Object> getInfoByToken(HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String token = request.getHeader("Authorization");
+		JwtService jwt = new JwtService();
+		if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+			token = token.substring(7, token.length());
+			String chkJwt = jwt.checkValid(token);
+			if(chkJwt.equals("true") || chkJwt.equals("expired")) {
+				Claims data = jwt.getUserIdx(token);
+				long userIdx = ((Integer) data.get("userIdx")).longValue();
+				UserDto user = userMapper.getUserInfo(userIdx);
+				map.put("status", true);
+				map.put("user", user);
+			} else {
+				map.put("status", false);
+			}
+		}
+		return map;
 	}
 	
 }

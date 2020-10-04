@@ -3,37 +3,29 @@ package kr.co.daou.knock.user.service;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
 
 @Service
 public class JwtService {
 	private static final String ENCRYPT_STRING = "intern"; // 비밀키 설정
-	private static final String DATA_KEY = "user";
+	private static final String DATA_KEY = "userIdx";
 	
-	@Autowired
-	private ObjectMapper objectMapper;
-	
-	public String createLoginToken(UserDto user) {
+	public String createLoginToken(long userIdx) {
 		long curTime = System.currentTimeMillis();
 		return Jwts.builder()
 				.setHeaderParam("typ", "JWT")
-				.setExpiration(new Date(curTime + 3600000))
+				.setExpiration(new Date(curTime * 60000 * 30))
 				.setIssuedAt(new Date(curTime))
-				.claim(DATA_KEY, user)
+				.claim(DATA_KEY, userIdx)
 				.signWith(SignatureAlgorithm.HS256, this.generateKey())
 				.compact();
 	}
@@ -48,21 +40,24 @@ public class JwtService {
 		return key;
 	}
 	
-	public boolean checkValid(final String jwt) {
-
+	public String checkValid(final String jwt) {
 		 try {
 	            Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(jwt);
-	            return true;
+	            return "true";
 	        } catch (SignatureException ex) {
 	        } catch (MalformedJwtException ex) {
 	        } catch (ExpiredJwtException ex) {
+	        	// 토큰 만료 시 갱신 로직
+	        	System.out.println(jwt);
+	        	System.out.println(getUserIdx(jwt));
+	        	return "expired";
 	        } catch (UnsupportedJwtException ex) {
 	        } catch (IllegalArgumentException ex) {
 	        }
-	        return false;
+	        return "fasle";
 	}
 	
-	public Claims getUser(String jwt) {
+	public Claims getUserIdx(String jwt) {
 		Claims claims = null;
 		try {
 			claims = Jwts.parser()

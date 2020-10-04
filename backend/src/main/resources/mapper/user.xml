@@ -13,15 +13,15 @@
 		WHERE email = #{email} 
 	</select>
 	
-	<select id="login" resultType="Integer">
-		SELECT count(*) 
+	<select id="login" resultType="Long">
+		SELECT idx
 		FROM user
 		WHERE email = #{email} AND password = #{password}		
 	</select>
 	
-	<select id="getUserInfo" parameterType="UserDto" resultType="UserDto">
+	<select id="getUserInfo" parameterType="Long" resultType="UserDto">
 		SELECT idx, email, name
 		FROM user
-		WHERE email = #{email} AND password = #{password}
+		WHERE idx = #{userIdx}
 	</select>
 </mapper>
