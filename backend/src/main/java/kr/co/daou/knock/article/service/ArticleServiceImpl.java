@@ -59,12 +59,12 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
     public String view(Article article) {
         Map<String, Object> rtnMap = returnMap();
         try{
-            article = articleMapper.findByIdx(article.getIdx());
-            article.setArticleHashtagList(articleHashtagMapper.findAllByArticleIdx(article.getIdx()));
-
             int totalCount = commentMapper.countByDto(article);
             setDefaultPaging(rtnMap, article, totalCount);
             List<Comment> comment = commentMapper.findAllByArticleIdx(article);
+
+            article = articleMapper.findByDto(article);
+            article.setArticleHashtagList(articleHashtagMapper.findAllByArticleIdx(article.getIdx()));
 
             rtnMap.put("article", article);
             rtnMap.put("comment", comment);
