@@ -19,11 +19,11 @@ public class JwtService {
 	private static final String ENCRYPT_STRING = "intern"; // 비밀키 설정
 	private static final String DATA_KEY = "userIdx";
 	
-	public String createLoginToken(long userIdx) {
+	public String createLoginToken(long userIdx, int expireTime) {
 		long curTime = System.currentTimeMillis();
 		return Jwts.builder()
 				.setHeaderParam("typ", "JWT")
-				.setExpiration(new Date(curTime * 60000 * 30))
+				.setExpiration(new Date(curTime + expireTime))
 				.setIssuedAt(new Date(curTime))
 				.claim(DATA_KEY, userIdx)
 				.signWith(SignatureAlgorithm.HS256, this.generateKey())
@@ -47,14 +47,11 @@ public class JwtService {
 	        } catch (SignatureException ex) {
 	        } catch (MalformedJwtException ex) {
 	        } catch (ExpiredJwtException ex) {
-	        	// 토큰 만료 시 갱신 로직
-	        	System.out.println(jwt);
-	        	System.out.println(getUserIdx(jwt));
 	        	return "expired";
 	        } catch (UnsupportedJwtException ex) {
 	        } catch (IllegalArgumentException ex) {
 	        }
-	        return "fasle";
+	        return "false";
 	}
 	
 	public Claims getUserIdx(String jwt) {

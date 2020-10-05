@@ -87,7 +87,7 @@ export default {
       http
         .get('review/enterRoom/' + this.roomIdx, config)
         .then((res) => {
-          if (res.data.status) {
+          if (res.status === 200) {
             console.log('in')
             this.chatList = res.data.chatList
             this.codeList = res.data.codeList
@@ -130,7 +130,7 @@ export default {
         .put(
           'review/modifyCode',
           data, config).then(res => {
-          if (res.data.status) {
+          if (res.status === 200) {
             console.log('success')
             this.sendLock('unlock')
           }

@@ -1,13 +1,10 @@
 package kr.co.daou.knock.user.service;
 
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,55 +13,87 @@ import kr.co.daou.knock.common.db.mybatis.dto.LoginRequest;
 import kr.co.daou.knock.common.db.mybatis.dto.SignUpRequest;
 import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
 import kr.co.daou.knock.common.db.mybatis.mapper.UserMapper;
+import kr.co.daou.knock.common.service.CommonService;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl extends CommonService implements UserService {
 	@Autowired
 	private UserMapper userMapper;
 
 	@Override
-	public int registerUser(SignUpRequest signUpRequest) {
-		String password = Sha256.encrypt(signUpRequest.getPassword());
-		signUpRequest.setPassword(password);
-		return userMapper.registerUser(signUpRequest);
-	}
-
-	@Override
-	public int chkEmail(String email) {
-		return userMapper.chkEmail(email);
-	}
-
-	@Override
-	public long login(LoginRequest loginRequest) {
-		String password = Sha256.encrypt(loginRequest.getPassword());
-		loginRequest.setPassword(password);
-		return userMapper.login(loginRequest);
-	}
-
-	@Override
-	public UserDto getUserInfo(long userIdx) {
-		return userMapper.getUserInfo(userIdx);
-	}
-
-	@Override
-	public Map<String, Object> getInfoByToken(HttpServletRequest request) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		String token = request.getHeader("Authorization");
-		JwtService jwt = new JwtService();
-		if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-			token = token.substring(7, token.length());
-			String chkJwt = jwt.checkValid(token);
-			if(chkJwt.equals("true") || chkJwt.equals("expired")) {
-				Claims data = jwt.getUserIdx(token);
-				long userIdx = ((Integer) data.get("userIdx")).longValue();
-				UserDto user = userMapper.getUserInfo(userIdx);
-				map.put("status", true);
-				map.put("user", user);
-			} else {
-				map.put("status", false);
+	public String registerUser(SignUpRequest signUpRequest) {
+		Map<String, Object> rtnMap = returnMap();
+		if (userMapper.chkEmail(signUpRequest.getEmail()) == 1) {
+			rtnMap.put(RESULT_TEXT, RESULT_FAIL);
+		} else {
+			try {
+				String password = Sha256.encrypt(signUpRequest.getPassword());
+				signUpRequest.setPassword(password);
+				userMapper.registerUser(signUpRequest);
+				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
+			} catch (Exception e) {
+				defaultExceptionHandling(rtnMap, RESULT_FAIL);
 			}
 		}
-		return map;
+		return jsonFormatTransfer(rtnMap);
 	}
-	
+
+	@Override
+	public String login(LoginRequest loginRequest) {
+		Map<String, Object> rtnMap = returnMap();
+		UserDto userDto = new UserDto();
+		try {
+			String password = Sha256.encrypt(loginRequest.getPassword());
+			loginRequest.setPassword(password);
+			long userIdx = userMapper.login(loginRequest);
+			if(userIdx > 0) {
+				userDto = userMapper.getUserInfo(userIdx);
+				rtnMap.put("user", userDto);
+				// 토큰 생성 후 리턴
+				JwtService jwt = new JwtService();
+				String accessToken = jwt.createLoginToken(userIdx, 60000 * 30);
+				String refreshToken = jwt.createLoginToken(userIdx, 60000 * 60 * 24 * 7);
+				rtnMap.put("accessToken", accessToken);
+				rtnMap.put("refreshToken", refreshToken);
+				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
+			} else {
+				rtnMap.put(RESULT_TEXT, RESULT_FAIL);
+			}
+		}catch (Exception e) {
+			defaultExceptionHandling(rtnMap, RESULT_FAIL);
+		}
+		return jsonFormatTransfer(rtnMap);
+	}
+
+//	@Override
+//	public UserDto getUserInfo(long userIdx) {
+//		return userMapper.getUserInfo(userIdx);
+//	}
+
+	@Override
+	public String getInfoByToken(HttpServletRequest request) {
+		Map<String, Object> rtnMap = returnMap();
+		String token = request.getHeader("Authorization");
+		JwtService jwt = new JwtService();
+		try {
+			if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+				token = token.substring(7, token.length());
+				String chkJwt = jwt.checkValid(token);
+				if (chkJwt.equals("true") || chkJwt.equals("expired")) {
+					//갱신로직
+					Claims data = jwt.getUserIdx(token);
+					long userIdx = ((Integer) data.get("userIdx")).longValue();
+					UserDto user = userMapper.getUserInfo(userIdx);
+					rtnMap.put("user", user);
+					rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
+				} else {
+					rtnMap.put(RESULT_TEXT, RESULT_FAIL);
+				}
+			}
+		} catch (Exception e) {
+			defaultExceptionHandling(rtnMap, RESULT_FAIL);
+		}
+		return jsonFormatTransfer(rtnMap);
+	}
+
 }

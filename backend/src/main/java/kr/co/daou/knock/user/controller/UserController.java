@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -33,40 +34,23 @@ public class UserController {
 	
 	@ApiOperation(value = "회원가입", response = List.class)
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest ) {
-		if(userService.chkEmail(signUpRequest.getEmail()) == 1) {
-			return ResponseEntity.ok(false);
-		}
-		userService.registerUser(signUpRequest);
-		return ResponseEntity.ok(true);
+	@ResponseBody
+	public String registerUser(@Valid @RequestBody SignUpRequest signUpRequest ) {
+		return userService.registerUser(signUpRequest);
 	}
 	
 	@ApiOperation(value = "로그인", response = List.class)
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		UserDto userDto = new UserDto();
-		Map<String, Object> map = new HashMap<String, Object>();
-		long userIdx = userService.login(loginRequest);
-		if(userIdx > 0) {
-			userDto = userService.getUserInfo(userIdx);
-			map.put("status", true);
-			map.put("user", userDto);
-			// 토큰 생성 후 리턴
-			JwtService jwt = new JwtService();
-			String token = jwt.createLoginToken(userIdx);
-			map.put("token", token);
-		} else {
-			map.put("status", false);
-		}
-		return new ResponseEntity<Map<String,Object>>(map, status);
+	@ResponseBody
+	public String loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+		return userService.login(loginRequest);
 	}
 	
 	@ApiOperation(value = "사용자 정보 받기", response = UserDto.class)
 	@GetMapping("/info")
-	public ResponseEntity<Map<String, Object>> getInfo(HttpServletRequest request) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(userService.getInfoByToken(request), status);
+	@ResponseBody
+	public String getInfo(HttpServletRequest request) {
+		return userService.getInfoByToken(request);
 	}
 	
 //	@ApiOperation(value = "사용자 정보 받기", response = UserDto.class)
