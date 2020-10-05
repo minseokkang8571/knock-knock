@@ -29,13 +29,25 @@ export default {
         endPageNo: 0,
         totalCnt: 0,
         ItemInPage: 5
+      },
+      searchInfo: {
+        text: '',
+        tag: '',
+        type: ''
       }
     }
   },
   methods: {
+    init() {
+      this.setSearchInfo()
+      this.getArticleList(1)
+    },
     getArticleList(pageNo) {
       http
-        .get(`article/list?pageNo=${pageNo}`)
+        .get(`article/list?pageNo=${pageNo}` +
+        `&searchText=${this.searchInfo.text}` +
+        `&searchTag=${this.searchInfo.tag}` +
+        `&searchType=${this.searchInfo.type}`)
         .then((res) => {
           console.log(res)
           this.articles = res.data.articleList
@@ -48,10 +60,22 @@ export default {
     },
     onPaging(pageNo) {
       this.getArticleList(pageNo)
+    },
+    setSearchInfo() {
+      if (this.$route.name === 'ArticleSearchList') {
+        // SearchBar를 통해 데이터가 입력된 경우
+        this.searchInfo.text = this.$route.query.searchText
+        this.searchInfo.tag = this.$route.query.searchTag
+        this.searchInfo.type = this.$route.query.searchType
+      }
     }
   },
   mounted() {
-    this.getArticleList(1)
+    this.init()
+  },
+  watch: {
+    // 검색어 변경시, 변경된 검색어로 API를 다시 요청
+    $route: 'init'
   }
 }
 </script>

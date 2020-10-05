@@ -42,10 +42,14 @@ const routes = [
     component: ArticleList
   },
   {
-    path: '/articles',
+    path: '/search',
+    name: 'ArticleSearchList',
+    component: ArticleList
+  },
+  {
+    path: '/article',
     name: 'ArticleDetail',
-    component: ArticleDetail,
-    props: true
+    component: ArticleDetail
   },
   {
     path: '/article',
