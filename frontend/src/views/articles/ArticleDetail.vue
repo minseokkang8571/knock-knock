@@ -1,21 +1,12 @@
 <template>
   <div class="container" v-if="article">
-    <article>
-      <div class="d-flex justify-content-between">
-        <h2 class="title-overflow col-9">{{ article.title }}</h2>
-        <span class="align-self-end color-grey">작성자 : {{ article.username }} | {{ article.regDate }}</span>
-      </div>
-      <hr>
-      <Preview :contents="article.contents" />
-      <div class="d-flex justify-content-start">
-        <button class="tag mt-1 mr-2">tag</button>
-        <button class="tag mt-1">tag</button>
-      </div>
-      <div v-show="article.userIdx === userInfo.idx">
-        <button @click="onUpdate">수정</button>
-        <button @click="onDelete">삭제</button>
-      </div>
-    </article>
+    <!-- 게시글 내용 -->
+    <ArticleContent
+      :article="article"
+      @onUpdate="onUpdate"
+      @onDelete="onDelete"
+    />
+    <!-- 댓글 리스트 -->
     <CommentList
       v-if="comments"
       :comments="comments"
@@ -28,6 +19,7 @@
       :pageInfo="pageInfo"
       @onPaging="onPaging"
     />
+    <!-- 댓글 입력폼-->
     <CommentCreate
       :payload="commentCreatePayload"
       @saveComment="getArticle(1)"
@@ -36,18 +28,17 @@
 </template>
 
 <script>
+import ArticleContent from '@/components/article/ArticleContent'
 import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
 import Pagination from '@/components/Pagination'
-import Preview from '@/components/viewer/Preview'
 import http from '@/util/http-common'
-import { mapState } from 'vuex'
 export default {
   components: {
+    ArticleContent,
     CommentList,
     CommentCreate,
-    Pagination,
-    Preview
+    Pagination
   },
   data() {
     return {
@@ -115,9 +106,6 @@ export default {
   },
   mounted() {
     this.getArticle(1)
-  },
-  computed: {
-    ...mapState(['userInfo'])
   }
 }
 </script>
