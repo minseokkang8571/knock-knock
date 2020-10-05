@@ -7,7 +7,7 @@
         <textarea id="textArea" v-model="review">
         </textarea>
         <button class="btn btn-primary mr-2" @click="sendLock('lock')">수정 시작</button>
-        <button class="btn btn-primary mr-2" @click="modifyCode()">수정 완료</button>
+        <button class="btn btn-primary mr-2" @click="sendLock('unlock')">수정 완료</button>
       </div>
       <div class="col-4 scroll-area">
         <b-row v-for="list in chatList" v-bind:key="list.idx">
@@ -193,11 +193,14 @@ export default {
     sendLock(type) {
       var option = {
         type: type,
-        contents: this.review,
-        userIdx: this.userInfo.idx
+        articleIdx: this.codeList[0].articleIdx,
+        roomIdx: this.roomIdx,
+        codeIdx: this.codeList[0].idx,
+        userIdx: this.userInfo.idx,
+        contents: this.review
       }
       this.stompClient.send(
-        '/lock/' + this.roomIdx,
+        '/' + type + '/' + this.roomIdx,
         JSON.stringify(option),
         {}
       )

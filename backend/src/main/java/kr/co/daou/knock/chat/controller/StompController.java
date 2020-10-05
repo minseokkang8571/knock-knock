@@ -1,38 +1,33 @@
 package kr.co.daou.knock.chat.controller;
 
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import kr.co.daou.knock.common.db.mybatis.dto.Review;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import kr.co.daou.knock.chat.service.ChatService;
-import kr.co.daou.knock.common.db.mybatis.dto.Chat;
-
 
 @Controller
 public class StompController {
-	
-	@Autowired
-	ChatService chatService;
-	
+
+
+/*	Stomp,socket 통신
 	@MessageMapping("/receive/{roomIdx}")
 	@SendTo("/send/{roomIdx}")
 	public Chat stompChat(@RequestBody Chat chat, @PathVariable("roomIdx") String roomIdx) throws Exception {
 		chatService.writeChat(chat);
 		return chat;
 	}
-	
+*/
 	@MessageMapping("/lock/{roomIdx}")
 	@SendTo("/send/{roomIdx}")
-	public Map<String, String> stompLock(@RequestBody Map<String, String> params, @PathVariable("roomIdx") String roomIdx) throws Exception {
-		return params;
+	public Review stompLock(@RequestBody Review review, @PathVariable("roomIdx") String roomIdx) throws Exception {
+		System.out.println(review);
+		return review;
 	}
-	
+
 	@MessageMapping("/out/{roomIdx}")
 	@SendTo("/send/{roomIdx}")
 	public String stompOut(@PathVariable("roomIdx") String roomIdx) throws Exception {

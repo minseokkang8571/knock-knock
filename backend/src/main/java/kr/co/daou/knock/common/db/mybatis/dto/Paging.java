@@ -34,7 +34,7 @@ public class Paging {
      */
     private void makePaging() {
         if (this.pageNo == 0) this.setPageNo(1); // 기본 값 설정
-        if (this.pageSize == 0) this.setPageSize(5); // 기본 값 설정
+        if (this.pageSize == 0) this.setPageSize(10); // 기본 값 설정
         if (this.totalCount == 0) return; // 게시 글 전체 수가 없는 경우
 
         int finalPage = ((int) (totalCount + (pageSize - 1))) / pageSize; // 마지막 페이지
