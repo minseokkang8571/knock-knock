@@ -40,7 +40,7 @@ export default {
           console.log(res)
           this.articles = res.data.articleList
           this.pageInfo.totalCnt = res.data.totalCount
-          this.pageInfo.endPageNo = res.data.totalCount / 5 - 1
+          this.pageInfo.endPageNo = Math.ceil(res.data.totalCount / 5)
         })
         .catch((err) => {
           console.log(err)

@@ -16,15 +16,29 @@
         <button @click="onDelete">삭제</button>
       </div>
     </article>
-    <CommentList v-if="comments" :comments="comments" :article="article" @saveComment="getArticle(1)"/>
+    <CommentList
+      v-if="comments"
+      :comments="comments"
+      :article="article"
+      @saveComment="getArticle(1)"
+    />
     <hr>
-    <CommentCreate :payload="commentCreatePayload" @saveComment="getArticle(1)"/>
+    <!-- 하단 페이지네이션 -->
+    <Pagination
+      :pageInfo="pageInfo"
+      @onPaging="onPaging"
+    />
+    <CommentCreate
+      :payload="commentCreatePayload"
+      @saveComment="getArticle(1)"
+    />
   </div>
 </template>
 
 <script>
 import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
+import Pagination from '@/components/Pagination'
 import Preview from '@/components/viewer/Preview'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
@@ -32,6 +46,7 @@ export default {
   components: {
     CommentList,
     CommentCreate,
+    Pagination,
     Preview
   },
   data() {
@@ -48,6 +63,11 @@ export default {
         articleIdx: null,
         groupLayer: -1,
         groupOrd: 0
+      },
+      pageInfo: {
+        endPageNo: 0,
+        totalCnt: 0,
+        ItemInPage: 10
       }
     }
   },
@@ -64,6 +84,8 @@ export default {
           this.article.userIdx = this.commentCreatePayload.userIdx = res.data.article.userIdx
           this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
           this.comments = res.data.comment
+          this.pageInfo.totalCnt = res.data.paging.totalCount
+          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.ItemInPage)
         })
         .catch((err) => {
           console.log(err)
@@ -83,6 +105,9 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    onPaging(pageNo) {
+      this.getArticle(pageNo)
     }
   },
   mounted() {

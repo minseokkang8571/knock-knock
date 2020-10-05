@@ -36,13 +36,14 @@ export default {
     init() {
       this.getRoomList(1)
     },
-    getRoomList(counter) {
+    getRoomList(pageNo) {
       http
-        .get(`review/getRoom?pageNo=${counter}`)
+        .get(`review/getRoom?pageNo=${pageNo}`)
         .then((res) => {
+          console.log(res)
           this.rooms = res.data.roomList
           this.pageInfo.totalCnt = this.rooms.length
-          this.pageInfo.endPageNo = this.pageInfo.totalCnt / 5 - 1
+          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.ItemInPage)
         })
         .catch((err) => {
           console.log(err)
