@@ -18,5 +18,10 @@ public class Review {
 	@ApiParam(value = "수정 코드", required = true)
 	private String contents; 
 	@ApiParam(value = "수정 시간", required = false)
-	private Date date; 
+	private Date date;
+
+	@ApiParam(value = "타입값(lock,unlock)")
+	private String type;
+	@ApiParam(value = "게시글 idx", required = true)
+	private long articleIdx;
 }
