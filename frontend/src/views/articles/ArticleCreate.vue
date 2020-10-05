@@ -25,10 +25,11 @@
           @keydown.tab.prevent="tabber($event)"
           @keydown.ctrl.66="toggleCtrlShortCut"
           @keydown.ctrl.73="toggleCtrlShortCut"
+          @keydown.ctrl.191="onModal"
         ></b-form-textarea>
       <div class="d-flex justify-content-end">
         <!-- preview for markdown -->
-        <PreviewModal :contents="form.contents" />
+        <PreviewModal :contents="form.contents" ref="previewModal" />
         <button
           type="submit"
           class="btn btn-success ml-2 pl-3 pr-3"
@@ -129,6 +130,11 @@ export default {
         changedText = specialChr + targetText + specialChr
       }
       this.form.contents = startText + changedText + endText
+    },
+    onModal(event) {
+      // ctrl + / 입력시 previewModal을 띄움
+      // 하위 컴포넌트 PreviewModal의 함수실행
+      this.$refs.previewModal.onModal()
     }
   },
   computed: {

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <b-button @click="$bvModal.show('modal-scoped')">Preview</b-button>
+    <b-button @click="onModal">Preview</b-button>
 
-    <b-modal size="xl" id="modal-scoped">
+    <b-modal size="xl" id="modal-scoped" @keydown.ctrl="myKeyDown">
       <template v-slot:modal-header="{}">
         <h5>Preview</h5>
       </template>
@@ -25,6 +25,11 @@ export default {
   },
   props: {
     contents: String
+  },
+  methods: {
+    onModal() {
+      this.$bvModal.show('modal-scoped')
+    }
   }
 }
 </script>
