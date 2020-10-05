@@ -104,6 +104,10 @@ export default {
   height: 3.6em;
 }
 
+.color-grey {
+  color: grey
+}
+
 #input-form p {
   text-align: left;
   margin-bottom: 0px;

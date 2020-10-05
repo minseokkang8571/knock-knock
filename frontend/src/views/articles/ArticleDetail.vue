@@ -2,8 +2,8 @@
   <div class="container" v-if="article">
     <article>
       <div class="d-flex justify-content-between">
-        <h2 class="title-overflow">{{ article.title }}</h2>
-        <span class="align-self-end">작성자: username백에서줘야함 작성시간: {{ article.regDate}}</span>
+        <h2 class="title-overflow col-9">{{ article.title }}</h2>
+        <span class="align-self-end color-grey">작성자 : {{ article.username }} | {{ article.regDate }}</span>
       </div>
       <hr>
       <Preview :contents="article.contents" />
@@ -56,6 +56,7 @@ export default {
         contents: '',
         regDate: '',
         userIdx: '',
+        username: '',
         idx: null
       },
       comments: null,
@@ -83,6 +84,8 @@ export default {
           this.article.regDate = res.data.article.formatedRegDate
           this.article.userIdx = this.commentCreatePayload.userIdx = res.data.article.userIdx
           this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
+          this.article.username = res.data.article.name
+
           this.comments = res.data.comment
           this.pageInfo.totalCnt = res.data.paging.totalCount
           this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.ItemInPage)
