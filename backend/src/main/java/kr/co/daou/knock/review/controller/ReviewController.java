@@ -20,7 +20,6 @@ import kr.co.daou.knock.common.db.mybatis.dto.Review;
 import kr.co.daou.knock.common.db.mybatis.dto.Room;
 import kr.co.daou.knock.review.service.ReviewService;
 
-@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 @RequestMapping("/review")
 public class ReviewController {

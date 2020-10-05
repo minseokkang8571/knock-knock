@@ -33,11 +33,10 @@
 	</select>
 	
 	<select id="enterRoom" resultType="Code">
-		SELECT *
-		FROM code
-		where article_idx = (SELECT article_idx 
-							FROM room 
-							WHERE idx = #{roomIdx})
+		SELECT a.*
+		FROM code as a INNER JOIN room as b
+		ON a.article_idx = b.article_idx
+		where b.idx = #{roomIdx}
 	</select>
 	
 	<update id="modifyCode" parameterType="Review">
