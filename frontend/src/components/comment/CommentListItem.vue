@@ -11,7 +11,7 @@
       <p class="col-1">userIdx = {{ comment.userIdx }}</p>
       <p class="col-11 text-left">{{ comment.contents }}</p>
     </div>
-    <!-- 댓글의 작성자일 경우 수정,삭제 권한을 제공 -->
+    <!-- 재댓글, 수정, 삭제 -->
     <div class="d-flex justify-content-end">
       <span
         v-if="comment.groupLayer === 0"
@@ -19,7 +19,7 @@
         class="mr-2 detail-button">
         재댓글
       </span>
-      <div v-show="comment.userIdx === userInfo.idx" class="d-inline">
+      <div v-if="comment.userIdx === userInfo.idx" class="d-inline">
         <span
           @click="showUpdateForm"
           class="mr-2 detail-button">
@@ -32,13 +32,13 @@
         </span>
       </div>
     </div>
-    <!-- 수정의 경우 markdown, 재댓글의 경우 text이기 때문에 서로 다른 폼을 사용 -->
+    <!-- 재댓글 입력 -->
     <div
       v-if="recommentFormVisibleIdx === comment.idx"
       class="w-100">
       <CommentCreate :payload="recommentPayload" @saveComment="saveComment" />
     </div>
-
+    <!-- 수정 입력 -->
     <div
       v-if="updateFormVisibleIdx === comment.idx"
       class="w-100">
