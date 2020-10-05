@@ -107,7 +107,7 @@
 			<artifactId>mybatis</artifactId>
 			<version>3.5.4</version>
 		</dependency>
-		
+
 		<!-- 유효성 검사 valid -->
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -119,6 +119,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+		<!-- redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
 	</dependencies>
