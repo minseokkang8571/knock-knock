@@ -28,6 +28,8 @@ public class Article extends Paging {
     @ApiParam(value = "작성자 이름", required = true)
     private String name;
 
+    private boolean likeYn;
+
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if(this.regDate != null){

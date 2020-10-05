@@ -4,13 +4,14 @@
 
 
     <select id="findAllByArticleIdx" parameterType="article" resultType="comment">
-        SELECT cm.*,u.name,(SELECT COUNT(*) FROM commentLike cml WHERE cml.comment_idx=cm.idx) commentLikeCount
+        SELECT cm.*,u.name, IFNULL(cml.comment_cnt,0) commentLikeCount, IF(ISNULL(cl.idx),false,true) likeYn
         FROM comment cm INNER JOIN user u ON cm.user_idx = u.idx
+        LEFT OUTER JOIN (SELECT comment_idx, count(*) comment_cnt FROM commentLike WHERE 1=1 group by comment_idx) cml ON cm.idx = cml.comment_idx
+        LEFT OUTER JOIN commentLike cl ON cl.comment_idx = cm.idx AND cl.user_idx=#{userIdx}
         WHERE cm.article_idx = #{idx}
         AND cm.del_yn = 'N'
         ORDER BY cm.origin_idx DESC, cm.group_ord ASC
-        LIMIT #{firstIndex},10
-
+        LIMIT #{firstIndex},#{pageSize}
     </select>
     <select id="countByDto" parameterType="article" resultType="int">
         SELECT count(*)
@@ -65,7 +66,7 @@
     <update id="updateDelYn" parameterType="Long">
         UPDATE comment
         SET del_yn = 'Y'
-        WHERE idx = #{idx}
+        WHERE (idx = #{idx} OR origin_idx=#{idx})
     </update>
 
     <insert id="insertCommentLike" parameterType="commentLike">

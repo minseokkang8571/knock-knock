@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ArticleMapper {
 
-    Article findByIdx(Long idx);
+    Article findByDto(Article article);
 
     void updateArticle(Article article);
 
