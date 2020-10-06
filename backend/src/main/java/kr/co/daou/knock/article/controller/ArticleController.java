@@ -158,8 +158,7 @@ public class ArticleController {
      */
     @ApiOperation(value = "답글 좋아요 삭제", response = List.class)
     @DeleteMapping("/commentLikeDelete")
-    @ResponseBody
-    public String commentLikeDelete(@RequestBody CommentLike commentLike) {
+    public String commentLikeDelete(CommentLike commentLike) {
         return articleService.commentLikeDelete(commentLike);
     }
 }
