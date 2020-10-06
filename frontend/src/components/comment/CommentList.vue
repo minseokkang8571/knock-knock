@@ -1,7 +1,9 @@
 <template>
 <div class="mt-2">
   <h4 class="text-left">Answer</h4>
-  <div v-for="(comment, idx) in comments" :key="idx" class="container mt-2">
+  <div
+    v-for="(comment, idx) in comments" :key="idx"
+    class="container mt-2 pl-0 pr-0">
     <CommentListItem
       :comment="comment"
       :article="article"

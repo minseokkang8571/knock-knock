@@ -1,59 +1,54 @@
 <template>
   <div>
-    <hr>
+    <hr class="article-hr">
     <!-- 댓글 -->
-    <div v-if="comment.groupLayer === 0" class="row">
-      <button class="col-1" @click="onLike">좋아요 {{ comment.commentLikeCount }}</button>
-      <p class="col-11 text-left">{{ comment.contents }}</p>
+    <div v-if="comment.groupLayer === 0">
+      <CommentContent
+        :comment="comment"
+        @onDislike="onDislike"
+        @onLike="onLike"
+        @showCommentForm="showCommentForm"
+        @showUpdateForm="showUpdateForm"
+        @onDelete="onDelete"/>
     </div>
     <!-- 재댓글 -->
-    <div v-if="comment.groupLayer === 1" class="row ml-4">
-      <p class="col-1">userIdx = {{ comment.userIdx }}</p>
-      <p class="col-11 text-left">{{ comment.contents }}</p>
-    </div>
-    <!-- 재댓글, 수정, 삭제 -->
-    <div class="d-flex justify-content-end">
-      <span
-        v-if="comment.groupLayer === 0"
-        @click="showCommentForm"
-        class="mr-2 detail-button">
-        재댓글
-      </span>
-      <div v-if="comment.userIdx === userInfo.idx" class="d-inline">
-        <span
-          @click="showUpdateForm"
-          class="mr-2 detail-button">
-          수정
-        </span>
-        <span
-          @click="onDelete"
-          class="detail-button">
-          삭제
-        </span>
-      </div>
+    <div v-if="comment.groupLayer === 1">
+      <RecommentContent
+        :comment="comment"
+        @showCommentForm="showCommentForm"
+        @showUpdateForm="showUpdateForm"
+        @onDelete="onDelete"/>
     </div>
     <!-- 재댓글 입력 -->
     <div
       v-if="recommentFormVisibleIdx === comment.idx"
       class="w-100">
-      <CommentCreate :payload="recommentPayload" @saveComment="saveComment" />
+      <CommentCreate
+        :payload="recommentPayload"
+        @saveComment="saveComment"/>
     </div>
     <!-- 수정 입력 -->
     <div
       v-if="updateFormVisibleIdx === comment.idx"
       class="w-100">
-      <CommentCreate :payload="updatePayload" @saveComment="saveComment"/>
+      <CommentCreate
+        :payload="updatePayload"
+        @saveComment="saveComment"/>
     </div>
   </div>
 </template>
 
 <script>
+import CommentContent from '@/components/comment/CommentContent'
 import CommentCreate from '@/components/comment/CommentCreate'
+import RecommentContent from '@/components/comment/RecommentContent'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
 export default {
   components: {
-    CommentCreate
+    CommentContent,
+    CommentCreate,
+    RecommentContent
   },
   props: {
     comment: Object,
@@ -63,12 +58,6 @@ export default {
   },
   data() {
     return {
-      commentForm: {
-        contents: ''
-      },
-      updateForm: {
-        contents: ''
-      },
       recommentPayload: {
         articleIdx: null,
         userIdx: null,
@@ -78,6 +67,7 @@ export default {
         contents: ''
       },
       updatePayload: {
+        contents: '',
         idx: null
       }
     }
@@ -101,6 +91,7 @@ export default {
     showUpdateForm() {
       // commentCreate로 보낼 데이터를 저장
       this.updatePayload.idx = this.comment.idx
+      this.updatePayload.contents = this.comment.contents
 
       // commentForm을 하나만 보여줄 수 있도록 commentList에서 관리
       this.$emit('onUpdate', this.comment.idx)
@@ -125,14 +116,31 @@ export default {
         userIdx: this.$store.state.userInfo.idx,
         commentIdx: this.comment.idx
       }
-      console.log(payload)
+
       http
         .post('article/commentLikeSave', payload, null)
         .then((res) => {
           console.log(res)
           if (res.data.httpCode === '300') {
             alert('이미 좋아요한 유저입니다.')
+          } else {
+            this.$emit('saveComment')
           }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    onDislike() {
+      const payload = {
+        userIdx: this.$store.state.userInfo.idx,
+        commentIdx: this.comment.idx
+      }
+
+      http
+        .delete(`article/commentLikeDelete?userIdx=${payload.userIdx}&commentIdx=${payload.commentIdx}`)
+        .then((res) => {
+          this.$emit('saveComment')
         })
         .catch((err) => {
           console.log(err)
@@ -143,7 +151,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style>
 .detail-button {
   color: grey;
   cursor: pointer;

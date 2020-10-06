@@ -22,7 +22,7 @@
       :article="article"
       @saveComment="getArticle(1)"
     />
-    <hr>
+    <hr class="article-hr">
     <!-- 하단 페이지네이션 -->
     <Pagination
       :pageInfo="pageInfo"
@@ -75,7 +75,7 @@ export default {
   methods: {
     getArticle(pageNo) {
       http
-        .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
+        .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}&userIdx=${this.userInfo.idx}`)
         .then((res) => {
           console.log(res)
 
@@ -123,5 +123,7 @@ export default {
 </script>
 
 <style>
-
+.article-hr {
+  margin: 5px 0px 5px 0px;
+}
 </style>

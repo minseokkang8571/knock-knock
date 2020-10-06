@@ -27,12 +27,14 @@ const rejectAuthUser = (to, from, next) => {
 
 const onlyAuthUser = (to, from, next) => {
   // 로그인이 필요한 페이지의 경우, 로그인 페이지로 리다이렉트
-  if (store.state.isLogin === true) {
-    next()
-  } else {
-    alert('로그인을 해야합니다.')
-    next({ name: 'Signin' })
-  }
+  setTimeout(function() {
+    if (store.state.isLogin === true) {
+      next()
+    } else {
+      alert('로그인을 해야합니다.')
+      next({ name: 'Signin' })
+    }
+  }, 300)
 }
 
 const routes = [

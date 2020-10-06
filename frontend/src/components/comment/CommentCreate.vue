@@ -9,7 +9,11 @@
       placeholder="댓글내용을 입력하세요."
       rows="15"
     ></b-form-textarea>
-    <button class="btn btn-primary mt-2 ml-auto d-block" @click="onCommentCreate">submit</button>
+    <button
+      class="btn btn-primary mt-2 ml-auto d-block"
+      @click="onCommentCreate">
+      submit
+    </button>
   </div>
 </template>
 
@@ -18,7 +22,6 @@ import http from '@/util/http-common'
 export default {
   props: {
     article: Object,
-    commentContents: String,
     commentIdx: Number,
     payload: Object
   },
@@ -33,7 +36,7 @@ export default {
     isUpdate() {
       // 수정의 경우 기존의 값을 사용자에게 제공
       if (this.commentIdx !== null) {
-        this.form.contents = this.commentContents
+        this.form.contents = this.payload.contents
       }
     },
     onCommentCreate() {

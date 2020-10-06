@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- v-html을 통한 XSS공격을 막기위해 sanitizer 라이브러리를 사용 -->
-    <div class="hljs" v-dompurify-html="convertMarkdown()"></div>
+    <div
+      class="hljs"
+      v-dompurify-html="convertMarkdown()">
+    </div>
   </div>
 </template>
 
@@ -45,6 +48,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.hljs {
+  padding: 0px 0px 0px 0px;
+}
 </style>
