@@ -28,7 +28,7 @@ export default {
       pageInfo: {
         endPageNo: 0,
         totalCnt: 0,
-        ItemInPage: 5
+        itemInPage: 5
       }
     }
   },
@@ -38,12 +38,13 @@ export default {
     },
     getRoomList(pageNo) {
       http
-        .get(`review/getRoom?pageNo=${pageNo}`)
+        .get(`review/getRoom?pageNo=${pageNo}` +
+        `&pageSize=${this.pageInfo.itemInPage}`)
         .then((res) => {
           console.log(res)
           this.rooms = res.data.roomList
           this.pageInfo.totalCnt = this.rooms.length
-          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.ItemInPage)
+          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
         })
         .catch((err) => {
           console.log(err)

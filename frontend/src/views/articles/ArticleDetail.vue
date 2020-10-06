@@ -60,7 +60,7 @@ export default {
       pageInfo: {
         endPageNo: 0,
         totalCnt: 0,
-        ItemInPage: 10
+        itemInPage: 10
       }
     }
   },
@@ -69,6 +69,7 @@ export default {
       http
         .get(`article/view?idx=${this.$route.query.articleIdx}` +
         `&pageNo=${pageNo}` +
+        `&pageSize=${this.pageInfo.itemInPage}` +
         `&userIdx=${this.userInfo.idx}`)
         .then((res) => {
           console.log(res)
@@ -82,7 +83,7 @@ export default {
 
           this.comments = res.data.comment
           this.pageInfo.totalCnt = res.data.paging.totalCount
-          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.ItemInPage)
+          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
         })
         .catch((err) => {
           console.log(err)

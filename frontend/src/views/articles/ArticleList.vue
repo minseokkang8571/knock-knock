@@ -28,7 +28,7 @@ export default {
       pageInfo: {
         endPageNo: 0,
         totalCnt: 0,
-        ItemInPage: 5
+        itemInPage: 10
       },
       searchInfo: {
         text: '',
@@ -45,6 +45,7 @@ export default {
     getArticleList(pageNo) {
       http
         .get(`article/list?pageNo=${pageNo}` +
+        `&pageSize=${this.pageInfo.itemInPage}` +
         `&searchText=${this.searchInfo.text}` +
         `&searchTag=${this.searchInfo.tag}` +
         `&searchType=${this.searchInfo.type}`)
@@ -52,7 +53,7 @@ export default {
           console.log(res)
           this.articles = res.data.articleList
           this.pageInfo.totalCnt = res.data.totalCount
-          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.ItemInPage)
+          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
         })
         .catch((err) => {
           console.log(err)
