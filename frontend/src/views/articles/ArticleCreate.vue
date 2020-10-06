@@ -106,6 +106,7 @@ export default {
       const targetText = text.slice(selectionStart, selectionEnd)
       const endText = text.slice(selectionEnd)
       let specialChr = ''
+      let changedText = ''
 
       if (selectionStart === selectionEnd) {
         // 커서블록이 없는 경우
@@ -118,18 +119,23 @@ export default {
         specialChr = '*'
       }
 
-      let changedText = ''
       const targetTextLen = targetText.length
       const specialChrLen = specialChr.length
+      let endCursorChange = specialChrLen * 2
       if (targetText.substr(0, specialChrLen) === specialChr &&
       targetText.substr(targetTextLen - specialChrLen, specialChrLen) === specialChr) {
         // 활성화 상태인 경우, 양쪽 특수문자를 제거
         changedText = targetText.slice(specialChrLen, targetTextLen - specialChrLen)
+        endCursorChange = endCursorChange * -1
       } else {
         // 양쪽 특수문자를 삽입
         changedText = specialChr + targetText + specialChr
       }
       this.form.contents = startText + changedText + endText
+
+      event.target.value = this.form.contents
+      event.target.selectionStart = selectionStart
+      event.target.selectionEnd = selectionEnd + endCursorChange
     },
     onModal(event) {
       // ctrl + / 입력시 previewModal을 띄움
