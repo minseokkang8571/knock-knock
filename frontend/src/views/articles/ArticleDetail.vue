@@ -13,7 +13,7 @@
       :article="article"
       @saveComment="getArticle(1)"
     />
-    <hr>
+    <hr class="article-hr">
     <!-- 하단 페이지네이션 -->
     <Pagination
       :pageInfo="pageInfo"
@@ -33,6 +33,7 @@ import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
 import Pagination from '@/components/Pagination'
 import http from '@/util/http-common'
+import { mapState } from 'vuex'
 export default {
   components: {
     ArticleContent,
@@ -66,7 +67,9 @@ export default {
   methods: {
     getArticle(pageNo) {
       http
-        .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}`)
+        .get(`article/view?idx=${this.$route.query.articleIdx}` +
+        `&pageNo=${pageNo}` +
+        `&userIdx=${this.userInfo.idx}`)
         .then((res) => {
           console.log(res)
 
@@ -104,6 +107,9 @@ export default {
       this.getArticle(pageNo)
     }
   },
+  computed: {
+    ...mapState(['userInfo'])
+  },
   mounted() {
     this.getArticle(1)
   }
@@ -111,5 +117,7 @@ export default {
 </script>
 
 <style>
-
+.article-hr {
+  margin: 5px 0px 5px 0px;
+}
 </style>
