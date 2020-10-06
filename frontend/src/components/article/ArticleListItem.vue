@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     toDetail(idx) {
-      this.$router.push(`article?articleIdx=${idx}`)
+      this.$router.push(`articles?articleIdx=${idx}`)
     }
   }
 }
