@@ -33,6 +33,7 @@ import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
 import Pagination from '@/components/Pagination'
 import http from '@/util/http-common'
+import { mapState } from 'vuex'
 export default {
   components: {
     ArticleContent,
@@ -66,7 +67,9 @@ export default {
   methods: {
     getArticle(pageNo) {
       http
-        .get(`article/view?idx=${this.$route.query.articleIdx}&pageNo=${pageNo}&userIdx=${this.userInfo.idx}`)
+        .get(`article/view?idx=${this.$route.query.articleIdx}` +
+        `&pageNo=${pageNo}` +
+        `&userIdx=${this.userInfo.idx}`)
         .then((res) => {
           console.log(res)
 
@@ -103,6 +106,9 @@ export default {
     onPaging(pageNo) {
       this.getArticle(pageNo)
     }
+  },
+  computed: {
+    ...mapState(['userInfo'])
   },
   mounted() {
     this.getArticle(1)
