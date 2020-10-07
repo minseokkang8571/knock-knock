@@ -21,8 +21,6 @@ public class JwtInterceptor extends HandlerInterceptorAdapter{
 			token = token.substring(7, token.length());
 			if(jwtService.checkValid(token).equals("true")) {
 				return true;
-			} else if(jwtService.checkValid(token).equals("expired")) {
-				//갱신 해서 리턴
 			}
 		}
 		return false;
