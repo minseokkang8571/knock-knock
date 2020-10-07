@@ -38,8 +38,8 @@ public class AuthController {
 				token = token.substring(7, token.length());
 				Claims data = jwtService.getUserIdx(token);
 				long userIdx = ((Integer) data.get("userIdx")).longValue();
-				if(jwtService.checkValid(token).equals("true") || jwtService.checkValid(token).equals("expired")) {
-					token = jwtService.createLoginToken(userIdx, 60000 * 30);
+				if(jwtService.checkValid(token).equals(HttpStatus.OK) || jwtService.checkValid(token).equals(HttpStatus.UNAUTHORIZED)) {
+					token = jwtService.createLoginToken(userIdx, 60000);
 					rtnMap.put("token", token);
 				} else {
 					status = HttpStatus.UNAUTHORIZED;
@@ -64,7 +64,7 @@ public class AuthController {
 				token = token.substring(7, token.length());
 				Claims data = jwtService.getUserIdx(token);
 				long userIdx = ((Integer) data.get("userIdx")).longValue();
-				if(jwtService.checkValid(token).equals("true") || jwtService.checkValid(token).equals("expired")) {
+				if(jwtService.checkValid(token).equals(200) || jwtService.checkValid(token).equals(401)) {
 					token = jwtService.createLoginToken(userIdx, 60000 * 60 * 24 * 7);
 					rtnMap.put("refresh", token);
 				} else {

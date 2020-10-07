@@ -32,15 +32,51 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    tmp() {
+    tmp({ commit }) {
       const token = localStorage.getItem('token')
       const refresh = localStorage.getItem('refresh')
       var decodedToken = jwtDecode(token)
       var decodedRefresh = jwtDecode(refresh)
       if (decodedToken.exp < new Date().getTime() / 1000 - (60000 * 6)) {
-        console.log('EXPIRED') // access Token 갱신
+        console.log('EXPIRED') // access Token 갱신 axios
+        const config = {}
+        if (token) {
+          config.headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+          http
+            .get('/auth/access', config)
+            .then((res) => {
+              console.log(res)
+              const token = res.data.accessToken
+              localStorage.setItem('token', token)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
       } else if (decodedRefresh.exp < new Date().getTime() / 1000 - (60000 * 6)) {
-        console.log('Refresh Expired') // refresh 갱신
+        console.log('Refresh Expired') // refresh 갱신 axios
+        const config = {}
+        if (refresh) {
+          config.headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${refresh}`
+          }
+          http
+            .get('/auth/refresh', config)
+            .then((res) => {
+              console.log(res)
+              const token = res.data.accessToken
+              const refresh = res.data.refreshToken
+              localStorage.setItem('token', token)
+              localStorage.setItem('refresh', refresh)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
       }
     },
     onSignin({ commit }, payload) {
