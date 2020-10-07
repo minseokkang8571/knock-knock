@@ -19,7 +19,7 @@
     <div class="mt-1 col-11">
       <Preview :contents="comment.contents" />
       <div class="d-flex justify-content-between">
-        <span>강민석</span>
+        <span>{{ comment.name }}</span>
         <div>
           <span
             v-if="comment.groupLayer === 0"

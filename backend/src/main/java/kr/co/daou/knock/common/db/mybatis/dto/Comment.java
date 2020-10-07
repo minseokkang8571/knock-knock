@@ -20,6 +20,7 @@ public class Comment extends Paging {
 
     private int commentLikeCount;
     private boolean likeYn;
+    private String name;
 
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
