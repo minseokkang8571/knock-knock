@@ -4,6 +4,7 @@
     <div class="row">
       <!-- 코드리뷰 -->
       <textarea
+        id="textArea"
         class="col-8 scroll-area"
         :value="review">
       </textarea>
@@ -156,9 +157,6 @@ export default {
             }
           })
         }
-        // error => {
-        //   this.connected = false
-        // }
       )
     },
     disconnect() {
