@@ -33,7 +33,6 @@ import CommentList from '@/components/comment/CommentList'
 import CommentCreate from '@/components/comment/CommentCreate'
 import Pagination from '@/components/Pagination'
 import http from '@/util/http-common'
-import { mapState } from 'vuex'
 export default {
   components: {
     ArticleContent,
@@ -61,16 +60,20 @@ export default {
         endPageNo: 0,
         totalCnt: 0,
         itemInPage: 10
-      }
+      },
+      userIdx: 0
     }
   },
   methods: {
-    getArticle(pageNo) {
+    // userIdx 비동기로 가져올시 문제가 생겨 localStorage에서 get
+    async getArticle(pageNo) {
+      this.userIdx = await localStorage.getItem('userIdx')
+
       http
         .get(`article/view?idx=${this.$route.query.articleIdx}` +
         `&pageNo=${pageNo}` +
         `&pageSize=${this.pageInfo.itemInPage}` +
-        `&userIdx=${this.userInfo.idx}`)
+        `&userIdx=${this.userIdx}`)
         .then((res) => {
           console.log(res)
 
@@ -107,9 +110,6 @@ export default {
     onPaging(pageNo) {
       this.getArticle(pageNo)
     }
-  },
-  computed: {
-    ...mapState(['userInfo'])
   },
   mounted() {
     this.getArticle(1)

@@ -122,7 +122,7 @@ export default {
         .then((res) => {
           console.log(res)
           if (res.data.httpCode === '300') {
-            alert('이미 좋아요한 유저입니다.')
+            // alert('이미 좋아요한 유저입니다.')
           } else {
             this.$emit('saveComment')
           }

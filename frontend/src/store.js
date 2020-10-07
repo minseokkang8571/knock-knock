@@ -40,6 +40,7 @@ export default new Vuex.Store({
             // 정상적으로 로그인 된 경우, 상태정보 저장 후 이전 페이지로 리다이렉트
             const token = res.data.token
             localStorage.setItem('token', token)
+            localStorage.setItem('userIdx', res.data.user.idx)
             commit('SigninSuccess', res.data.user)
             router.back()
           } else {
@@ -59,9 +60,12 @@ export default new Vuex.Store({
       http
         .post('/user/signup', payload, null)
         .then((res) => {
-          console.log(res)
-          alert('회원가입이 완료되었습니다.')
-          router.push({ name: 'ArticleList' })
+          if (res.data) {
+            alert('회원가입이 완료되었습니다.')
+            router.push({ name: 'ArticleList' })
+          } else {
+            alert('유효하지 않은 입력입니다.')
+          }
         })
         .catch((err) => {
           console.log(err)

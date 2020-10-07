@@ -28,7 +28,7 @@ export default {
       pageInfo: {
         endPageNo: 0,
         totalCnt: 0,
-        itemInPage: 5
+        itemInPage: 10
       },
       searchInfo: {
         text: '',
