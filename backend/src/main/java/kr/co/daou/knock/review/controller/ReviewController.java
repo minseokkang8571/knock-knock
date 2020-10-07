@@ -1,18 +1,17 @@
 package kr.co.daou.knock.review.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
@@ -29,37 +28,37 @@ public class ReviewController {
 	
 	@ApiOperation(value = "방 생성")
 	@PostMapping("/createRoom")
-	public ResponseEntity<Map<String, Object>> createRoom(@RequestBody Room room) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(reviewService.createRoom(room), status);
+	@ResponseBody
+	public String createRoom(@RequestBody Room room) {
+		return reviewService.createRoom(room);
 	}
 	
 	@ApiOperation(value = "방 리스트")
-	@GetMapping("/getRoom") // 페이징 파라미터 추가하기
-	public ResponseEntity<Map<String, Object>> getRoom(Room room) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(reviewService.getRoom(room), status);
+	@GetMapping("/getRoom")
+	@ResponseBody
+	public String getRoom(Room room) {
+		return reviewService.getRoom(room);
 	}
 	
 	@ApiOperation(value = "방 입장 (getCode)")
 	@GetMapping("/enterRoom/{roomIdx}")
-	public ResponseEntity<Map<String, Object>> enterRoom(@PathVariable("roomIdx") long roomIdx) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(reviewService.enterRoom(roomIdx), status);
+	@ResponseBody
+	public String enterRoom(@PathVariable("roomIdx") long roomIdx) {
+		return reviewService.enterRoom(roomIdx);
 	}
 	
 	@ApiOperation(value = "코드 수정")
 	@PutMapping("/modifyCode")
-	public ResponseEntity<Map<String, Object>> modifyCode(@RequestBody Review review) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(reviewService.modifyCode(review), status);
+	@ResponseBody
+	public String modifyCode(@RequestBody Review review) {
+		return reviewService.modifyCode(review);
 	}
 	
 	@ApiOperation(value = "코드 저장 (방 나가기)")
 	@PutMapping("/saveCode/{roomIdx}")
-	public ResponseEntity<Map<String, Object>> saveCode(@PathVariable("roomIdx") long roomIdx) {
-		HttpStatus status = HttpStatus.ACCEPTED;
-		return new ResponseEntity<Map<String,Object>>(reviewService.saveCode(roomIdx), status);
+	@ResponseBody
+	public String saveCode(@PathVariable("roomIdx") long roomIdx) {
+		return reviewService.saveCode(roomIdx);
 	}
 	
 //	// articleController로 옮기기

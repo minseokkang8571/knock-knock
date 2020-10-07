@@ -44,7 +44,7 @@
     <div class="d-flex justify-content-end mt-2">
       <button class="btn btn-primary mr-2" @click="save()">save</button>
       <router-link :to="{ name: 'ReviewList' }">
-      <button class="btn btn-secondary">exit</button>
+      <button class="btn btn-secondary" @click="disconnect()">exit</button>
       </router-link>
     </div>
   </div>
@@ -87,7 +87,7 @@ export default {
       http
         .get('review/enterRoom/' + this.roomIdx, config)
         .then((res) => {
-          if (res.data.status) {
+          if (res.status === 200) {
             console.log('in')
             this.chatList = res.data.chatList
             this.codeList = res.data.codeList
@@ -130,7 +130,7 @@ export default {
         .put(
           'review/modifyCode',
           data, config).then(res => {
-          if (res.data.status) {
+          if (res.status === 200) {
             console.log('success')
             this.sendLock('unlock')
           }
@@ -148,6 +148,7 @@ export default {
           this.stompClient.subscribe('/send/' + this.roomIdx, res => {
             var tmp = document.getElementById('textArea')
             if (res.body === 'out') {
+              this.disconnect()
               this.$router.push('/review')
               alert('코드리뷰가 종료되었습니다.')
             } else if (JSON.parse(res.body).type === 'lock') {
@@ -170,6 +171,11 @@ export default {
         //   this.connected = false
         // }
       )
+    },
+    disconnect() {
+      if (this.stompClient !== null) {
+        this.stompClient.disconnect()
+      }
     },
     sendOut() {
       this.stompClient.send(
