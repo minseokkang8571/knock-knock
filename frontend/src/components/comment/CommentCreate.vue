@@ -8,22 +8,39 @@
       required
       placeholder="댓글내용을 입력하세요."
       rows="15"
+      @keydown.tab.prevent="tabber($event)"
+      @keydown.ctrl.66="toggleCtrlShortCut"
+      @keydown.ctrl.73="toggleCtrlShortCut"
+      @keydown.ctrl.191="onModal"
     ></b-form-textarea>
-    <button
-      class="btn btn-primary mt-2 ml-auto d-block"
-      @click="onCommentCreate">
-      submit
-    </button>
+    <div class="d-flex justify-content-end mt-1">
+      <!-- preview for markdown -->
+      <PreviewModal
+        :contents="form.contents"
+        :modalId="modalId"
+        ref="previewModal" />
+      <button
+        @click="onCommentCreate"
+        class="btn btn-success ml-2 pl-3 pr-3"
+      >Submit</button>
+    </div>
   </div>
 </template>
 
 <script>
+import PreviewModal from '@/components/modal/PreviewModal'
+import markdownMixin from '@/components/mixin/markdownMixin'
 import http from '@/util/http-common'
 export default {
+  mixins: [markdownMixin],
   props: {
     article: Object,
     commentIdx: Number,
-    payload: Object
+    payload: Object,
+    modalId: String
+  },
+  components: {
+    PreviewModal
   },
   data() {
     return {

@@ -89,8 +89,8 @@ export default new Vuex.Store({
             const refreshToken = res.data.refreshToken
             localStorage.setItem('accessToken', accessToken)
             localStorage.setItem('refreshToken', refreshToken)
+            localStorage.setItem('userIdx', res.data.user.idx)
             commit('SigninSuccess', res.data.user)
-            this.chkAccessToken()
             router.back()
           } else {
             // DB에 없는 데이터가 전달 된 경우
@@ -109,9 +109,12 @@ export default new Vuex.Store({
       http
         .post('/user/signup', payload, null)
         .then((res) => {
-          console.log(res)
-          alert('회원가입이 완료되었습니다.')
-          router.push({ name: 'ArticleList' })
+          if (res.data) {
+            alert('회원가입이 완료되었습니다.')
+            router.push({ name: 'ArticleList' })
+          } else {
+            alert('유효하지 않은 입력입니다.')
+          }
         })
         .catch((err) => {
           console.log(err)
@@ -145,36 +148,6 @@ export default new Vuex.Store({
         .catch((err) => {
           console.log(err)
         })
-    },
-    chkAccessToken() {
-      console.log('chkAccessToken')
-      setTimeout(() => {
-        var accessToken = localStorage.getItem('accessToken')
-        const refreshToken = localStorage.getItem('refreshToken')
-        var decodedAccess = jwtDecode(accessToken)
-        console.log('process')
-        if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
-          console.log('EXPIRED') // access Token 갱신 axios
-          const config = {}
-          if (refreshToken) {
-            config.headers = {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${refreshToken}`
-            }
-            http
-              .get('/auth/access', config)
-              .then((res) => {
-                console.log(res)
-                accessToken = res.data.accessToken
-                localStorage.setItem('accessToken', accessToken)
-                this.chkAccessToken()
-              })
-              .catch((err) => {
-                console.log(err)
-              })
-          }
-        }
-      }, 1000 * 60 * 25)
     }
   }
 })

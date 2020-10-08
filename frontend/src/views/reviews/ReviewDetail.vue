@@ -2,46 +2,36 @@
   <div class="container mt-1">
     <h4>ReviewSession</h4>
     <div class="row">
-      <div class="col-8 scroll-area">
-        <h4>ReviewPart</h4>
-        <textarea id="textArea" v-model="review">
+      <!-- 코드리뷰 -->
+      <textarea
+        id="textArea"
+        class="col-8 scroll-area"
+        :value="review">
+      </textarea>
+      <!-- 채팅 -->
+      <div class="col-4 d-flex flex-column">
+        <div class="scroll-area chat-area">
+          <b-row
+            v-for="list in chatList"
+            v-bind:key="list.idx"
+            class="message"
+            :class="{ 'message-out': list.name === userInfo.name, 'message-in': list.name !== userInfo.name }">
+            <p class="font-weight-bold mb-0 mr-1 text-subtitle-1 pl-6">{{ list.name }}:</p>
+            <p class="real mb-0">{{ list.contents }}</p>
+          </b-row>
+        </div>
+        <textarea
+          v-model="chatting"
+          cols="30"
+          rows="4"
+          @keydown.enter="sendMsg()">
         </textarea>
-        <button class="btn btn-primary mr-2" @click="sendLock('lock')">수정 시작</button>
-        <button class="btn btn-primary mr-2" @click="sendLock('unlock')">수정 완료</button>
-      </div>
-      <div class="col-4 scroll-area">
-        <b-row v-for="list in chatList" v-bind:key="list.idx">
-          <b-col cols="2" class="text-align:right" v-if="userInfo.idx == list.userIdx">
-            <div class="outgoing-chats-msg">
-              <p>{{ list.contents }}</p>
-            </div>
-          </b-col>
-          <b-col v-if="userInfo.idx != list.userIdx">
-            <div class="received-msg-inbox">
-            <p>{{ list.name }} : {{ list.contents }}</p>
-            </div>
-            <!-- <div class="received-msg-inbox">
-              <p>{{ list.contents }}</p>
-            </div> -->
-          </b-col>
-        </b-row>
-        <footer absolute class="msg-bottom">
-          <b-col cols="10">
-            <input
-              type="text"
-              class="form-control"
-              id="chatting"
-              v-model="chatting"
-              placeholder="메세지를 입력해주세요."
-            />
-          </b-col>
-          <b-col cols="2" class="hover" @click="sendMsg()" @keypress.enter="sendMsg()"
-            >전송</b-col
-          >
-        </footer>
       </div>
     </div>
+    <!-- 버튼리스트 -->
     <div class="d-flex justify-content-end mt-2">
+      <button class="btn btn-primary mr-2" @click="sendLock('lock')">수정 시작</button>
+      <button class="btn btn-primary mr-2" @click="sendLock('unlock')">수정 완료</button>
       <button class="btn btn-primary mr-2" @click="save()">save</button>
       <router-link :to="{ name: 'ReviewList' }">
       <button class="btn btn-secondary" @click="disconnect()">exit</button>
@@ -167,9 +157,6 @@ export default {
             }
           })
         }
-        // error => {
-        //   this.connected = false
-        // }
       )
     },
     disconnect() {
@@ -219,38 +206,51 @@ export default {
 </script>
 
 <style scoped>
-.list-form {
-  height: 530px;
-  overflow: scroll;
+
+.chat-area {
+  height: 62vh;
+  overflow-x: hidden;
 }
-.received-msg-inbox {
-  width: 57%;
+
+.message {
+  width: 45%;
+  /* border-radius: 10px; */
+  padding: 0.5em;
+  /* margin-bottom: 0.5em; */
+  font-size: 0.8em;
 }
-.received-msg-inbox p {
-  background: #efefef none repeat scroll 0 0;
+
+.message-in {
+  /* background: #407fff; */
+  color: black;
+  margin-right: 50%;
+
+  /* padding: 0; */
+}
+
+.message-out {
+  /* background: #407fff; */
+  color: black;
+  margin-left: 50%;
+
+  /* padding: 0; */
+}
+
+.message-out .real {
+  background: #407fff;
+  color: white;
   border-radius: 10px;
-  color: #646464;
-  font-size: 12px;
-  margin: 0;
-  padding: 5px 10px 5px 12px;
-  width: 100%;
+  /* margin-left: 50%; */
 }
-/* .outgoing-chats {
-  overflow: hidden;
-  margin: 26px 20px;
-}
-.outgoing-chats-msg p {
-  background: #b2ebf2 none repeat scroll 0 0;
+
+.message-in .real {
+  background: #f1f0f0;
   color: black;
   border-radius: 10px;
-  font-size: 12px;
-  margin: 0;
-  padding: 5px 10px 5px 12px;
-  width: 100%;
 }
-.outgoing-chats-msg {
-  float: left;
-  width: 46%;
-  margin-left: 45%;
-} */
+
+.pl-6 {
+  padding: 0px 0px 0px 6px !important;
+}
+
 </style>

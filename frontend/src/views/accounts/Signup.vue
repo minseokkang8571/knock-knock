@@ -72,12 +72,12 @@ export default {
   },
   methods: {
     onSubmit(evt) {
+      evt.preventDefault()
       if (!this.validation || !this.pwChk) {
         alert('비밀번호를 확인해주세요.')
-        return
+      } else {
+        this.$store.dispatch('onSignup', this.form)
       }
-      evt.preventDefault()
-      this.$store.dispatch('onSignup', this.form)
     }
   },
   computed: {

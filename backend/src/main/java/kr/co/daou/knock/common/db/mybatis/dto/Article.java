@@ -20,15 +20,17 @@ public class Article extends Paging {
     private String contents;
     @ApiParam(value = "삭제여부", required = true)
     private String delYn;
-    @ApiParam(value = "등록일", required = true)
+    @ApiParam(value = "등록일")
     private Date regDate;
     @ApiParam(value = "테그 리스트", required = true)
     private List<ArticleHashtag> articleHashtagList;
 
-    @ApiParam(value = "작성자 이름", required = true)
+    @ApiParam(value = "작성자 이름")
     private String name;
-
+    @ApiParam(value = "게시글 좋아요 여부")
     private boolean likeYn;
+    @ApiParam(value = "태그 값")
+    private String tag;
 
     public String getFormatedRegDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

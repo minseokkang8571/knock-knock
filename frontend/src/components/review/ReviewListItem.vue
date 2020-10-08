@@ -2,7 +2,7 @@
   <div>
     <div class="mt-5 d-flex justify-content-between">
       <h2 @click="toDetail(room.idx)" class="common-title">{{ room.title }}</h2>
-      <span class="align-self-end">작성자 : {{ room.name }}</span>
+      <span class="align-self-end color-grey">작성자 : {{ room.name }}</span>
     </div>
       <div class="text-left">{{ room.contents }}</div>
     <div class="d-flex justify-content-start">

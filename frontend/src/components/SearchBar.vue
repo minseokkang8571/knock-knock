@@ -1,18 +1,17 @@
 <template>
   <div class="d-flex">
-    <div class="dropdown">
-      <button
-        type="button"
-        class="btn btn-success dropdown-toggle mt-2 mb-2"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false">
-        Language
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item">python</a>
-        <a class="dropdown-item">java</a>
-      </div>
+    <div>
+      <b-dropdown
+        id="dropdown-1"
+        text="search type"
+        class="m-md-2"
+        size="sm">
+        <b-dropdown-item
+          v-for="(type, idx) in dropDownList" :key="idx"
+          @click="setSearchType(type)">
+          {{ type }}
+        </b-dropdown-item>
+      </b-dropdown>
     </div>
     <div>
       <b-navbar type="light" variant="light">
@@ -43,7 +42,8 @@ export default {
         text: '',
         tag: '',
         type: ''
-      }
+      },
+      dropDownList: ['contents', 'name', 'title', 'tag']
     }
   },
   methods: {
@@ -56,6 +56,9 @@ export default {
           console.log(err)
         })
       this.searchInfo.text = ''
+    },
+    setSearchType(type) {
+      this.searchInfo.type = type
     }
   }
 }

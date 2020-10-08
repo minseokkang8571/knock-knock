@@ -2,7 +2,7 @@
   <div>
     <b-button @click="onModal">Preview</b-button>
 
-    <b-modal size="xl" id="modal-scoped" @keydown.ctrl="myKeyDown">
+    <b-modal size="xl" :id="modalId" @keydown.ctrl="myKeyDown">
       <template v-slot:modal-header="{}">
         <h5>Preview</h5>
       </template>
@@ -24,11 +24,12 @@ export default {
     Preview
   },
   props: {
-    contents: String
+    contents: String,
+    modalId: String // 댓글 생성, 재댓글 생성의 입력폼을 구분하기 위한 Id값, CommentCreate의 상위 컴포넌트로 부터 props
   },
   methods: {
     onModal() {
-      this.$bvModal.show('modal-scoped')
+      this.$bvModal.show(this.modalId)
     }
   }
 }
