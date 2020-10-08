@@ -2,37 +2,64 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.daou.knock.common.db.mybatis.mapper.ArticleMapper">
 
-
     <select id="findAllByDto" parameterType="article" resultType="article">
         SELECT ac.*,u.name FROM article ac INNER JOIN user u ON ac.user_idx = u.idx
-        <if test="searchTag != '' and searchTag != null">
+        <if test="searchType != '' and searchText != null and searchText !='' and searchType.equalsIgnoreCase('tag')">
             INNER JOIN articleHashtag acht ON acht.article_idx = ac.idx
-            INNER JOIN hashtag ht ON ht.idx = acht.hashtag_idx and ht.tag = #{searchTag}
+            INNER JOIN hashtag ht ON ht.idx = acht.hashtag_idx and ht.tag = #{searchText}
         </if>
         WHERE ac.del_yn = 'N'
-        <if test="searchText != '' and searchText != null">
-            AND (ac.title LIKE concat('%', #{searchText}, '%')
-            OR ac.contents LIKE concat('%', #{searchText}, '%')
-            OR u.name LIKE concat('%', #{searchText}, '%')
-            )
-        </if>
+        <choose>
+            <when test='searchType =="" and searchText != null and searchText != ""'>
+                AND (ac.title LIKE concat('%', #{searchText}, '%')
+                OR ac.contents LIKE concat('%', #{searchText}, '%')
+                OR u.name LIKE concat('%', #{searchText}, '%')
+                )
+            </when>
+            <when test="searchType != '' and searchText != null and searchText !=''">
+                <choose>
+                    <when test="searchType.equalsIgnoreCase('name')">
+                        and u.name LIKE concat('%', #{searchText}, '%')
+                    </when>
+                    <when test="searchType.equalsIgnoreCase('tag')">
+                    </when>
+                    <otherwise>
+                        AND ac.${searchType} LIKE concat('%',#{searchText},'%')
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
         ORDER BY ac.idx DESC
         LIMIT #{firstIndex},#{pageSize}
     </select>
 
     <select id="countByDto" parameterType="article" resultType="int">
         SELECT count(*) FROM article ac INNER JOIN user u ON ac.user_idx = u.idx
-        <if test="searchTag != '' and searchTag != null">
+        <if test="searchType != '' and searchText != null and searchText !='' and searchType.equalsIgnoreCase('tag')">
             INNER JOIN articleHashtag acht ON acht.article_idx = ac.idx
             INNER JOIN hashtag ht ON ht.idx = acht.hashtag_idx and ht.tag = #{searchTag}
         </if>
         WHERE ac.del_yn = 'N'
-        <if test="searchText != '' and searchText != null">
-            AND (ac.title LIKE concat('%', #{searchText}, '%')
-            OR ac.contents LIKE concat('%', #{searchText}, '%')
-            OR u.name LIKE concat('%', #{searchText}, '%')
-            )
-        </if>
+        <choose>
+            <when test='searchType =="" and searchText != null and searchText != ""'>
+                AND (ac.title LIKE concat('%', #{searchText}, '%')
+                OR ac.contents LIKE concat('%', #{searchText}, '%')
+                OR u.name LIKE concat('%', #{searchText}, '%')
+                )
+            </when>
+            <when test="searchType != '' and searchText != null and searchText !=''">
+                <choose>
+                    <when test="searchType.equalsIgnoreCase('name')">
+                        and u.name LIKE concat('%', #{searchText}, '%')
+                    </when>
+                    <when test="searchType.equalsIgnoreCase('tag')">
+                    </when>
+                    <otherwise>
+                        AND ac.${searchType} LIKE concat('%',#{searchText},'%')
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
     </select>
 
     <select id="findByDto" parameterType="article" resultType="article">

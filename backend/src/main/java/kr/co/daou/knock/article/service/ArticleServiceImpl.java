@@ -107,27 +107,39 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
         try{
             if(article.getIdx() != null){   // 수정일 경우
                 articleMapper.updateArticle(article);
+                //code, articleHashtag 테이블 데이터 삭제 후 재등록
+                codeMapper.deleteByArticleIdx(article);
+                articleHashtagMapper.deleteByArticleIdx(article);
             } else {    // 등록일 경우
                 articleMapper.insertArticle(article);
-
-                int startIndex = article.getContents().indexOf("```");
-                int endIndex=0;
-                Code code = new Code();
-                code.setArticleIdx(article.getIdx());
-                while(startIndex!=-1){
-                    System.out.println(startIndex+" : "+endIndex);
-                    endIndex = article.getContents().indexOf("```",startIndex+1);
-                    //코드테이블 삽입
-                    code.setOriginContents(article.getContents().substring(startIndex,endIndex+3));
+            }
+            int startIndex = article.getContents().indexOf("```");
+            int endIndex=0;
+            Code code = new Code();
+            Language language = new Language();
+            code.setArticleIdx(article.getIdx());
+            while(startIndex!=-1){
+                endIndex = article.getContents().indexOf("```",startIndex+1);
+                //코드테이블 삽입
+                code.setOriginContents(article.getContents().substring(startIndex,endIndex+3));
+                language.setName(code.getOriginContents().split("\n")[0].substring(3));
+                if(codeMapper.countByLanguage(language)>0){
                     codeMapper.insertCode(code);
-                    //해시태그 추출
-                    Hashtag hashtag = new Hashtag();
-                    hashtag.setTag(code.getOriginContents().split("\n")[0].substring(3));
+                }
+                startIndex = article.getContents().indexOf("```",endIndex+1);
+            }
+
+            //해시태그 추출
+            if(article.getTag() != null) {
+                String[] tagList = article.getTag().split(",");
+                Hashtag hashtag = new Hashtag();
+                for (int i = 0; i < tagList.length; i++) {
+                    hashtag.setTag(tagList[i]);
                     //추출된 해시태그 hashtag 테이블에 있는지 확인
-                    if(hashtagMapper.countByTag(hashtag) == 0){
+                    if (hashtagMapper.countByTag(hashtag) == 0) {
                         //해시태그가 없으면 tag 테이블에 추출된 해시태그 삽입
                         hashtagMapper.insertHashtag(hashtag);
-                    } else{
+                    } else {
                         hashtag = hashtagMapper.findByHashtag(hashtag);
                     }
                     //articleHashtag 테이블에 추출된 해시태그 정보 삽입
@@ -135,10 +147,9 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
                     articleHashtag.setArticleIdx(article.getIdx());
                     articleHashtag.setHashtagIdx(hashtag.getIdx());
                     articleHashtagMapper.insertHashtag(articleHashtag);
-                    startIndex = article.getContents().indexOf("```",endIndex+1);
-                    System.out.println(startIndex+" : "+endIndex);
                 }
             }
+
             rtnMap.put("idx", article.getIdx());
             rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
         }catch (Exception e){
