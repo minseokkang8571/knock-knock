@@ -86,11 +86,6 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    },
-    onModal(event) {
-      // ctrl + / 입력시 previewModal을 띄움
-      // 하위 컴포넌트 PreviewModal의 함수실행
-      this.$refs.previewModal.onModal()
     }
   },
   computed: {

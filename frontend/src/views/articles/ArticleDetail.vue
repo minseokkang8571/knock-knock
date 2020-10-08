@@ -21,6 +21,7 @@
     />
     <!-- 댓글 입력폼-->
     <CommentCreate
+      :modalId="modalCreate"
       :payload="commentCreatePayload"
       @saveComment="getArticle(1)"
     />
@@ -61,7 +62,8 @@ export default {
         totalCnt: 0,
         itemInPage: 10
       },
-      userIdx: 0
+      userIdx: 0,
+      modalCreate: 'modal-Create'
     }
   },
   methods: {

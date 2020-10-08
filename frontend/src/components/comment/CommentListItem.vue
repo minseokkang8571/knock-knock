@@ -25,6 +25,7 @@
       class="w-100">
       <CommentCreate
         :payload="recommentPayload"
+        :modalId="modalReCreate"
         @saveComment="saveComment"/>
     </div>
     <!-- 수정 입력 -->
@@ -33,6 +34,7 @@
       class="w-100">
       <CommentCreate
         :payload="updatePayload"
+        :modalId="modalReCreate"
         @saveComment="saveComment"/>
     </div>
   </div>
@@ -69,7 +71,8 @@ export default {
       updatePayload: {
         contents: '',
         idx: null
-      }
+      },
+      modalReCreate: 'modal-recreate'
     }
   },
   computed: {

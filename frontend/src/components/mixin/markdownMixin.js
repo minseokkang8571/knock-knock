@@ -4,6 +4,7 @@ const markdownMixin = {
   methods: {
     tabber(event) {
       // 탭을 눌렀을 때, 4space만큼 커서와 내용이 이동하도록 하는 함수
+      console.log(event)
       const text = this.form.contents
       const originalSelectionStart = event.target.selectionStart
       const startText = text.slice(0, originalSelectionStart)
@@ -53,6 +54,11 @@ const markdownMixin = {
       event.target.value = this.form.contents
       event.target.selectionStart = selectionStart
       event.target.selectionEnd = selectionEnd + endCursorChange
+    },
+    onModal(event) {
+      // ctrl + / 입력시 previewModal을 띄움
+      // 하위 컴포넌트 PreviewModal의 함수실행
+      this.$refs.previewModal.onModal()
     }
   }
 }
