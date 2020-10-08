@@ -21,4 +21,8 @@
         WHERE article_idx = #{articleIdx}
     </select>
 
+    <delete id="deleteByArticleIdx" parameterType="article">
+        DELETE FROM articleHashtag
+        WHERE article_idx = #{idx}
+    </delete>
 </mapper>

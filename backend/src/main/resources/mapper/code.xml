@@ -20,4 +20,13 @@
     </insert>
 
 
+    <select id="countByLanguage" parameterType="language" resultType="int">
+        SELECT count(*) FROM language
+        WHERE name = #{name}
+    </select>
+
+    <delete id="deleteByArticleIdx" parameterType="article">
+        DELETE FROM code
+        WHERE article_idx = #{idx}
+    </delete>
 </mapper>

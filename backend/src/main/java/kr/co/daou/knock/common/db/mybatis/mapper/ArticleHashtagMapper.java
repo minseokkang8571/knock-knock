@@ -12,5 +12,5 @@ public interface ArticleHashtagMapper {
 
     List<ArticleHashtag> findAllByArticleIdx(Long articleIdx);
 
-
+    void deleteByArticleIdx(Article article);
 }
