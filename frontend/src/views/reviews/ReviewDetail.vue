@@ -17,7 +17,7 @@
             class="message"
             :class="{ 'message-out': list.name === userInfo.name, 'message-in': list.name !== userInfo.name }">
             <p class="font-weight-bold mb-0 mr-1 text-subtitle-1 pl-6">{{ list.name }}:</p>
-            <p class="real pa-3 mb-0">{{ list.contents }}</p>
+            <p class="real mb-0">{{ list.contents }}</p>
           </b-row>
         </div>
         <textarea
