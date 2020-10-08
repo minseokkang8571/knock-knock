@@ -33,24 +33,24 @@ export default new Vuex.Store({
   },
   actions: {
     tmp({ commit }) {
-      const token = localStorage.getItem('token')
-      const refresh = localStorage.getItem('refresh')
-      var decodedToken = jwtDecode(token)
-      var decodedRefresh = jwtDecode(refresh)
-      if (decodedToken.exp < new Date().getTime() / 1000 - (60000 * 6)) {
+      var accessToken = localStorage.getItem('accessToken')
+      const refreshToken = localStorage.getItem('refreshToken')
+      var decodedAccess = jwtDecode(accessToken)
+      var decodedRefresh = jwtDecode(refreshToken)
+      if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
         console.log('EXPIRED') // access Token 갱신 axios
         const config = {}
-        if (token) {
+        if (accessToken) {
           config.headers = {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${accessToken}`
           }
           http
             .get('/auth/access', config)
             .then((res) => {
               console.log(res)
-              const token = res.data.accessToken
-              localStorage.setItem('token', token)
+              accessToken = res.data.accessToken
+              localStorage.setItem('accessToken', accessToken)
             })
             .catch((err) => {
               console.log(err)
@@ -59,19 +59,19 @@ export default new Vuex.Store({
       } else if (decodedRefresh.exp < new Date().getTime() / 1000 - (60000 * 6)) {
         console.log('Refresh Expired') // refresh 갱신 axios
         const config = {}
-        if (refresh) {
+        if (refreshToken) {
           config.headers = {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${refresh}`
+            Authorization: `Bearer ${refreshToken}`
           }
           http
             .get('/auth/refresh', config)
             .then((res) => {
               console.log(res)
-              const token = res.data.accessToken
-              const refresh = res.data.refreshToken
-              localStorage.setItem('token', token)
-              localStorage.setItem('refresh', refresh)
+              const accessToken = res.data.accessToken
+              const refreshToken = res.data.refreshToken
+              localStorage.setItem('accessToken', accessToken)
+              localStorage.setItem('refreshToken', refreshToken)
             })
             .catch((err) => {
               console.log(err)
@@ -85,11 +85,12 @@ export default new Vuex.Store({
         .then((res) => {
           if (res.status === 200) {
             // 정상적으로 로그인 된 경우, 상태정보 저장 후 이전 페이지로 리다이렉트
-            const token = res.data.accessToken
-            const refresh = res.data.refreshToken
-            localStorage.setItem('token', token)
-            localStorage.setItem('refresh', refresh)
+            const accessToken = res.data.accessToken
+            const refreshToken = res.data.refreshToken
+            localStorage.setItem('accessToken', accessToken)
+            localStorage.setItem('refreshToken', refreshToken)
             commit('SigninSuccess', res.data.user)
+            this.chkAccessToken()
             router.back()
           } else {
             // DB에 없는 데이터가 전달 된 경우
@@ -144,6 +145,36 @@ export default new Vuex.Store({
         .catch((err) => {
           console.log(err)
         })
+    },
+    chkAccessToken() {
+      console.log('chkAccessToken')
+      setTimeout(() => {
+        var accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+        var decodedAccess = jwtDecode(accessToken)
+        console.log('process')
+        if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
+          console.log('EXPIRED') // access Token 갱신 axios
+          const config = {}
+          if (refreshToken) {
+            config.headers = {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${refreshToken}`
+            }
+            http
+              .get('/auth/access', config)
+              .then((res) => {
+                console.log(res)
+                accessToken = res.data.accessToken
+                localStorage.setItem('accessToken', accessToken)
+                this.chkAccessToken()
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+        }
+      }, 1000 * 60 * 25)
     }
   }
 })

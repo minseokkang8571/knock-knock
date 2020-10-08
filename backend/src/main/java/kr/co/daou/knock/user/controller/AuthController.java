@@ -38,7 +38,7 @@ public class AuthController {
 				token = token.substring(7, token.length());
 				Claims data = jwtService.getUserIdx(token);
 				long userIdx = ((Integer) data.get("userIdx")).longValue();
-				if(jwtService.checkValid(token).equals(HttpStatus.OK) || jwtService.checkValid(token).equals(HttpStatus.UNAUTHORIZED)) {
+				if(jwtService.checkValid(token).equals("true") || jwtService.checkValid(token).equals("expired")) {
 					token = jwtService.createLoginToken(userIdx, 60000);
 					rtnMap.put("token", token);
 				} else {
@@ -52,6 +52,8 @@ public class AuthController {
 		
 	}
 
+	
+	//만료기간이 7일인데 굳이 갱신을 해줘야할지
 	@ApiOperation("Refresh 토큰 갱신")
 	@GetMapping("/refresh")
 	@ResponseBody
@@ -64,7 +66,7 @@ public class AuthController {
 				token = token.substring(7, token.length());
 				Claims data = jwtService.getUserIdx(token);
 				long userIdx = ((Integer) data.get("userIdx")).longValue();
-				if(jwtService.checkValid(token).equals(200) || jwtService.checkValid(token).equals(401)) {
+				if(jwtService.checkValid(token).equals("true") || jwtService.checkValid(token).equals("expired")) {
 					token = jwtService.createLoginToken(userIdx, 60000 * 60 * 24 * 7);
 					rtnMap.put("refresh", token);
 				} else {
