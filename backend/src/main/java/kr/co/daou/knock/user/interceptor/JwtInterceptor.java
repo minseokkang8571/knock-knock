@@ -16,16 +16,15 @@ public class JwtInterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String token = request.getHeader(HEADER_AUTH);
+		System.out.println(token);
 		JwtService jwtService = new JwtService();
 		if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
 			token = token.substring(7, token.length());
 			if(jwtService.checkValid(token).equals("true")) {
-				response.sendError(444, "expired");	
 				return true;
+			} else if(jwtService.checkValid(token).equals("expired")) {
+				response.sendError(444, "expired");
 			}
-		} else {
-			response.sendError(444, "expired");		
-			System.out.println("aaa");
 		}
 		return false;
 	}

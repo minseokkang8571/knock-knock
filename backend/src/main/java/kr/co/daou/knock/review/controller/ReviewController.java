@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
+import kr.co.daou.knock.common.db.mybatis.dto.Chat;
 import kr.co.daou.knock.common.db.mybatis.dto.Review;
 import kr.co.daou.knock.common.db.mybatis.dto.Room;
 import kr.co.daou.knock.review.service.ReviewService;
@@ -59,6 +60,13 @@ public class ReviewController {
 	@ResponseBody
 	public String saveCode(@PathVariable("roomIdx") long roomIdx) {
 		return reviewService.saveCode(roomIdx);
+	}
+	
+	@ApiOperation(value = "채팅 전송")
+	@PostMapping("/sendChat")
+	@ResponseBody
+	public String sendChat(@RequestBody Chat chat) {
+		return reviewService.sendChat(chat);
 	}
 	
 //	// articleController로 옮기기

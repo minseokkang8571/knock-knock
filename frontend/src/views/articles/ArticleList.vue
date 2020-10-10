@@ -57,6 +57,9 @@ export default {
         })
         .catch((err) => {
           console.log(err)
+          console.log(err.config)
+          console.log(err.request)
+          console.log(err.request.status)
         })
     },
     onPaging(pageNo) {

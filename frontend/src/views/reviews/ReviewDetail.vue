@@ -67,33 +67,33 @@ export default {
     enterRoom() {
       // this.$store.dispatch('getChat', this.roomNumber)
       const config = {}
-      console.log(localStorage.getItem('token'))
-      if (localStorage.getItem('token')) {
+      console.log(localStorage.getItem('accessToken'))
+      if (localStorage.getItem('accessToken')) {
         config.headers = {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
+        http
+          .get('review/enterRoom/' + this.roomIdx, config)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log('in')
+              this.chatList = res.data.chatList
+              this.codeList = res.data.codeList
+              this.review = this.codeList[0].reviewContents
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       }
-      http
-        .get('review/enterRoom/' + this.roomIdx, config)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log('in')
-            this.chatList = res.data.chatList
-            this.codeList = res.data.codeList
-            this.review = this.codeList[0].reviewContents
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     save() {
       const config = {}
-      if (localStorage.getItem('token')) {
+      if (localStorage.getItem('accessToken')) {
         config.headers = {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       }
       http
@@ -110,10 +110,10 @@ export default {
         userIdx: this.userInfo.idx,
         contents: this.review
       }
-      if (localStorage.getItem('token')) {
+      if (localStorage.getItem('accessToken')) {
         config.headers = {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       }
       http
@@ -153,6 +153,9 @@ export default {
                 tmp.readOnly = false
               }
             } else {
+              var date = new Date()
+              var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+              console.log('응답 시간 : ' + now)
               this.chatList.push(JSON.parse(res.body))
             }
           })
@@ -176,6 +179,10 @@ export default {
         contents: this.chatting,
         name: this.userInfo.name
       }
+      var date = new Date()
+      var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+      console.log('전송 시간 : ' + now)
+
       this.stompClient.send(
         '/receive/' + this.roomIdx,
         JSON.stringify(option),

@@ -37,18 +37,27 @@ export default {
       this.getRoomList(1)
     },
     getRoomList(pageNo) {
-      http
-        .get(`review/getRoom?pageNo=${pageNo}` +
-        `&pageSize=${this.pageInfo.itemInPage}`)
-        .then((res) => {
-          console.log(res)
-          this.rooms = res.data.roomList
-          this.pageInfo.totalCnt = this.rooms.length
-          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      const config = {}
+      const accessToken = localStorage.getItem('accessToken')
+      console.log(localStorage.getItem('accessToken'))
+      if (accessToken) {
+        config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+        http
+          .get(`review/getRoom?pageNo=${pageNo}` +
+          `&pageSize=${this.pageInfo.itemInPage}`, config)
+          .then((res) => {
+            console.log(res)
+            this.rooms = res.data.roomList
+            this.pageInfo.totalCnt = this.rooms.length
+            this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     },
     onPaging(pageNo) {
       this.getRoomList(pageNo)

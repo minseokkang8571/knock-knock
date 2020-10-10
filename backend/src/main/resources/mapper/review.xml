@@ -53,4 +53,12 @@
 		UPDATE room set DEL_YN = 'Y'
 		WHERE idx = #{roomIdx}
 	</update>
+	
+	<insert id="saveChat" parameterType="Map">
+		INSERT INTO chat(room_idx, user_idx, contents)
+		VALUES
+		<foreach collection="chatList" item="item" separator=" , ">
+			(#{item.roomIdx}, #{item.userIdx}, #{item.contents})
+		</foreach>
+	</insert>
 </mapper>

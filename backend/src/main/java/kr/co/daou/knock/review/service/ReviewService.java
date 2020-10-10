@@ -2,6 +2,7 @@ package kr.co.daou.knock.review.service;
 
 import java.util.Map;
 
+import kr.co.daou.knock.common.db.mybatis.dto.Chat;
 import kr.co.daou.knock.common.db.mybatis.dto.Review;
 import kr.co.daou.knock.common.db.mybatis.dto.Room;
 
@@ -12,4 +13,5 @@ public interface ReviewService {
 	String enterRoom(long articleIdx);
 	String modifyCode(Review review);
 	String saveCode(long roomIdx);
+	String sendChat(Chat chat);
 }

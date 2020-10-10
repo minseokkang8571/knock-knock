@@ -1,9 +1,17 @@
 package kr.co.daou.knock.review.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import kr.co.daou.knock.common.db.mybatis.dto.Chat;
@@ -21,6 +29,8 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 	private ReviewMapper reviewMapper;
 	@Autowired
 	private ChatMapper chatMapper;
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 
 	@Override
 	public String createRoom(Room room) {
@@ -100,12 +110,40 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 	@Override
 	public String saveCode(long roomIdx) {
 		Map<String, Object> rtnMap = returnMap();
+		Map<String, Object> userMap = new HashMap<String, Object>();
+		ListOperations<String, Object> lop = redisTemplate.opsForList();
+//		SetOperations<String, Object> sop = redisTemplate.opsForSet();
 		try {
 			if (reviewMapper.saveCode(roomIdx) == 1) {
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
+//				Set<Object> set = sop.members("idx");
+				List<Object> chatList = new ArrayList<>();
+				chatList = lop.range("chat:" + roomIdx, 0, -1);
+				// list를 제대로 가져왔다면 redis에서 데이터 삭제
+				if(chatList.size() > 0) {
+					redisTemplate.delete("chat:" + roomIdx);
+				}
+				// chatList rdb에 저장
+				userMap.put("chatList", chatList);
+				reviewMapper.saveChat(userMap);
 			} else {
 				rtnMap.put(RESULT_TEXT, RESULT_FAIL);
 			}			
+		} catch (Exception e) {
+			defaultExceptionHandling(rtnMap, RESULT_FAIL);
+		}
+		return jsonFormatTransfer(rtnMap);
+	}
+	
+	@Override
+	public String sendChat(Chat chat) {
+		Map<String, Object> rtnMap = returnMap();
+		try {
+			//redis에 데이터 저장
+			ListOperations<String, Object> lop = redisTemplate.opsForList();
+//			SetOperations<String, Object> sop = redisTemplate.opsForSet();
+//			sop.add("idx", chat.getRoomIdx());
+			lop.rightPush("chat:" + chat.getRoomIdx(), chat);
 		} catch (Exception e) {
 			defaultExceptionHandling(rtnMap, RESULT_FAIL);
 		}

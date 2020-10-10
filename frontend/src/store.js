@@ -39,6 +39,7 @@ export default new Vuex.Store({
       var decodedRefresh = jwtDecode(refreshToken)
       if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
         console.log('EXPIRED') // access Token 갱신 axios
+        // 헤더에 accessToken 같이보내기
         const config = {}
         if (accessToken) {
           config.headers = {
@@ -103,7 +104,8 @@ export default new Vuex.Store({
     },
     onSignout({ commit }) {
       commit('Signout')
-      localStorage.removeItem('token')
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
     },
     onSignup({ commit }, payload) {
       http
@@ -121,16 +123,22 @@ export default new Vuex.Store({
         })
     },
     getUserInfo({ commit }) {
-      const token = localStorage.getItem('token')
+      const accessToken = localStorage.getItem('accessToken')
       const config = {}
-      if (token) {
+      var date = new Date()
+      var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+      console.log('전송 시간 : ' + now)
+      if (accessToken) {
         config.headers = {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
         http
           .get('/user/info', config)
           .then((res) => {
+            var date = new Date()
+            var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+            console.log('응답 시간 : ' + now)
             console.log(res)
             commit('SigninSuccess', res.data.user)
           })
@@ -149,5 +157,36 @@ export default new Vuex.Store({
           console.log(err)
         })
     }
+    // 토큰갱신 오용상
+    // chkAccessToken() {
+    //   console.log('chkAccessToken')
+    //   setTimeout(() => {
+    //     var accessToken = localStorage.getItem('accessToken')
+    //     const refreshToken = localStorage.getItem('refreshToken')
+    //     var decodedAccess = jwtDecode(accessToken)
+    //     console.log('process')
+    //     if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
+    //       console.log('EXPIRED') // access Token 갱신 axios
+    //       const config = {}
+    //       if (refreshToken) {
+    //         config.headers = {
+    //           'Content-Type': 'application/json',
+    //           Authorization: `Bearer ${refreshToken}`
+    //         }
+    //         http
+    //           .get('/auth/access', config)
+    //           .then((res) => {
+    //             console.log(res)
+    //             accessToken = res.data.accessToken
+    //             localStorage.setItem('accessToken', accessToken)
+    //             this.chkAccessToken()
+    //           })
+    //           .catch((err) => {
+    //             console.log(err)
+    //           })
+    //       }
+    //     }
+    //   }, 1000 * 60 * 25)
+    // }
   }
 })

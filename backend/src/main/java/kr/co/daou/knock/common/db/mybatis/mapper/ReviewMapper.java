@@ -1,6 +1,7 @@
 package kr.co.daou.knock.common.db.mybatis.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.co.daou.knock.common.db.mybatis.dto.Code;
 import kr.co.daou.knock.common.db.mybatis.dto.Review;
@@ -16,4 +17,5 @@ public interface ReviewMapper {
 	int modifyCode(Review review);
 	int reviewLog(Review review);
 	int saveCode(long roomIdx);
+	void saveChat(Map<String, Object> userMap);
 }

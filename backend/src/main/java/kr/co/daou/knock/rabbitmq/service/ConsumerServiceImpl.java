@@ -39,7 +39,7 @@ public class ConsumerServiceImpl extends CommonService implements ConsumerServic
         ObjectMapper mapper = new ObjectMapper();
         try {
             Chat chat = mapper.readValue(new String(message.getBody()), Chat.class);
-            chatService.writeChat(chat);
+//            chatService.writeChat(chat);
             messagingTemplate.convertAndSend("/send/"+chat.getRoomIdx(),chat);
             log.info("message.getBody() : "+new String(message.getBody()));
             log.info("Chat : "+chat);

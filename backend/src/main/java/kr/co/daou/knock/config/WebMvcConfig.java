@@ -18,9 +18,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final long MAX_AGE_SECS = 3600;
     
     private static final String[] EXCLUDE_PATHS = {
-    		"/user/**", 
+    		"/user/**",
             //TODO :: 테스트용(추후 삭제)
-            "/article/**", "/review/**"
+            "/article/**"
+    		, "/review/**"
     };
 
     @Override
