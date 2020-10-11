@@ -11,6 +11,7 @@
 <script>
 import marked from 'marked'
 import hljs from 'highlight.js'
+import '@/assets/styles/github-gist.css'
 export default {
   props: {
     contents: String
