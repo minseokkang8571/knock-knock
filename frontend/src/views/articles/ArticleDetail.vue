@@ -82,7 +82,7 @@ export default {
         this.article.contents = res.data.article.contents
         this.article.title = res.data.article.title
         this.article.regDate = res.data.article.formatedRegDate
-        this.article.userIdx = this.commentCreatePayload.userIdx = res.data.article.userIdx
+        this.article.userIdx = this.commentCreatePayload.userIdx = this.userIdx
         this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
         this.article.username = res.data.article.name
 
