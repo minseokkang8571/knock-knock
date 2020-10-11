@@ -105,49 +105,47 @@ export default new Vuex.Store({
       commit('Signout')
       localStorage.removeItem('token')
     },
-    onSignup({ commit }, payload) {
-      http
-        .post('/user/signup', payload, null)
-        .then((res) => {
-          if (res.data) {
-            alert('회원가입이 완료되었습니다.')
-            router.push({ name: 'ArticleList' })
-          } else {
-            alert('유효하지 않은 입력입니다.')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    getUserInfo({ commit }) {
-      const token = localStorage.getItem('token')
-      const config = {}
-      if (token) {
-        config.headers = {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+    async onSignup({ commit }, payload) {
+      try {
+        const res = await http.post('/user/signup', payload, null)
+
+        if (res.data) {
+          alert('회원가입이 완료되었습니다.')
+          router.push({ name: 'ArticleList' })
+        } else {
+          alert('유효하지 않은 입력입니다.')
         }
-        http
-          .get('/user/info', config)
-          .then((res) => {
-            console.log(res)
-            commit('SigninSuccess', res.data.user)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+      } catch (err) {
+        console.log(err)
       }
     },
-    getChat(context, roomNumber) {
-      http
-        .get(`chat/list/${roomNumber}`)
-        .then((res) => {
-          this.state.chats = res.data.chatList
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    async getUserInfo({ commit }) {
+      const token = localStorage.getItem('token')
+      const config = {}
+
+      try {
+        if (token) {
+          config.headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+          const res = await http.get('/user/info', config)
+
+          console.log(res)
+          commit('SigninSuccess', res.data.user)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async getChat(context, roomNumber) {
+      try {
+        const res = await http.get(`chat/list/${roomNumber}`)
+
+        this.state.chats = res.data.chatList
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 })
