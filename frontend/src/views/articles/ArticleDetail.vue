@@ -69,30 +69,29 @@ export default {
   methods: {
     // userIdx 비동기로 가져올시 문제가 생겨 localStorage에서 get
     async getArticle(pageNo) {
-      this.userIdx = await localStorage.getItem('userIdx')
+      this.userIdx = localStorage.getItem('userIdx')
 
-      http
-        .get(`article/view?idx=${this.$route.query.articleIdx}` +
-        `&pageNo=${pageNo}` +
-        `&pageSize=${this.pageInfo.itemInPage}` +
-        `&userIdx=${this.userIdx}`)
-        .then((res) => {
-          console.log(res)
+      try {
+        const res = await http.get(`article/view?idx=${this.$route.query.articleIdx}` +
+          `&pageNo=${pageNo}` +
+          `&pageSize=${this.pageInfo.itemInPage}` +
+          `&userIdx=${this.userIdx}`)
 
-          this.article.contents = res.data.article.contents
-          this.article.title = res.data.article.title
-          this.article.regDate = res.data.article.formatedRegDate
-          this.article.userIdx = this.commentCreatePayload.userIdx = res.data.article.userIdx
-          this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
-          this.article.username = res.data.article.name
+        console.log(res)
 
-          this.comments = res.data.comment
-          this.pageInfo.totalCnt = res.data.paging.totalCount
-          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+        this.article.contents = res.data.article.contents
+        this.article.title = res.data.article.title
+        this.article.regDate = res.data.article.formatedRegDate
+        this.article.userIdx = this.commentCreatePayload.userIdx = res.data.article.userIdx
+        this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
+        this.article.username = res.data.article.name
+
+        this.comments = res.data.comment
+        this.pageInfo.totalCnt = res.data.paging.totalCount
+        this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
+      } catch (error) {
+        console.log(error)
+      }
     },
     onUpdate() {
       this.$store.commit('setCurrentArticle', this.$route.query.articleIdx)

@@ -29,7 +29,10 @@
         ></b-form-textarea>
       <div class="d-flex justify-content-end">
         <!-- preview for markdown -->
-        <PreviewModal :contents="form.contents" ref="previewModal" />
+        <PreviewModal
+          :contents="form.contents"
+          :modalId="modalId"
+          ref="previewModal" />
         <button
           type="submit"
           class="btn btn-success ml-2 pl-3 pr-3"
@@ -47,7 +50,6 @@ import PreviewModal from '@/components/modal/PreviewModal'
 import markdownMixin from '@/components/mixin/markdownMixin'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
-import '@/assets/styles/github-gist.css'
 export default {
   mixins: [markdownMixin],
   components: {
@@ -62,7 +64,8 @@ export default {
       form: {
         title: '',
         contents: ''
-      }
+      },
+      modalId: 'modalCreate'
     }
   },
   methods: {
@@ -74,18 +77,18 @@ export default {
         this.form.contents = this.articleContents
       }
     },
-    onSubmit(payload) {
+    async onSubmit(payload) {
       event.preventDefault()
       payload.userIdx = this.$store.state.userInfo.idx
-      http
-        .post('/article/save', payload, null)
-        .then((res) => {
-          console.log(res)
-          this.$router.push(`articles?articleIdx=${res.data.idx}`)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+
+      try {
+        const res = await http.post('/article/save', payload, null)
+
+        console.log(res)
+        this.$router.push(`articles?articleIdx=${res.data.idx}`)
+      } catch (err) {
+        console.log(err)
+      }
     }
   },
   computed: {
