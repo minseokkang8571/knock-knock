@@ -37,50 +37,18 @@ export default {
       this.getRoomList(1)
     },
     getRoomList(pageNo) {
-      const config = {}
-      const accessToken = localStorage.getItem('accessToken')
-      console.log(localStorage.getItem('accessToken'))
-      if (accessToken) {
-        config.headers = {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-        http
-          .get(`review/getRoom?pageNo=${pageNo}` +
-          `&pageSize=${this.pageInfo.itemInPage}`, config)
-          .then((res) => {
-            console.log(res)
-            this.rooms = res.data.roomList
-            this.pageInfo.totalCnt = this.rooms.length
-            this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
-          })
-          .catch((err) => {
-            try {
-              console.log(err)
-              if (err.request.status === 444) {
-                const config = {}
-                const refreshToken = localStorage.getItem('refreshToken')
-                console.log(refreshToken)
-                if (refreshToken) {
-                  config.headers = {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${refreshToken}`
-                  }
-                  http
-                    .get('auth/access', config)
-                    .then((res) => {
-                      localStorage.removeItem('accessToken')
-                      localStorage.setItem('accessToken', res.data.accessToken)
-                      console.log('update accessToken')
-                      this.getRoomList()
-                    })
-                }
-              }
-            } catch (error) {
-              console.log(error)
-            }
-          })
-      }
+      http
+        .get(`review/getRoom?pageNo=${pageNo}` +
+        `&pageSize=${this.pageInfo.itemInPage}`, null)
+        .then((res) => {
+          console.log(res)
+          this.rooms = res.data.roomList
+          this.pageInfo.totalCnt = this.rooms.length
+          this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     onPaging(pageNo) {
       this.getRoomList(pageNo)
