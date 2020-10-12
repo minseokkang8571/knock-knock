@@ -11,14 +11,14 @@
       <!-- 채팅 -->
       <div class="col-4 d-flex flex-column">
         <div class="scroll-area chat-area">
-          <b-row
+          <div
             v-for="list in chatList"
             v-bind:key="list.idx"
             class="message"
             :class="{ 'message-out': list.name === userInfo.name, 'message-in': list.name !== userInfo.name }">
             <p class="font-weight-bold mb-0 mr-1 text-subtitle-1 pl-6">{{ list.name }}:</p>
             <p class="real mb-0">{{ list.contents }}</p>
-          </b-row>
+          </div>
         </div>
         <textarea
           v-model="chatting"
