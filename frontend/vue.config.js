@@ -1,4 +1,5 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
@@ -7,8 +8,9 @@ module.exports = {
     },
     configureWebpack: {
       plugins: [
-        new UglifyJsPlugin(),
-        new BundleAnalyzerPlugin()
+        // new UglifyJsPlugin(),
+        new TerserPlugin()
+        // new BundleAnalyzerPlugin()
       ]
     }
   }

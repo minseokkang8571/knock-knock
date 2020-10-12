@@ -101,7 +101,6 @@ export default {
         const res = await http.post('/article/save', payload, null)
 
         console.log(res)
-        this.$router.push(`articles?articleIdx=${res.data.idx}`)
       } catch (err) {
         console.log(err)
       }
