@@ -27,6 +27,17 @@
           @keydown.ctrl.73="toggleCtrlShortCut"
           @keydown.ctrl.191="onModal"
         ></b-form-textarea>
+
+        <p>Tags:</p>
+        <b-form-input
+          id="input-3"
+          v-model="form.tags"
+          type="text"
+          required
+          placeholder="태그를 입력하세요."
+          autocomplete="off"
+        ></b-form-input>
+
       <div class="d-flex justify-content-end">
         <!-- preview for markdown -->
         <PreviewModal
@@ -63,7 +74,8 @@ export default {
     return {
       form: {
         title: '',
-        contents: ''
+        contents: '',
+        tags: ''
       },
       modalId: 'modalCreate'
     }

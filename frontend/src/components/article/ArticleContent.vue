@@ -11,9 +11,19 @@
         <button class="tag mt-1 mr-2">tag</button>
         <button class="tag mt-1">tag</button>
       </div>
-      <div v-show="article.userIdx === userInfo.idx">
-        <button @click="onUpdate">수정</button>
-        <button @click="onDelete">삭제</button>
+      <div
+        v-if="article.userIdx == userInfo.idx"
+        class="d-flex justify-content-end">
+        <span
+          @click="onUpdate"
+          class="mr-2 detail-button">
+          수정
+        </span>
+        <span
+          @click="onDelete"
+          class="detail-button">
+          삭제
+        </span>
       </div>
     </article>
   </div>
