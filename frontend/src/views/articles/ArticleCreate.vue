@@ -31,7 +31,7 @@
         <p>Tags:</p>
         <b-form-input
           id="input-3"
-          v-model="form.tags"
+          v-model="form.tag"
           type="text"
           required
           placeholder="태그를 입력하세요."
@@ -50,9 +50,6 @@
         >Submit</button>
       </div>
     </b-form>
-    <!-- TO DO::
-    v-html 대체할 방법 찾기
-     -->
   </div>
 </template>
 
@@ -68,14 +65,15 @@ export default {
   },
   props: {
     articleTitle: String,
-    articleContents: String
+    articleContents: String,
+    articleHashtagList: Array
   },
   data() {
     return {
       form: {
         title: '',
         contents: '',
-        tags: ''
+        tag: ''
       },
       modalId: 'modalCreate'
     }
@@ -87,6 +85,12 @@ export default {
         this.form.idx = this.currentArticleIdx
         this.form.title = this.articleTitle
         this.form.contents = this.articleContents
+        for (var i = 0; i < this.articleHashtagList.length; i++) {
+          if (i > 0) {
+            this.form.tag += ','
+          }
+          this.form.tag += this.articleHashtagList[i].tag
+        }
       }
     },
     async onSubmit(payload) {

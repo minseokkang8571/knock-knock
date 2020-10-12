@@ -49,7 +49,8 @@ export default {
         regDate: '',
         userIdx: '',
         username: '',
-        idx: null
+        idx: null,
+        hashtagList: null
       },
       comments: null,
       commentCreatePayload: {
@@ -78,13 +79,15 @@ export default {
           `&userIdx=${this.userIdx}`)
 
         console.log(res)
+        const responseArticle = res.data.article
 
-        this.article.contents = res.data.article.contents
-        this.article.title = res.data.article.title
-        this.article.regDate = res.data.article.formatedRegDate
+        this.article.contents = responseArticle.contents
+        this.article.title = responseArticle.title
+        this.article.regDate = responseArticle.formatedRegDate
+        this.article.username = responseArticle.name
+        this.article.hashtagList = responseArticle.articleHashtagList
         this.article.userIdx = this.commentCreatePayload.userIdx = this.userIdx
-        this.article.idx = this.commentCreatePayload.articleIdx = res.data.article.idx
-        this.article.username = res.data.article.name
+        this.article.idx = this.commentCreatePayload.articleIdx = responseArticle.idx
 
         this.comments = res.data.comment
         this.pageInfo.totalCnt = res.data.paging.totalCount
@@ -95,7 +98,14 @@ export default {
     },
     onUpdate() {
       this.$store.commit('setCurrentArticle', this.$route.query.articleIdx)
-      this.$router.push({ name: 'ArticleCreate', params: { articleTitle: this.article.title, articleContents: this.article.contents } })
+      this.$router.push({
+        name: 'ArticleCreate',
+        params: {
+          articleTitle: this.article.title,
+          articleContents: this.article.contents,
+          articleHashtagList: this.article.hashtagList
+        }
+      })
     },
     onDelete() {
       http
