@@ -28,7 +28,7 @@ public class RabbitmqController {
     }
     @MessageMapping("/unlock/{roomIdx}")
     public void stompCode(@RequestBody Review review, @PathVariable("roomIdx") String roomIdx) throws Exception {
-        System.out.println("test : "+review);
+        System.out.println("test in unlock@@ : "+review);
         producerService.sendCode(review);
     }
 }

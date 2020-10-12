@@ -18,4 +18,5 @@ public interface ReviewMapper {
 	int reviewLog(Review review);
 	int saveCode(long roomIdx);
 	void saveChat(Map<String, Object> userMap);
+	Code getCodeForModify(Review review);
 }

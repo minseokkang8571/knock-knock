@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
-import ArticleList from '@/views/articles/ArticleList'
-import ArticleDetail from '@/views/articles/ArticleDetail'
-import ArticleCreate from '@/views/articles/ArticleCreate'
-import Signin from '@/views/accounts/Signin'
-import Signup from '@/views/accounts/Signup'
-import ReviewList from '@/views/reviews/ReviewList'
-import ReviewDetail from '@/views/reviews/ReviewDetail'
 
 Vue.use(VueRouter)
+
+const ArticleList = () => import(/* webpackChunkName: "ArticleList" */ '@/views/articles/ArticleList')
+const ArticleDetail = () => import(/* webpackChunkName: "ArticleDetail" */ '@/views/articles/ArticleDetail')
+const ArticleCreate = () => import(/* webpackChunkName: "ArticleCreate" */ '@/views/articles/ArticleCreate')
+const Signin = () => import(/* webpackChunkName: "Signin" */ '@/views/accounts/Signin')
+const Signup = () => import(/* webpackChunkName: "Signup" */ '@/views/accounts/Signup')
+const ReviewList = () => import(/* webpackChunkName: "ReviewList" */ '@/views/reviews/ReviewList')
+const ReviewDetail = () => import(/* webpackChunkName: "ReviewDetail" */ '@/views/reviews/ReviewDetail')
 
 const rejectAuthUser = (to, from, next) => {
   // 로그인 상태에서 사용자가 직접 signin, signup url을 주소창에 쳐서 들어온 경우

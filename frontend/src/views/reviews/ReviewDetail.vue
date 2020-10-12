@@ -6,19 +6,21 @@
       <textarea
         id="textArea"
         class="col-8 scroll-area"
-        :value="review">
+        v-model="review"
+        @keydown.capture="onKeydown"
+        @keyup.capture="keyupDebounce(onKeyup, 400)">
       </textarea>
       <!-- 채팅 -->
       <div class="col-4 d-flex flex-column">
         <div class="scroll-area chat-area">
-          <b-row
+          <div
             v-for="list in chatList"
             v-bind:key="list.idx"
             class="message"
             :class="{ 'message-out': list.name === userInfo.name, 'message-in': list.name !== userInfo.name }">
             <p class="font-weight-bold mb-0 mr-1 text-subtitle-1 pl-6">{{ list.name }}:</p>
             <p class="real mb-0">{{ list.contents }}</p>
-          </b-row>
+          </div>
         </div>
         <textarea
           v-model="chatting"
@@ -30,6 +32,7 @@
     </div>
     <!-- 버튼리스트 -->
     <div class="d-flex justify-content-end mt-2">
+      {{ debounce.isFirst }}
       <button class="btn btn-primary mr-2" @click="sendLock('lock')">수정 시작</button>
       <button class="btn btn-primary mr-2" @click="sendLock('unlock')">수정 완료</button>
       <button class="btn btn-primary mr-2" @click="save()">save</button>
@@ -52,7 +55,15 @@ export default {
       chatList: [],
       codeList: [],
       chatting: this.chatting,
-      review: this.review
+      review: this.review,
+      debounce: {
+        timer: null,
+        isFirst: true
+      },
+      changedText: {
+        start: null,
+        end: null
+      }
     }
   },
   computed: {
@@ -181,6 +192,7 @@ export default {
             } else if (JSON.parse(res.body).type === 'unlock') {
               if (parseInt(JSON.parse(res.body).userIdx) !== this.userInfo.idx) {
                 alert('수정 하실 수 있습니다.')
+                console.log(JSON.parse(res.body).contents)
                 this.review = JSON.parse(res.body).contents
                 tmp.readOnly = false
               }
@@ -236,6 +248,41 @@ export default {
         JSON.stringify(option),
         {}
       )
+    },
+    keyupDebounce(fn, wait) {
+      const keyboardEvent = event
+
+      if (this.isAlnum(event.keyCode)) {
+        if (this.debounce.timer) {
+          clearTimeout(this.debounce.timer)
+          this.debounce.timer = null
+        }
+        this.debounce.timer = setTimeout(() => {
+          fn(keyboardEvent)
+          this.debounce.isFirst = true
+        }, wait)
+      }
+    },
+    onKeyup(event) {
+      this.changedText.end = event.target.selectionEnd
+      const text = this.review
+      const insertText = text.slice(this.changedText.start, this.changedText.end)
+      console.log(`insert@${this.changedText.start}'${insertText}'`)
+    },
+    onKeydown() {
+      if (this.debounce.isFirst && this.isAlnum(event.keyCode)) {
+        this.changedText.start = event.target.selectionStart
+        this.debounce.isFirst = false
+      }
+    },
+    isAlpha(charCode) {
+      return ((charCode >= 65) && (charCode <= 90))
+    },
+    isDigit(charCode) {
+      return ((charCode >= 48) && (charCode <= 57))
+    },
+    isAlnum(charCode) {
+      return (this.isAlpha(charCode) || this.isDigit(charCode) || charCode === 32)
     }
   },
   mounted() {

@@ -4,10 +4,11 @@
       <h2 @click="toDetail(article.idx)" class="common-title title-overflow col-9">{{ article.title }}</h2>
       <span class="align-self-end color-grey">작성자 : {{ article.name }} | {{ article.formatedRegDate }}</span>
     </div>
-      <!-- TODO:: 글 내용 프리뷰할지 논의 -->
-      <!-- <p class="text-left content-overflow">{{ article.contents }}</p> -->
     <div class="d-flex flex-row">
-      <button v-for="(tag, idx) in article.articleHashtagList" :key="idx" class="tag mt-1 mr-2">tag</button>
+      <button v-for="(tag, idx) in article.articleHashtagList" :key="idx"
+        class="tag mt-1 mr-2">
+        {{ tag.tag }}
+      </button>
     </div>
   </div>
 </template>

@@ -79,17 +79,16 @@ export default {
     ...mapState(['userInfo'])
   },
   methods: {
-    onDelete() {
-      http
-        .delete(`article/commentDelete?idx=${this.comment.idx}`)
-        .then((res) => {
-          console.log(res)
-          // 변경사항을 화면에 서브하기 위해 emit
-          this.$emit('saveComment')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+    async onDelete() {
+      try {
+        const res = await http.delete(`article/commentDelete?idx=${this.comment.idx}`)
+
+        console.log(res)
+        // 변경사항을 화면에 서브하기 위해 emit
+        this.$emit('saveComment')
+      } catch (err) {
+        console.log(err)
+      }
     },
     showUpdateForm() {
       // commentCreate로 보낼 데이터를 저장
@@ -114,40 +113,40 @@ export default {
       this.$emit('saveComment')
     },
     // TODO:: 좋아요 명확하게 변경해야함.(백단에서부터)
-    onLike() {
+    async onLike() {
       const payload = {
         userIdx: this.$store.state.userInfo.idx,
         commentIdx: this.comment.idx
       }
 
-      http
-        .post('article/commentLikeSave', payload, null)
-        .then((res) => {
-          console.log(res)
-          if (res.data.httpCode === '300') {
-            // alert('이미 좋아요한 유저입니다.')
-          } else {
-            this.$emit('saveComment')
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    onDislike() {
-      const payload = {
-        userIdx: this.$store.state.userInfo.idx,
-        commentIdx: this.comment.idx
-      }
+      try {
+        const res = await http.post('article/commentLikeSave', payload, null)
 
-      http
-        .delete(`article/commentLikeDelete?userIdx=${payload.userIdx}&commentIdx=${payload.commentIdx}`)
-        .then((res) => {
+        console.log(res)
+        if (res.data.httpCode === '300') {
+          // alert('이미 좋아요한 유저입니다.')
+        } else {
           this.$emit('saveComment')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async onDislike() {
+      const payload = {
+        userIdx: this.$store.state.userInfo.idx,
+        commentIdx: this.comment.idx
+      }
+
+      try {
+        const res = await http.delete(`article/commentLikeDelete?userIdx=${payload.userIdx}` +
+          `&commentIdx=${payload.commentIdx}`)
+
+        console.log(res)
+        this.$emit('saveComment')
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }

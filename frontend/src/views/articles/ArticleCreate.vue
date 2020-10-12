@@ -27,18 +27,29 @@
           @keydown.ctrl.73="toggleCtrlShortCut"
           @keydown.ctrl.191="onModal"
         ></b-form-textarea>
+
+        <p>Tags:</p>
+        <b-form-input
+          id="input-3"
+          v-model="form.tag"
+          type="text"
+          required
+          placeholder="태그를 입력하세요."
+          autocomplete="off"
+        ></b-form-input>
+
       <div class="d-flex justify-content-end">
         <!-- preview for markdown -->
-        <PreviewModal :contents="form.contents" ref="previewModal" />
+        <PreviewModal
+          :contents="form.contents"
+          :modalId="modalId"
+          ref="previewModal" />
         <button
           type="submit"
           class="btn btn-success ml-2 pl-3 pr-3"
         >Submit</button>
       </div>
     </b-form>
-    <!-- TO DO::
-    v-html 대체할 방법 찾기
-     -->
   </div>
 </template>
 
@@ -47,7 +58,6 @@ import PreviewModal from '@/components/modal/PreviewModal'
 import markdownMixin from '@/components/mixin/markdownMixin'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
-import '@/assets/styles/github-gist.css'
 export default {
   mixins: [markdownMixin],
   components: {
@@ -55,14 +65,17 @@ export default {
   },
   props: {
     articleTitle: String,
-    articleContents: String
+    articleContents: String,
+    articleHashtagList: Array
   },
   data() {
     return {
       form: {
         title: '',
-        contents: ''
-      }
+        contents: '',
+        tag: ''
+      },
+      modalId: 'modalCreate'
     }
   },
   methods: {
@@ -72,20 +85,30 @@ export default {
         this.form.idx = this.currentArticleIdx
         this.form.title = this.articleTitle
         this.form.contents = this.articleContents
+        for (var i = 0; i < this.articleHashtagList.length; i++) {
+          if (i > 0) {
+            this.form.tag += ','
+          }
+          this.form.tag += this.articleHashtagList[i].tag
+        }
       }
     },
-    onSubmit(payload) {
+    async onSubmit(payload) {
       event.preventDefault()
       payload.userIdx = this.$store.state.userInfo.idx
-      http
-        .post('/article/save', payload, null)
-        .then((res) => {
-          console.log(res)
+
+      try {
+        const res = await http.post('/article/save', payload, null)
+
+        console.log(res)
+        if (res.data.httpCode === '200') {
           this.$router.push(`articles?articleIdx=${res.data.idx}`)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+        } else {
+          alert('잘못된 입력입니다.')
+        }
+      } catch (err) {
+        console.log(err)
+      }
     }
   },
   computed: {

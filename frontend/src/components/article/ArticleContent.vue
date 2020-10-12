@@ -7,13 +7,27 @@
       </div>
       <hr>
       <Preview :contents="article.contents" />
-      <div class="d-flex justify-content-start">
-        <button class="tag mt-1 mr-2">tag</button>
-        <button class="tag mt-1">tag</button>
+
+      <div class="d-flex flex-row">
+        <button v-for="(tag, idx) in article.hashtagList" :key="idx"
+          class="tag mt-1 mr-2">
+          {{ tag.tag }}
+        </button>
       </div>
-      <div v-show="article.userIdx === userInfo.idx">
-        <button @click="onUpdate">수정</button>
-        <button @click="onDelete">삭제</button>
+
+      <div
+        v-if="article.userIdx == userInfo.idx"
+        class="d-flex justify-content-end">
+        <span
+          @click="onUpdate"
+          class="mr-2 detail-button">
+          수정
+        </span>
+        <span
+          @click="onDelete"
+          class="detail-button">
+          삭제
+        </span>
       </div>
     </article>
   </div>

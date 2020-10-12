@@ -32,6 +32,12 @@
 		where article_idx = #{articleIdx}
 	</select>
 	
+	<select id="getCodeForModify" parameterType="Review" resultType="Code">
+		SELECT *
+		FROM code
+		where idx = #{codeIdx}
+	</select>
+	
 	<select id="enterRoom" resultType="Code">
 		SELECT a.*
 		FROM code as a INNER JOIN room as b
