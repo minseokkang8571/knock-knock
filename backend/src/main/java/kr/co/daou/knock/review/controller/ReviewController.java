@@ -41,11 +41,18 @@ public class ReviewController {
 		return reviewService.getRoom(room);
 	}
 	
-	@ApiOperation(value = "방 입장 (getCode)")
+	@ApiOperation(value = "방 입장 (enterRoom)")
 	@GetMapping("/enterRoom/{roomIdx}")
 	@ResponseBody
 	public String enterRoom(@PathVariable("roomIdx") long roomIdx) {
 		return reviewService.enterRoom(roomIdx);
+	}
+	
+	@ApiOperation(value = "코드 불러오기 (getCode)")
+	@GetMapping("/{articleIdx}")
+	@ResponseBody
+	public String getCode(@PathVariable("articleIdx") long articleIdx) {
+		return reviewService.getCode(articleIdx);
 	}
 	
 	@ApiOperation(value = "코드 수정")
@@ -68,6 +75,8 @@ public class ReviewController {
 	public String sendChat(@RequestBody Chat chat) {
 		return reviewService.sendChat(chat);
 	}
+	
+	
 	
 //	// articleController로 옮기기
 //	@ApiOperation(value = "리뷰받은 코드 불러오기")

@@ -60,24 +60,6 @@ public class UserController {
 	public String getInfo(HttpServletRequest request) {
 		return userService.getInfoByToken(request);
 	}
-	
-//	@ApiOperation(value = "사용자 정보 받기", response = UserDto.class)
-//	@PostMapping("/info")
-//	public ResponseEntity<Map<String, Object>> getInfo(@RequestBody Map<String, String> param) {
-//		HttpStatus status = HttpStatus.ACCEPTED;
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		JwtService jwt = new JwtService();
-//		if(jwt.checkValid(param.get("token"))) {
-//			Object data = jwt.getUserIdx(param.get("token"));
-//			System.out.println(data);
-//			map.put("status", true);
-//			map.put("user", data);
-//		} else {
-//			map.put("status", false);
-//		}
-//		return new ResponseEntity<Map<String,Object>>(map, status);
-//	}
-	
 
 	
 }

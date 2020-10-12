@@ -55,24 +55,29 @@ export default {
             this.pageInfo.endPageNo = Math.ceil(this.pageInfo.totalCnt / this.pageInfo.itemInPage)
           })
           .catch((err) => {
-            console.log(err)
-            if (err.request.status === 444) {
-              const config = {}
-              const refreshToken = localStorage.getItem('refreshToken')
-              if (refreshToken) {
-                config.headers = {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${refreshToken}`
+            try {
+              console.log(err)
+              if (err.request.status === 444) {
+                const config = {}
+                const refreshToken = localStorage.getItem('refreshToken')
+                console.log(refreshToken)
+                if (refreshToken) {
+                  config.headers = {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${refreshToken}`
+                  }
+                  http
+                    .get('auth/access', config)
+                    .then((res) => {
+                      localStorage.removeItem('accessToken')
+                      localStorage.setItem('accessToken', res.data.accessToken)
+                      console.log('update accessToken')
+                      this.getRoomList()
+                    })
                 }
-                http
-                  .get('auth/access', config)
-                  .then((res) => {
-                    localStorage.removeItem('accessToken')
-                    localStorage.setItem('accessToken', res.data.accessToken)
-                    console.log('update accessToken')
-                    this.getRoomList()
-                  })
               }
+            } catch (error) {
+              console.log(error)
             }
           })
       }

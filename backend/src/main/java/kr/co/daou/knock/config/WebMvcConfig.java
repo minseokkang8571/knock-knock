@@ -22,6 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             //TODO :: 테스트용(추후 삭제)
             "/article/**"
     		, "/review/**"
+    		, "/auth/**"
     };
 
     @Override

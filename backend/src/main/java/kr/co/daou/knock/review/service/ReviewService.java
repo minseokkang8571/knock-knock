@@ -14,4 +14,5 @@ public interface ReviewService {
 	String modifyCode(Review review);
 	String saveCode(long roomIdx);
 	String sendChat(Chat chat);
+	String getCode(long articleIdx);
 }

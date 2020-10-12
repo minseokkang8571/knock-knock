@@ -163,4 +163,17 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 		return jsonFormatTransfer(rtnMap);
 	}
 
+	@Override
+	public String getCode(long articleIdx) {
+		Map<String, Object> rtnMap = returnMap();
+		try {
+			List<Code> codeList = reviewMapper.getCode(articleIdx);
+			rtnMap.put("codeList", codeList);
+			rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
+		} catch (Exception e) {
+			rtnMap.put(RESULT_TEXT, RESULT_FAIL);
+		}
+		return jsonFormatTransfer(rtnMap);
+	}
+
 }
