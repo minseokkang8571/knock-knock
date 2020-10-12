@@ -103,9 +103,25 @@ export default new Vuex.Store({
         })
     },
     onSignout({ commit }) {
-      commit('Signout')
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
+      const config = {}
+      if (localStorage.getItem('refreshToken')) {
+        config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('refreshToken')}`
+        }
+        http
+          .delete(
+            'user/logout', config
+          )
+          .then(res => {
+            if (res.status === 200) {
+              console.log('logout')
+              localStorage.removeItem('accessToken')
+              localStorage.removeItem('refreshToken')
+              commit('Signout')
+            }
+          })
+      }
     },
     onSignup({ commit }, payload) {
       http

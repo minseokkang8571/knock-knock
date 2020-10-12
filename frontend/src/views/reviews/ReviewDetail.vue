@@ -84,7 +84,10 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err)
+            if (err.request.status === 444) {
+              this.updateToken()
+              this.enterRoom()
+            }
           })
       }
     },
@@ -100,6 +103,12 @@ export default {
         .put('review/saveCode/' + this.roomIdx, config)
         .then((res) => {
           this.sendOut()
+        })
+        .catch((err) => {
+          if (err.request.status === 444) {
+            this.updateToken()
+            this.save()
+          }
         })
     },
     modifyCode() {
@@ -125,6 +134,29 @@ export default {
             this.sendLock('unlock')
           }
         })
+        .catch((err) => {
+          if (err.request.status === 444) {
+            this.updateToken()
+            this.modifyCode()
+          }
+        })
+    },
+    updateToken() {
+      const config = {}
+      const refreshToken = localStorage.getItem('refreshToken')
+      if (refreshToken) {
+        config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${refreshToken}`
+        }
+        http
+          .get('auth/access', config)
+          .then((res) => {
+            localStorage.removeItem('accessToken')
+            localStorage.setItem('accessToken', res.data.accessToken)
+            console.log('update accessToken')
+          })
+      }
     },
     connect() {
       const serverURL = 'http://localhost:4000/chat'

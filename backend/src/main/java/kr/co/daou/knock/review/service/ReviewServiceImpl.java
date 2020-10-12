@@ -37,10 +37,14 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 		Map<String, Object> rtnMap = returnMap();
 		try {
 			if (reviewMapper.createRoom(room) == 1) {
+				ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 				long roomIdx = room.getIdx();
 				rtnMap.put("roomIdx", roomIdx);
 				reviewMapper.copyCode(room.getArticleIdx());
 				List<Code> list = reviewMapper.getCode(room.getArticleIdx());
+				for (Code code : list) {
+					vop.set("review:" + roomIdx + ":" + code.getIdx(), code);
+				}
 				rtnMap.put("codeList", list);
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
 			} else {
@@ -78,7 +82,14 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 		Map<String, Object> rtnMap = returnMap();
 		try {
 			List<Code> codeList = reviewMapper.enterRoom(roomIdx);
-			List<Chat> chatList = chatMapper.getChat(roomIdx);
+			ListOperations<String, Object> lop = redisTemplate.opsForList();
+			ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+			List<Object> chatList = new ArrayList<>();
+//			List<Object> codeList = new ArrayList<>(); 
+			chatList = lop.range("chat:" + roomIdx, 0, -1);
+//			codeList = (List<Object>) vop.get("review:" + roomIdx + ":*");
+			System.out.println(codeList);
+//			List<Chat> chatList = chatMapper.getChat(roomIdx);
 			if (codeList.size() > 0) {
 				rtnMap.put("codeList", codeList);
 				rtnMap.put("chatList", chatList);
@@ -95,12 +106,14 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 	@Override
 	public String modifyCode(Review review) {
 		Map<String, Object> rtnMap = returnMap();
+		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		try {
 			if (reviewMapper.modifyCode(review) == 1 && reviewMapper.reviewLog(review) == 1) {
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
 			} else {
 				rtnMap.put(RESULT_TEXT, RESULT_FAIL);
-			}			
+			}		
+//			vop.set("review:" + review.getCodeIdx(), review);
 		} catch (Exception e) {
 			defaultExceptionHandling(rtnMap, RESULT_FAIL);
 		}

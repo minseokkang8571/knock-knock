@@ -1,11 +1,13 @@
 package kr.co.daou.knock.user.service;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,9 +25,7 @@ public class UserServiceImpl extends CommonService implements UserService {
 	private UserMapper userMapper;
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
-	
-	
-	
+
 	@Override
 	public String registerUser(SignUpRequest signUpRequest) {
 		Map<String, Object> rtnMap = returnMap();
@@ -53,7 +53,7 @@ public class UserServiceImpl extends CommonService implements UserService {
 			String password = Sha256.encrypt(loginRequest.getPassword());
 			loginRequest.setPassword(password);
 			long userIdx = userMapper.login(loginRequest);
-			if(userIdx > 0) {
+			if (userIdx > 0) {
 				userDto = userMapper.getUserInfo(userIdx);
 				rtnMap.put("user", userDto);
 				// 토큰 생성 후 리턴
@@ -62,12 +62,30 @@ public class UserServiceImpl extends CommonService implements UserService {
 				String refreshToken = jwt.createLoginToken(userIdx, 60000 * 60 * 24 * 7);
 				rtnMap.put("accessToken", accessToken);
 				rtnMap.put("refreshToken", refreshToken);
-				vop.set("token:" + accessToken, userDto);
+				vop.set("token:" + accessToken, userDto, 30, TimeUnit.MINUTES);
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
 			} else {
 				rtnMap.put(RESULT_TEXT, RESULT_FAIL);
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
+			defaultExceptionHandling(rtnMap, RESULT_FAIL);
+		}
+		return jsonFormatTransfer(rtnMap);
+	}
+
+	// 로그아웃 시 refreshToken Redis에 저장
+	@Override
+	public String logout(HttpServletRequest request) {
+		Map<String, Object> rtnMap = returnMap();
+		String token = request.getHeader("Authorization");
+		SetOperations<String, Object> sop = redisTemplate.opsForSet();
+		try {
+			if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+				token = token.substring(7, token.length());
+				sop.add("blacklist", token);
+				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
+			}
+		} catch (Exception e) {
 			defaultExceptionHandling(rtnMap, RESULT_FAIL);
 		}
 		return jsonFormatTransfer(rtnMap);
@@ -78,8 +96,7 @@ public class UserServiceImpl extends CommonService implements UserService {
 //		return userMapper.getUserInfo(userIdx);
 //	}
 
-	
-	//AuthController로 옮겨서 검증은 인터셉터에서 하도록
+	// AuthController로 옮겨서 검증은 인터셉터에서 하도록
 	@Override
 	public String getInfoByToken(HttpServletRequest request) {
 		Map<String, Object> rtnMap = returnMap();
@@ -91,12 +108,7 @@ public class UserServiceImpl extends CommonService implements UserService {
 				token = token.substring(7, token.length());
 				String chkJwt = jwt.checkValid(token);
 				if (chkJwt.equals("true") || chkJwt.equals("expired")) {
-					//갱신로직
-					Claims data = jwt.getUserIdx(token);
-					long userIdx = ((Integer) data.get("userIdx")).longValue();
-//					UserDto user = userMapper.getUserInfo(userIdx);
 					UserDto user = (UserDto) vop.get("token:" + token);
-					System.out.println(user);
 					rtnMap.put("user", user);
 					rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
 				} else {
@@ -104,8 +116,7 @@ public class UserServiceImpl extends CommonService implements UserService {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-//			defaultExceptionHandling(rtnMap, RESULT_FAIL);
+			defaultExceptionHandling(rtnMap, RESULT_FAIL);
 		}
 		return jsonFormatTransfer(rtnMap);
 	}

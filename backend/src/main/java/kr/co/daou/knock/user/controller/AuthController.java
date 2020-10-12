@@ -2,6 +2,7 @@ package kr.co.daou.knock.user.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
+import kr.co.daou.knock.common.db.mybatis.dto.UserDto;
+import kr.co.daou.knock.common.db.mybatis.mapper.UserMapper;
 import kr.co.daou.knock.user.service.JwtService;
 
 @RestController
@@ -29,6 +32,8 @@ public class AuthController {
 	JwtService jwtService = new JwtService();
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	@Autowired
+	private UserMapper userMapper;
 
 	@ApiOperation("Access 토큰 갱신")
 	@GetMapping("/access")
@@ -42,9 +47,10 @@ public class AuthController {
 			refreshToken = refreshToken.substring(7, refreshToken.length());
 			Claims data = jwtService.getUserIdx(refreshToken);
 			long userIdx = ((Integer) data.get("userIdx")).longValue();
+			UserDto user = userMapper.getUserInfo(userIdx);
 			String accessToken = jwtService.createLoginToken(userIdx, 60000 * 30);
 			rtnMap.put("accessToken", accessToken);
-//				vop.set(token, userDto);
+				vop.set("token:" + accessToken, user, 30, TimeUnit.MINUTES);
 //				accessToken도 받아서 rename 시키기
 		} catch (Exception e) {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
