@@ -91,6 +91,9 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 			System.out.println(codeList);
 //			List<Chat> chatList = chatMapper.getChat(roomIdx);
 			if (codeList.size() > 0) {
+//				for (Code code : codeList) {
+//					vop.set("code:" + code.getIdx(), code);
+//				}
 				rtnMap.put("codeList", codeList);
 				rtnMap.put("chatList", chatList);
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);

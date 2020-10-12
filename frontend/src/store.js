@@ -87,8 +87,8 @@ export default new Vuex.Store({
           // 정상적으로 로그인 된 경우, 상태정보 저장 후 이전 페이지로 리다이렉트
           const token = res.data.accessToken
           const refresh = res.data.refreshToken
-          localStorage.setItem('token', token)
-          localStorage.setItem('refresh', refresh)
+          localStorage.setItem('accessToken', token)
+          localStorage.setItem('refreshToken', refresh)
           localStorage.setItem('userIdx', res.data.user.idx)
           commit('SigninSuccess', res.data.user)
           router.back()
@@ -156,7 +156,7 @@ export default new Vuex.Store({
               console.log(res)
               commit('SigninSuccess', res.data.user)
             })
-          }
+        }
       } catch (err) {
         console.log(err)
       }

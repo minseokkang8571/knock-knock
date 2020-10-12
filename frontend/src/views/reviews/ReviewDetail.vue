@@ -63,6 +63,10 @@ export default {
       changedText: {
         start: null,
         end: null
+      },
+      ot: {
+        idx: 0,
+        string: ''
       }
     }
   },
@@ -184,18 +188,18 @@ export default {
               this.disconnect()
               this.$router.push('/review')
               alert('코드리뷰가 종료되었습니다.')
-            } else if (JSON.parse(res.body).type === 'lock') {
-              if (parseInt(JSON.parse(res.body).userIdx) !== this.userInfo.idx) {
-                alert('다른 사용자가 입력중입니다.')
-                tmp.readOnly = true
-              }
+            // } else if (JSON.parse(res.body).type === 'lock') {
+            //   if (parseInt(JSON.parse(res.body).userIdx) !== this.userInfo.idx) {
+            //     alert('다른 사용자가 입력중입니다.')
+            //     tmp.readOnly = true
+            //   }
             } else if (JSON.parse(res.body).type === 'unlock') {
-              if (parseInt(JSON.parse(res.body).userIdx) !== this.userInfo.idx) {
-                alert('수정 하실 수 있습니다.')
+              if (parseInt(JSON.parse(res.body).userIdx) === this.userInfo.idx) {
+                // alert('수정 하실 수 있습니다.')
                 console.log(JSON.parse(res.body).contents)
-                this.review = JSON.parse(res.body).contents
                 tmp.readOnly = false
               }
+              this.review = JSON.parse(res.body).contents
             } else {
               var date = new Date()
               var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
@@ -234,17 +238,19 @@ export default {
       )
       this.chatting = ''
     },
-    sendLock(type) {
+    sendLock() {
       var option = {
-        type: type,
+        type: 'unlock',
         articleIdx: this.codeList[0].articleIdx,
         roomIdx: this.roomIdx,
         codeIdx: this.codeList[0].idx,
         userIdx: this.userInfo.idx,
-        contents: this.review
+        contents: this.review,
+        otIdx: this.ot.idx,
+        otString: this.ot.string
       }
       this.stompClient.send(
-        '/' + type + '/' + this.roomIdx,
+        '/unlock/' + this.roomIdx,
         JSON.stringify(option),
         {}
       )
@@ -268,6 +274,10 @@ export default {
       const text = this.review
       const insertText = text.slice(this.changedText.start, this.changedText.end)
       console.log(`insert@${this.changedText.start}'${insertText}'`)
+      this.ot.idx = this.changedText.start
+      this.ot.string = insertText
+      this.tmp.readOnly = true
+      this.sendLock()
     },
     onKeydown() {
       if (this.debounce.isFirst && this.isAlnum(event.keyCode)) {

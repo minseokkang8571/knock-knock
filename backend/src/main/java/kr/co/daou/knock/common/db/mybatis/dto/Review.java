@@ -24,4 +24,7 @@ public class Review {
 	private String type;
 	@ApiParam(value = "게시글 idx", required = true)
 	private long articleIdx;
+	
+	private int otIdx;
+	private String otString;
 }
