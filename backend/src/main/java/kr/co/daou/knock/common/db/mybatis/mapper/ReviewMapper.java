@@ -16,4 +16,5 @@ public interface ReviewMapper {
 	int modifyCode(Review review);
 	int reviewLog(Review review);
 	int saveCode(long roomIdx);
+	Code getCodeForModify(Review review);
 }

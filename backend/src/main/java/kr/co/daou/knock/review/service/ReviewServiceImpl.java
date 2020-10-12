@@ -85,6 +85,14 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 	@Override
 	public String modifyCode(Review review) {
 		Map<String, Object> rtnMap = returnMap();
+		Code code = null;
+		try {
+			code = reviewMapper.getCodeForModify(review);
+		} catch (Exception e) {
+			defaultExceptionHandling(rtnMap, RESULT_FAIL);
+		}
+		System.out.println("@@@@");
+		System.out.println(code);
 		try {
 			if (reviewMapper.modifyCode(review) == 1 && reviewMapper.reviewLog(review) == 1) {
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
