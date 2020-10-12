@@ -101,6 +101,11 @@ export default {
         const res = await http.post('/article/save', payload, null)
 
         console.log(res)
+        if (res.data.httpCode === '200') {
+          this.$router.push(`articles?articleIdx=${res.data.idx}`)
+        } else {
+          alert('잘못된 입력입니다.')
+        }
       } catch (err) {
         console.log(err)
       }
