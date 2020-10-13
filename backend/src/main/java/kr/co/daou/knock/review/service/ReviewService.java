@@ -11,7 +11,7 @@ public interface ReviewService {
 	String createRoom(Room room);
 	String getRoom(Room room);
 	String enterRoom(long articleIdx);
-	String modifyCode(Review review);
+	String modifyCode(String text, long codeIdx);
 	String saveCode(long roomIdx);
 	String sendChat(Chat chat);
 	String getCode(long articleIdx);

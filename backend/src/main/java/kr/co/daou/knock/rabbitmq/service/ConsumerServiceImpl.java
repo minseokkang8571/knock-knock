@@ -59,7 +59,7 @@ public class ConsumerServiceImpl extends CommonService implements ConsumerServic
 //          수정이 완료된 시점에서 큐에 등록 후 읽어옴
 //            읽어온 데이터 화면에 전달
 //            화면에서 데이터 뿌리고 사용자들이 수정할 수 있는 권한 부여
-            reviewService.modifyCode(review);
+//            reviewService.modifyCode(review);
             messagingTemplate.convertAndSend("/send/"+review.getRoomIdx(),review);
             log.info("message.getBody() : "+new String(message.getBody()));
             log.info("review : "+review);

@@ -45,8 +45,8 @@
 		where b.idx = #{roomIdx}
 	</select>
 	
-	<update id="modifyCode" parameterType="Review">
-		UPDATE code set REVIEW_CONTENTS = #{contents}
+	<update id="modifyCode">
+		UPDATE code set REVIEW_CONTENTS = #{text}
 		WHERE idx = #{codeIdx}
 	</update>
 	

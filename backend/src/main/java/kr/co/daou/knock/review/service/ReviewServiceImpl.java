@@ -107,19 +107,11 @@ public class ReviewServiceImpl extends CommonService implements ReviewService {
 	}
 
 	@Override
-	public String modifyCode(Review review) {
+	public String modifyCode(String text, long codeIdx) {
 		Map<String, Object> rtnMap = returnMap();
-		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-		Code code = null;
+//		ValueOperations<String, Object> vop = redisTemplate.opsForValue();
 		try {
-			code = reviewMapper.getCodeForModify(review);
-		} catch (Exception e) {
-			defaultExceptionHandling(rtnMap, RESULT_FAIL);
-		}
-		System.out.println("@@@@");
-		System.out.println(code);
-		try {
-			if (reviewMapper.modifyCode(review) == 1 && reviewMapper.reviewLog(review) == 1) {
+			if (reviewMapper.modifyCode(text, codeIdx) == 1) {
 				rtnMap.put(RESULT_TEXT, RESULT_SUCCESS);
 			} else {
 				rtnMap.put(RESULT_TEXT, RESULT_FAIL);

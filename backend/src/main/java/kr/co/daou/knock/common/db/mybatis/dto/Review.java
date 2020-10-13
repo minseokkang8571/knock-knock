@@ -15,8 +15,8 @@ public class Review {
 	private long codeIdx;
 	@ApiParam(value = "유저 idx (누가 수정했는지)", required = true)
 	private long userIdx;
-	@ApiParam(value = "수정 코드", required = true)
-	private String contents; 
+//	@ApiParam(value = "수정 코드", required = true)
+//	private String contents; 
 	@ApiParam(value = "수정 시간", required = false)
 	private Date date;
 

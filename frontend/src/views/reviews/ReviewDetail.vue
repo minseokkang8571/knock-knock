@@ -195,11 +195,15 @@ export default {
             //   }
             } else if (JSON.parse(res.body).type === 'unlock') {
               if (parseInt(JSON.parse(res.body).userIdx) === this.userInfo.idx) {
-                // alert('수정 하실 수 있습니다.')
-                console.log(JSON.parse(res.body).contents)
+                console.log('ACK')
                 tmp.readOnly = false
+              } else {
+                const text = this.review
+                const otIdx = JSON.parse(res.body).otIdx
+                const otString = JSON.parse(res.body).otString
+
+                this.review = text.slice(0, otIdx) + otString + text.slice(otIdx)
               }
-              this.review = JSON.parse(res.body).contents
             } else {
               var date = new Date()
               var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
@@ -227,9 +231,9 @@ export default {
         contents: this.chatting,
         name: this.userInfo.name
       }
-      var date = new Date()
-      var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
-      console.log('전송 시간 : ' + now)
+      // var date = new Date()
+      // var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+      // console.log('전송 시간 : ' + now)
 
       this.stompClient.send(
         '/receive/' + this.roomIdx,
@@ -245,7 +249,7 @@ export default {
         roomIdx: this.roomIdx,
         codeIdx: this.codeList[0].idx,
         userIdx: this.userInfo.idx,
-        contents: this.review,
+        // contents: this.review,
         otIdx: this.ot.idx,
         otString: this.ot.string
       }
@@ -276,7 +280,7 @@ export default {
       console.log(`insert@${this.changedText.start}'${insertText}'`)
       this.ot.idx = this.changedText.start
       this.ot.string = insertText
-      this.tmp.readOnly = true
+      // this.tmp.readOnly = true
       this.sendLock()
     },
     onKeydown() {

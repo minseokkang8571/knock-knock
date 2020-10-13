@@ -59,18 +59,11 @@ public class RabbitmqController {
         	String after = tmp.substring(review.getOtIdx());
         	result = before + review.getOtString() + after;        	        	
         }
-        
-        review.setContents(result);
-        reviewService.modifyCode(review);
-        ot.setIdx(review.getOtIdx());
+         
+        reviewService.modifyCode(result, review.getCodeIdx());
         ot.setString(review.getOtString());
         System.out.println(ot);
         vop.set("code:" + code.getIdx(), ot);
         producerService.sendCode(review);
     }
-    
-//    public class Ot {
-//    	long idx;
-//    	String string;
-//    }
 }
