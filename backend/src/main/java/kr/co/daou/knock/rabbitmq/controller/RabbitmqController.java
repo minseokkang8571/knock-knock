@@ -36,7 +36,7 @@ public class RabbitmqController {
         reviewService.sendChat(chat);
     	producerService.sendChat(chat);
     }
-    @MessageMapping("/unlock/{roomIdx}")
+    @MessageMapping("/operation/{roomIdx}")
     public void stompCode(@RequestBody Review review, @PathVariable("roomIdx") String roomIdx) throws Exception {
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
         Code code = reviewMapper.getCodeForModify(review);

@@ -40,7 +40,7 @@ export default {
   methods: {
     sendLock() {
       var option = {
-        type: 'unlock',
+        type: 'operation',
         articleIdx: this.codeList[0].articleIdx,
         roomIdx: this.roomIdx,
         codeIdx: this.codeList[0].idx,
@@ -50,7 +50,7 @@ export default {
         otString: this.ot.string
       }
       this.stompClient.send(
-        '/unlock/' + this.roomIdx,
+        '/operation/' + this.roomIdx,
         JSON.stringify(option),
         {}
       )
@@ -114,6 +114,12 @@ export default {
       const otString = this.operation.string
 
       this.review = text.slice(0, otIdx) + otString + text.slice(otIdx)
+      const codeArea = document.getElementById('textArea')
+      codeArea.readOnly = true
+    },
+    receiveAck() {
+      const codeArea = document.getElementById('textArea')
+      codeArea.readOnly = false
     },
     setReview() {
       this.review = this.codeList[0].reviewContents

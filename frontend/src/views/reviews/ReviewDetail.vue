@@ -167,22 +167,14 @@ export default {
           this.connected = true
           console.log(frame)
           this.stompClient.subscribe('/send/' + this.roomIdx, res => {
-            var tmp = document.getElementById('textArea')
             if (res.body === 'out') {
               this.disconnect()
               this.$router.push('/review')
               alert('코드리뷰가 종료되었습니다.')
-            // } else if (JSON.parse(res.body).type === 'lock') {
-            //   if (parseInt(JSON.parse(res.body).userIdx) !== this.userInfo.idx) {
-            //     alert('다른 사용자가 입력중입니다.')
-            //     tmp.readOnly = true
-            //   }
-            } else if (JSON.parse(res.body).type === 'unlock') {
+            } else if (JSON.parse(res.body).type === 'operation') {
               if (parseInt(JSON.parse(res.body).userIdx) === this.userInfo.idx) {
-                console.log('ACK')
-                tmp.readOnly = false
+                this.$refs.reviewCode.receiveAck()
               } else {
-                console.log(JSON.parse(res.body))
                 this.operation.idx = JSON.parse(res.body).otIdx
                 this.operation.string = JSON.parse(res.body).otString
                 this.$refs.reviewCode.receiveOperation()
