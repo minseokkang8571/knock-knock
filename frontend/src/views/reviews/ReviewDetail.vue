@@ -110,36 +110,6 @@ export default {
           }
         })
     },
-    modifyCode() {
-      const config = {}
-      const data = {
-        roomIdx: this.roomIdx,
-        codeIdx: this.codeList[0].idx,
-        userIdx: this.userInfo.idx,
-        contents: this.review
-      }
-      if (localStorage.getItem('accessToken')) {
-        config.headers = {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      }
-      http
-        .put(
-          'review/modifyCode',
-          data, config).then(res => {
-          if (res.status === 200) {
-            console.log('success')
-            this.sendLock('unlock')
-          }
-        })
-        .catch((err) => {
-          if (err.request.status === 444) {
-            this.updateToken()
-            this.modifyCode()
-          }
-        })
-    },
     updateToken() {
       const config = {}
       const refreshToken = localStorage.getItem('refreshToken')
