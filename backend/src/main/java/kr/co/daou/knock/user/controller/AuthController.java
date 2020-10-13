@@ -40,7 +40,6 @@ public class AuthController {
 	@GetMapping("/access")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getAccessToken(HttpServletRequest request) {
-		System.out.println("aaa");
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
 		String refreshToken = request.getHeader(HEADER_AUTH);
 		HttpStatus status = HttpStatus.OK;

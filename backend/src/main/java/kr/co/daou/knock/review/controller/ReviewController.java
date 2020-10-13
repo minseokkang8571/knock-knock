@@ -55,12 +55,12 @@ public class ReviewController {
 		return reviewService.getCode(articleIdx);
 	}
 	
-	@ApiOperation(value = "코드 수정")
-	@PutMapping("/modifyCode")
-	@ResponseBody
-	public String modifyCode(@RequestBody Review review) {
-		return reviewService.modifyCode(review);
-	}
+//	@ApiOperation(value = "코드 수정")
+//	@PutMapping("/modifyCode")
+//	@ResponseBody
+//	public String modifyCode(@RequestBody Review review) {
+//		return reviewService.modifyCode(review);
+//	}
 	
 	@ApiOperation(value = "코드 저장 (방 나가기)")
 	@PutMapping("/saveCode/{roomIdx}")

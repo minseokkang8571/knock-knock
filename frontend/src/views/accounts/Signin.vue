@@ -34,13 +34,16 @@
 </template>
 
 <script>
+import http from '@/util/http-common'
+import jwtDecode from 'jwt-decode'
 export default {
   data() {
     return {
       form: {
         email: '',
         password: ''
-      }
+      },
+      refreshInterval: 60 * 1000 * 25
     }
   },
   methods: {
@@ -51,7 +54,55 @@ export default {
         alert('이미 로그인된 사용자입니다.')
         this.$router.push({ name: 'ArticleList' })
       }
-      this.$store.dispatch('onSignin', this.form)
+      this.onSignin(this.form)
+    },
+    async onSignin(payload) {
+      try {
+        const res = await http.post('/user/login', payload, null)
+        if (res.status === 200) {
+          // 정상적으로 로그인 된 경우, 상태정보 저장 후 이전 페이지로 리다이렉트
+          const token = res.data.accessToken
+          const refresh = res.data.refreshToken
+          localStorage.setItem('accessToken', token)
+          localStorage.setItem('refreshToken', refresh)
+          localStorage.setItem('userIdx', res.data.user.idx)
+
+          this.$store.commit('SigninSuccess', res.data.user)
+          this.$store.commit('setRefreshTimer', setInterval(this.refreshAccessToken, this.refreshInterval))
+          this.$router.back()
+        } else {
+          // DB에 없는 데이터가 전달 된 경우
+          alert('이메일과 비밀번호를 확인해주세요.')
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    refreshAccessToken(context) {
+      let accessToken = localStorage.getItem('accessToken')
+      let refreshToken = localStorage.getItem('refreshToken')
+      const decodedAccess = jwtDecode(accessToken)
+      if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
+        console.log('EXPIRED') // access Token 갱신 axios
+        // 헤더에 accessToken 같이보내기
+        const config = {}
+        if (refreshToken) {
+          config.headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${refreshToken}`
+          }
+          http
+            .get('/auth/access', config)
+            .then((res) => {
+              console.log(res)
+              accessToken = res.data.accessToken
+              localStorage.setItem('accessToken', accessToken)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+      }
     }
   }
 }
