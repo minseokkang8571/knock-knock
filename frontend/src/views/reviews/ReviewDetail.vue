@@ -67,6 +67,10 @@ export default {
       ot: {
         idx: 0,
         string: ''
+      },
+      deleteIdx: {
+        start: null,
+        end: null
       }
     }
   },
@@ -262,7 +266,7 @@ export default {
     keyupDebounce(fn, wait) {
       const keyboardEvent = event
 
-      if (this.isAlnum(event.keyCode)) {
+      if (this.isAlnum(event.keyCode) || this.isDel(event.keyCode)) {
         if (this.debounce.timer) {
           clearTimeout(this.debounce.timer)
           this.debounce.timer = null
@@ -274,18 +278,29 @@ export default {
       }
     },
     onKeyup(event) {
-      this.changedText.end = event.target.selectionEnd
-      const text = this.review
-      const insertText = text.slice(this.changedText.start, this.changedText.end)
-      console.log(`insert@${this.changedText.start}'${insertText}'`)
-      this.ot.idx = this.changedText.start
-      this.ot.string = insertText
-      // this.tmp.readOnly = true
-      this.sendLock()
+      if (this.isDel(event.keyCode)) {
+        // 삭제
+        if (this.deleteIdx.start === this.deleteIdx.end) {
+          // 블럭단위 삭제가 아닌경우
+          this.deleteIdx.end = event.target.selectionEnd
+        }
+        console.log(`delete@${this.deleteIdx.end}-${this.deleteIdx.start}`)
+      } else {
+        // 삽입
+        this.changedText.end = event.target.selectionEnd
+        const text = this.review
+        const insertText = text.slice(this.changedText.start, this.changedText.end)
+        console.log(`insert@${this.changedText.start}'${insertText}'`)
+        this.ot.idx = this.changedText.start
+        this.ot.string = insertText
+        // this.tmp.readOnly = true
+        this.sendLock()
+      }
     },
     onKeydown() {
-      if (this.debounce.isFirst && this.isAlnum(event.keyCode)) {
-        this.changedText.start = event.target.selectionStart
+      if (this.debounce.isFirst && (this.isAlnum(event.keyCode) || this.isDel(event.keyCode))) {
+        this.changedText.start = this.deleteIdx.end = event.target.selectionStart
+        this.deleteIdx.start = event.target.selectionEnd
         this.debounce.isFirst = false
       }
     },
@@ -294,6 +309,9 @@ export default {
     },
     isDigit(charCode) {
       return ((charCode >= 48) && (charCode <= 57))
+    },
+    isDel(charCode) {
+      return (charCode === 8)
     },
     isAlnum(charCode) {
       return (this.isAlpha(charCode) || this.isDigit(charCode) || charCode === 32)
