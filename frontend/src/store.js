@@ -75,9 +75,9 @@ export default new Vuex.Store({
       try {
         const accessToken = localStorage.getItem('accessToken')
         const config = {}
-        var date = new Date()
-        var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
-        console.log('전송 시간 : ' + now)
+        // let date = new Date()
+        // let now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+        // console.log('전송 시간 : ' + now)
         if (accessToken) {
           config.headers = {
             'Content-Type': 'application/json',
@@ -86,10 +86,9 @@ export default new Vuex.Store({
           http
             .get('/user/info', config)
             .then((res) => {
-              var date = new Date()
-              var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
-              console.log('응답 시간 : ' + now)
-              console.log(res)
+              // date = new Date()
+              // now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
+              // console.log('응답 시간 : ' + now)
               commit('SigninSuccess', res.data.user)
             })
         }
