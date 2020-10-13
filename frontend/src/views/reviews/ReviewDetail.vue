@@ -19,8 +19,6 @@
     </div>
     <!-- 버튼리스트 -->
     <div class="d-flex justify-content-end mt-2">
-      <button class="btn btn-primary mr-2" @click="sendLock('lock')">수정 시작</button>
-      <button class="btn btn-primary mr-2" @click="sendLock('unlock')">수정 완료</button>
       <button class="btn btn-primary mr-2" @click="save()">save</button>
       <router-link :to="{ name: 'ReviewList' }">
       <button class="btn btn-secondary" @click="disconnect()">exit</button>

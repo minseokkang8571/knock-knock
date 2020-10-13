@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- v-html을 통한 XSS공격을 막기위해 sanitizer 라이브러리를 사용 -->
+    <!-- <p>abc<iframe//src=jAva&Tab;script:alert(3)>def</p> -->
     <div
       class="hljs"
       v-dompurify-html="convertMarkdown()">
