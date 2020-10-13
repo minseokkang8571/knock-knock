@@ -11,24 +11,11 @@
         @keyup.capture="keyupDebounce(onKeyup, 400)">
       </textarea>
       <!-- 채팅 -->
-      <div class="col-4 d-flex flex-column">
-        <div class="scroll-area chat-area">
-          <div
-            v-for="list in chatList"
-            v-bind:key="list.idx"
-            class="message"
-            :class="{ 'message-out': list.name === userInfo.name, 'message-in': list.name !== userInfo.name }">
-            <p class="font-weight-bold mb-0 mr-1 text-subtitle-1 pl-6">{{ list.name }}:</p>
-            <p class="real mb-0">{{ list.contents }}</p>
-          </div>
-        </div>
-        <textarea
-          v-model="chatting"
-          cols="30"
-          rows="4"
-          @keydown.enter="sendMsg()">
-        </textarea>
-      </div>
+      <ReviewChat
+        :chatList="chatList"
+        :stompClient="stompClient"
+        :roomIdx="roomIdx"
+      />
     </div>
     <!-- 버튼리스트 -->
     <div class="d-flex justify-content-end mt-2">
@@ -44,18 +31,23 @@
 </template>
 
 <script>
+import ReviewChat from '@/components/review/ReviewChat'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import http from '@/util/http-common'
 import { mapState } from 'vuex'
 export default {
+  components: {
+    ReviewChat
+  },
   data() {
     return {
       roomIdx: this.$route.query.roomIdx,
       chatList: [],
       codeList: [],
-      chatting: this.chatting,
+      stompClient: null,
       review: this.review,
+
       debounce: {
         timer: null,
         isFirst: true
@@ -228,24 +220,6 @@ export default {
         '/out/' + this.roomIdx, {}
       )
     },
-    sendMsg() {
-      var option = {
-        roomIdx: this.roomIdx,
-        userIdx: this.userInfo.idx,
-        contents: this.chatting,
-        name: this.userInfo.name
-      }
-      // var date = new Date()
-      // var now = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ':' + date.getMilliseconds()
-      // console.log('전송 시간 : ' + now)
-
-      this.stompClient.send(
-        '/receive/' + this.roomIdx,
-        JSON.stringify(option),
-        {}
-      )
-      this.chatting = ''
-    },
     sendLock() {
       var option = {
         type: 'unlock',
@@ -324,51 +298,5 @@ export default {
 </script>
 
 <style scoped>
-
-.chat-area {
-  height: 62vh;
-  overflow-x: hidden;
-}
-
-.message {
-  width: 45%;
-  /* border-radius: 10px; */
-  padding: 0.5em;
-  /* margin-bottom: 0.5em; */
-  font-size: 0.8em;
-}
-
-.message-in {
-  /* background: #407fff; */
-  color: black;
-  margin-right: 50%;
-
-  /* padding: 0; */
-}
-
-.message-out {
-  /* background: #407fff; */
-  color: black;
-  margin-left: 50%;
-
-  /* padding: 0; */
-}
-
-.message-out .real {
-  background: #407fff;
-  color: white;
-  border-radius: 10px;
-  /* margin-left: 50%; */
-}
-
-.message-in .real {
-  background: #f1f0f0;
-  color: black;
-  border-radius: 10px;
-}
-
-.pl-6 {
-  padding: 0px 0px 0px 6px !important;
-}
 
 </style>
