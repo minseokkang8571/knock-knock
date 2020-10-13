@@ -53,6 +53,7 @@ export default {
         JSON.stringify(option),
         {}
       )
+      // Ack를 받기전까지 코드를 수정할 수 없음
       const codeArea = document.getElementById('textArea')
       codeArea.readOnly = true
     },
@@ -109,6 +110,7 @@ export default {
       return (this.isAlpha(charCode) || this.isDigit(charCode) || charCode === 32)
     },
     receiveOperation() {
+      // operation을 받았을 때 client의 코드데이터를 변경
       const text = this.review
       const otIdx = this.operation.idx
       const otString = this.operation.string
@@ -116,6 +118,7 @@ export default {
       this.review = text.slice(0, otIdx) + otString + text.slice(otIdx)
     },
     receiveAck() {
+      // Ack를 받아 코드변경권한을 얻음
       const codeArea = document.getElementById('textArea')
       codeArea.readOnly = false
     },
