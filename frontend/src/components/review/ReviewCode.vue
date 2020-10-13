@@ -38,14 +38,13 @@ export default {
     }
   },
   methods: {
-    sendLock() {
+    sendOperation() {
       var option = {
         type: 'operation',
         articleIdx: this.codeList[0].articleIdx,
         roomIdx: this.roomIdx,
         codeIdx: this.codeList[0].idx,
         userIdx: localStorage.getItem('userIdx'),
-        // contents: this.review,
         otIdx: this.ot.idx,
         otString: this.ot.string
       }
@@ -54,6 +53,8 @@ export default {
         JSON.stringify(option),
         {}
       )
+      const codeArea = document.getElementById('textArea')
+      codeArea.readOnly = true
     },
     keyupDebounce(fn, wait) {
       const keyboardEvent = event
@@ -82,11 +83,10 @@ export default {
         this.changedText.end = event.target.selectionEnd
         const text = this.review
         const insertText = text.slice(this.changedText.start, this.changedText.end)
-        console.log(`insert@${this.changedText.start}'${insertText}'`)
         this.ot.idx = this.changedText.start
         this.ot.string = insertText
-        // this.tmp.readOnly = true
-        this.sendLock()
+        console.log(`insert@${this.changedText.start}'${insertText}'`)
+        this.sendOperation()
       }
     },
     onKeydown() {
@@ -114,8 +114,6 @@ export default {
       const otString = this.operation.string
 
       this.review = text.slice(0, otIdx) + otString + text.slice(otIdx)
-      const codeArea = document.getElementById('textArea')
-      codeArea.readOnly = true
     },
     receiveAck() {
       const codeArea = document.getElementById('textArea')
