@@ -57,20 +57,6 @@ export default new Vuex.Store({
           })
       }
     },
-    async onSignup({ commit }, payload) {
-      try {
-        const res = await http.post('/user/signup', payload, null)
-
-        if (res.data) {
-          alert('회원가입이 완료되었습니다.')
-          router.push({ name: 'ArticleList' })
-        } else {
-          alert('유효하지 않은 입력입니다.')
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    },
     async getUserInfo({ commit }) {
       try {
         const accessToken = localStorage.getItem('accessToken')
