@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import http from '@/util/http-common'
 export default {
   data() {
     return {
@@ -76,7 +77,21 @@ export default {
       if (!this.validation || !this.pwChk) {
         alert('비밀번호를 확인해주세요.')
       } else {
-        this.$store.dispatch('onSignup', this.form)
+        this.onSignup(this.form)
+      }
+    },
+    async onSignup(payload) {
+      try {
+        const res = await http.post('/user/signup', payload, null)
+
+        if (res.data) {
+          alert('회원가입이 완료되었습니다.')
+          this.$router.push({ name: 'ArticleList' })
+        } else {
+          alert('유효하지 않은 입력입니다.')
+        }
+      } catch (err) {
+        console.log(err)
       }
     }
   },
