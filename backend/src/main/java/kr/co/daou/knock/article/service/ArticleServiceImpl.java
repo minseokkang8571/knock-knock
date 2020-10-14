@@ -120,6 +120,9 @@ public class ArticleServiceImpl extends CommonService implements ArticleService{
             code.setArticleIdx(article.getIdx());
             while(startIndex!=-1){
                 endIndex = article.getContents().indexOf("```",startIndex+1);
+                if(endIndex == -1){
+                    break;
+                }
                 //코드테이블 삽입
                 code.setOriginContents(article.getContents().substring(startIndex,endIndex+3));
                 language.setName(code.getOriginContents().split("\n")[0].substring(3));
