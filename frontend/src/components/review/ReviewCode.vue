@@ -127,7 +127,7 @@ export default {
     }
   },
   watch: {
-    codeList: 'setReview',
+    codeList: 'setReview'
   }
 }
 </script>
