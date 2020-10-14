@@ -18,7 +18,16 @@ public class RabbitmqController {
     ProducerService producerService;
 
     @MessageMapping("/receive/{roomIdx}")
-    public void stompChat(@RequestBody Chat chat, @PathVariable("roomIdx") String roomIdx) throws Exception {
+    public void stompChat(@RequestBody String map, @PathVariable("roomIdx") String roomIdx) throws Exception {
+        System.out.println(map);
+        Chat chat = new Chat();
+        String[] temp = map.split(",");
+        chat.setRoomIdx(temp[0].split(":")[1].split("\"")[1]);
+        chat.setUserIdx(temp[1].split(":")[1].split("\"")[0]);
+        chat.setContents(temp[2].split(":")[1].split("\"")[1]);
+        chat.setName(temp[3].split(":")[1].split("\"")[1]);
+
+        System.out.println(chat);
         producerService.sendChat(chat);
     }
     @MessageMapping("/unlock/{roomIdx}")
@@ -26,4 +35,6 @@ public class RabbitmqController {
         System.out.println("test : "+review);
         producerService.sendCode(review);
     }
+
+
 }

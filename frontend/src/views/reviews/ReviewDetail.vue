@@ -15,7 +15,7 @@
             v-for="list in chatList"
             v-bind:key="list.idx"
             class="message"
-            :class="{ 'message-out': list.name === userInfo.name, 'message-in': list.name !== userInfo.name }">
+            :class="{ 'message-out': list.userIdx === tmp, 'message-in': list.userIdx !== tmp }">
             <p class="font-weight-bold mb-0 mr-1 text-subtitle-1 pl-6">{{ list.name }}:</p>
             <p class="real mb-0">{{ list.contents }}</p>
           </b-row>
@@ -52,7 +52,8 @@ export default {
       chatList: [],
       codeList: [],
       chatting: this.chatting,
-      review: this.review
+      review: this.review,
+      tmp: localStorage.getItem('userIdx')
     }
   },
   computed: {
@@ -176,6 +177,7 @@ export default {
         contents: this.chatting,
         name: this.userInfo.name
       }
+      console.log(JSON.stringify(option))
       this.stompClient.send(
         '/receive/' + this.roomIdx,
         JSON.stringify(option),
