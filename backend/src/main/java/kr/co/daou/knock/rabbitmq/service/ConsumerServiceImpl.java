@@ -32,7 +32,7 @@ public class ConsumerServiceImpl extends CommonService implements ConsumerServic
     }
 
 
-    @RabbitListener(queues = QUEUE_NAME_CHAT)
+    @RabbitListener(queues = QUEUE_NAME_CHAT,exclusive = true)
     public void receiveMessage(final Message message) {
         log.info("Send Chat starting");
         log.info(message.toString());
@@ -49,7 +49,7 @@ public class ConsumerServiceImpl extends CommonService implements ConsumerServic
         }
     }
 
-    @RabbitListener(queues = QUEUE_NAME_CODE)
+    @RabbitListener(queues = QUEUE_NAME_CODE,exclusive = true)
     public void receiveCode(final Message message) {
         log.info("Send Code starting");
         log.info(message.toString());
