@@ -46,7 +46,8 @@ export default {
       codeList: [],
       stompClient: null,
       operation: {
-        idx: null,
+        startIdx: null,
+        endIdx: null,
         string: null
       },
       review: ''
@@ -143,7 +144,8 @@ export default {
               if (parseInt(JSON.parse(res.body).userIdx) === this.userInfo.idx) {
                 this.$refs.reviewCode.receiveAck()
               } else {
-                this.operation.idx = JSON.parse(res.body).otStartIdx
+                this.operation.startIdx = JSON.parse(res.body).otStartIdx
+                this.operation.endIdx = JSON.parse(res.body).otEndIdx
                 this.operation.string = JSON.parse(res.body).otString
                 this.$refs.reviewCode.receiveOperation()
               }

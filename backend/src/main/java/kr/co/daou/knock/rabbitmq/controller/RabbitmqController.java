@@ -48,19 +48,22 @@ public class RabbitmqController {
         	ot.setIdx(Integer.MAX_VALUE);
         }
         //코드 수정
-        if(ot.getIdx() < review.getOtIdx()) {
-        	review.setOtIdx(review.getOtIdx() + ot.getString().length());
+        System.out.println(ot.getIdx());
+        System.out.println(review.getOtStartIdx());
+        if(ot.getIdx() < review.getOtStartIdx()) {
+        	review.setOtStartIdx(review.getOtStartIdx() + ot.getString().length());
         }
         String result = "";
-        if(review.getOtIdx() >= tmp.length()) {
+        if(review.getOtStartIdx() >= tmp.length()) {
         	result = tmp + review.getOtString();
         } else {
-        	String before = tmp.substring(0, review.getOtIdx());
-        	String after = tmp.substring(review.getOtIdx());
-        	result = before + review.getOtString() + after;        	        	
+        	String before = tmp.substring(0, review.getOtStartIdx());
+        	String after = tmp.substring(review.getOtEndIdx());
+        	result = before + review.getOtString() + after;        	
         }
          
         reviewService.modifyCode(result, review.getCodeIdx());
+//        ot.setIdx(review.getOtStartIdx());
         ot.setString(review.getOtString());
         System.out.println(ot);
         vop.set("code:" + code.getIdx(), ot);

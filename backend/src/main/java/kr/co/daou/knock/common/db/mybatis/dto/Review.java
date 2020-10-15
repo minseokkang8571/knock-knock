@@ -20,11 +20,14 @@ public class Review {
 	@ApiParam(value = "수정 시간", required = false)
 	private Date date;
 
-	@ApiParam(value = "타입값(lock,unlock)")
+	@ApiParam(value = "타입값(operation)")
 	private String type;
 	@ApiParam(value = "게시글 idx", required = true)
 	private long articleIdx;
 	
-	private int otIdx;
+//	OT
 	private String otString;
+	private String otType;
+	private int otStartIdx;
+	private int otEndIdx;
 }

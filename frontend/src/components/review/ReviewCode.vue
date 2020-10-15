@@ -47,7 +47,6 @@ export default {
         roomIdx: this.roomIdx,
         codeIdx: this.codeList[0].idx,
         userIdx: localStorage.getItem('userIdx'),
-        otType: this.ot.type,
         otStartIdx: this.ot.startIdx,
         otEndIdx: this.ot.endIdx,
         otString: this.ot.string
@@ -78,35 +77,29 @@ export default {
     onKeyup(event) {
       if (this.isDel(event.keyCode)) {
         // 삭제
-        if (this.deleteIdx.start === this.deleteIdx.end) {
+        if (this.ot.startIdx === this.ot.endIdx) {
           // 블럭단위 삭제가 아닌경우
-          this.deleteIdx.start = event.target.selectionEnd
+          this.ot.startIdx = event.target.selectionEnd
         }
-        console.log(`delete@${this.deleteIdx.start}-${this.deleteIdx.end}`)
-        this.ot.type = 'delete'
-        this.ot.startIdx = this.deleteIdx.start
-        this.ot.endIdx = this.deleteIdx.end
+        console.log(`delete@${this.ot.startIdx}-${this.ot.endIdx}`)
         this.ot.string = ''
       } else {
         // 삽입
-        console.log(this.insertIdx.start, this.insertIdx.end)
-        if (this.insertIdx.start === this.insertIdx.end) {
-          this.insertIdx.end = event.target.selectionEnd
-        }
         const text = this.review
-        const insertText = text.slice(this.insertIdx.start, this.insertIdx.end)
-        console.log(`insert@${this.insertIdx.start}-${this.insertIdx.end}'${insertText}'`)
-        this.ot.type = 'insert'
-        this.ot.startIdx = this.insertIdx.start
-        this.ot.endIdx = this.insertIdx.end
+        let insertText = ''
+        console.log(this.ot.startIdx, this.ot.endIdx)
+        if (this.ot.startIdx === this.ot.endIdx) {
+          insertText = text.slice(this.ot.startIdx, event.target.selectionEnd)
+        }
+        console.log(`insert@${this.ot.startIdx}-${this.ot.endIdx}'${insertText}'`)
         this.ot.string = insertText
-        this.sendOperation()
       }
+      this.sendOperation()
     },
     onKeydown() {
       if (this.debounce.isFirst && (this.isAlnum(event.keyCode) || this.isDel(event.keyCode))) {
-        this.insertIdx.start = this.deleteIdx.start = event.target.selectionStart
-        this.insertIdx.end = this.deleteIdx.end = event.target.selectionEnd
+        this.ot.startIdx = event.target.selectionStart
+        this.ot.endIdx = event.target.selectionEnd
         this.debounce.isFirst = false
       }
     },
@@ -125,10 +118,11 @@ export default {
     receiveOperation() {
       // operation을 받았을 때 client의 코드데이터를 변경
       const text = this.review
-      const otIdx = this.operation.idx
+      const otStartIdx = this.operation.startIdx
+      const otEndIdx = this.operation.endIdx
       const otString = this.operation.string
 
-      this.review = text.slice(0, otIdx) + otString + text.slice(otIdx)
+      this.review = text.slice(0, otStartIdx) + otString + text.slice(otEndIdx)
     },
     receiveAck() {
       // Ack를 받아 코드변경권한을 얻음
