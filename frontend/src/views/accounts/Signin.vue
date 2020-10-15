@@ -80,7 +80,7 @@ export default {
     },
     refreshAccessToken(context) {
       let accessToken = localStorage.getItem('accessToken')
-      let refreshToken = localStorage.getItem('refreshToken')
+      const refreshToken = localStorage.getItem('refreshToken')
       const decodedAccess = jwtDecode(accessToken)
       if (decodedAccess.exp < new Date().getTime() / 1000 - (60000 * 6)) {
         console.log('EXPIRED') // access Token 갱신 axios

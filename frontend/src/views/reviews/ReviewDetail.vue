@@ -143,7 +143,7 @@ export default {
               if (parseInt(JSON.parse(res.body).userIdx) === this.userInfo.idx) {
                 this.$refs.reviewCode.receiveAck()
               } else {
-                this.operation.idx = JSON.parse(res.body).otIdx
+                this.operation.idx = JSON.parse(res.body).otStartIdx
                 this.operation.string = JSON.parse(res.body).otString
                 this.$refs.reviewCode.receiveOperation()
               }

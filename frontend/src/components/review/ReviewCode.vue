@@ -23,15 +23,17 @@ export default {
         timer: null,
         isFirst: true
       },
-      changedText: {
-        start: null,
-        end: null
-      },
       ot: {
-        idx: 0,
+        type: null,
+        startIdx: 0,
+        endIdx: 0,
         string: ''
       },
       deleteIdx: {
+        start: null,
+        end: null
+      },
+      insertIdx: {
         start: null,
         end: null
       }
@@ -45,7 +47,9 @@ export default {
         roomIdx: this.roomIdx,
         codeIdx: this.codeList[0].idx,
         userIdx: localStorage.getItem('userIdx'),
-        otIdx: this.ot.idx,
+        otType: this.ot.type,
+        otStartIdx: this.ot.startIdx,
+        otEndIdx: this.ot.endIdx,
         otString: this.ot.string
       }
       this.stompClient.send(
@@ -76,24 +80,33 @@ export default {
         // 삭제
         if (this.deleteIdx.start === this.deleteIdx.end) {
           // 블럭단위 삭제가 아닌경우
-          this.deleteIdx.end = event.target.selectionEnd
+          this.deleteIdx.start = event.target.selectionEnd
         }
-        console.log(`delete@${this.deleteIdx.end}-${this.deleteIdx.start}`)
+        console.log(`delete@${this.deleteIdx.start}-${this.deleteIdx.end}`)
+        this.ot.type = 'delete'
+        this.ot.startIdx = this.deleteIdx.start
+        this.ot.endIdx = this.deleteIdx.end
+        this.ot.string = ''
       } else {
         // 삽입
-        this.changedText.end = event.target.selectionEnd
+        console.log(this.insertIdx.start, this.insertIdx.end)
+        if (this.insertIdx.start === this.insertIdx.end) {
+          this.insertIdx.end = event.target.selectionEnd
+        }
         const text = this.review
-        const insertText = text.slice(this.changedText.start, this.changedText.end)
-        this.ot.idx = this.changedText.start
+        const insertText = text.slice(this.insertIdx.start, this.insertIdx.end)
+        console.log(`insert@${this.insertIdx.start}-${this.insertIdx.end}'${insertText}'`)
+        this.ot.type = 'insert'
+        this.ot.startIdx = this.insertIdx.start
+        this.ot.endIdx = this.insertIdx.end
         this.ot.string = insertText
-        console.log(`insert@${this.changedText.start}'${insertText}'`)
         this.sendOperation()
       }
     },
     onKeydown() {
       if (this.debounce.isFirst && (this.isAlnum(event.keyCode) || this.isDel(event.keyCode))) {
-        this.changedText.start = this.deleteIdx.end = event.target.selectionStart
-        this.deleteIdx.start = event.target.selectionEnd
+        this.insertIdx.start = this.deleteIdx.start = event.target.selectionStart
+        this.insertIdx.end = this.deleteIdx.end = event.target.selectionEnd
         this.debounce.isFirst = false
       }
     },
@@ -127,7 +140,7 @@ export default {
     }
   },
   watch: {
-    codeList: 'setReview',
+    codeList: 'setReview'
   }
 }
 </script>
